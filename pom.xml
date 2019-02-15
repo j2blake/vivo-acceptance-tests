@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <description><![CDATA[
+    ---------------------------------------------------------------------------
+
+    The parent pom.xml
+    
+    Properties, dependencies, plugin-management, etc. that applies across the
+    projects.
+
+    ---------------------------------------------------------------------------
+    ]]></description>
+
+    <name>VIVO: Acceptance tests</name>
+    <url>https://j2blake.github.io/vivo-acceptance-tests/</url>
+
+    <groupId>edu.cornell.library.scholars</groupId>
+    <artifactId>vivo-acceptance-tests</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>transience</module>
+    </modules>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>j2blake</id>
+            <name>Jim Blake</name>
+            <email>jeb228@cornell.edu</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <organization>Cornell University Libraries</organization>
+            <organizationUrl>https://www.library.cornell.edu/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/j2blake/vivo-acceptance-tests.git</connection>
+        <developerConnection>scm:git:ssh://github.com:/j2blake/vivo-acceptance-tests.git</developerConnection>
+        <url>http://github.com/j2blake/vivo-acceptance-tests/tree/master</url>
+    </scm>
+
+</project>

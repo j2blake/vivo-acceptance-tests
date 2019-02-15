@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<description><![CDATA[
+    ---------------------------------------------------------------------------
+
+    Transient data stores for use in acceptance testing.
+
+    Compile the source, run the tests, JAR it up.
+
+    ---------------------------------------------------------------------------
+    ]]></description>
+
+	<parent>
+		<groupId>edu.cornell.library.scholars</groupId>
+		<artifactId>vivo-acceptance-tests</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<name>VIVO: Transient data stores for acceptance tests</name>
+
+	<artifactId>vivo-acceptance-tests-transient-stores</artifactId>
+	<packaging>jar</packaging>
+
+	<properties>
+		<vitro-version>1.11.0-SNAPSHOT</vitro-version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.vivoweb</groupId>
+			<artifactId>vitro-api</artifactId>
+			<version>${vitro-version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.vivoweb</groupId>
+			<artifactId>vitro-dependencies</artifactId>
+			<version>${vitro-version}</version>
+			<type>pom</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.vivoweb</groupId>
+			<artifactId>vitro-api</artifactId>
+			<version>${vitro-version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>7.6.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-analyzers-common</artifactId>
+			<version>7.6.0</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- Use Java 1.8, at least. -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.7.0</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
