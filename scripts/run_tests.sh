@@ -64,7 +64,7 @@ if [ -d "$OUT_DIR/context" ]; then
   mkdir $OUT_DIR/context
 fi
 
-cp -R $VIVODIR/installer/webapp/target/vivo $OUT_DIR/context/
+cp -R $VIVODIR/installer/webapp/target/vivo $OUT_DIR/context
 
 cp $BASEDIR/../transience/target/vivo-acceptance-tests-transient-stores-0.1-SNAPSHOT.jar $OUT_DIR/context/vivo/WEB-INF/lib
 
