@@ -1,5 +1,8 @@
 require "selenium-webdriver"
 
+require_relative "../helpers/vivo_helper"
+require_relative "../helpers/selenium_helper"
+
 RSpec.configure do |config|
   config.order = :defined
 
@@ -10,6 +13,7 @@ RSpec.configure do |config|
     $browser = Selenium::WebDriver.for :chrome, options: options
     
     $vivo = VivoHelper.new
+    $selenium = SeleniumHelper.new
   end
 
   config.after(:all) do
