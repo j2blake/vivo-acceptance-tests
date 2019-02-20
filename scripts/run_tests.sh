@@ -76,6 +76,7 @@ cp /Users/jeb228/.m2/repository/org/apache/lucene/lucene-queryparser/7.6.0/lucen
 cp /Users/jeb228/.m2/repository/org/apache/lucene/lucene-sandbox/7.6.0/lucene-sandbox-7.6.0.jar $OUT_DIR/context/vivo/WEB-INF/lib
 
 cp $BASEDIR/kluge/catalina.jar $OUT_DIR/context/vivo/WEB-INF/lib
+cp $BASEDIR/kluge/startup_listeners.txt $OUT_DIR/context/vivo/WEB-INF/resources
 
 #
 # Run it
