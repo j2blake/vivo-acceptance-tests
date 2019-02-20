@@ -15,7 +15,7 @@ describe "Create People" do
       $browser.find_element(:name, "loginForm").click
       expect($browser.title).to eq("VIVO")
     end
-    
+
     it "decides to add a faculty member" do
       $browser.find_element(:link_text, "Site Admin").click
       expect($browser.title).to eq("VIVO Site Administration")
@@ -25,24 +25,24 @@ describe "Create People" do
       $browser.find_element(:id, "submit").click
       expect($browser.title).to eq("Edit")
     end
-    
+
     it "creates with the basic info" do
       $browser.find_element(:id, "firstName").send_keys("Jane")
       $browser.find_element(:id, "lastName").send_keys("Faculty")
       $browser.find_element(:id, "submit").click
       expect($browser.title).to eq("Faculty, Jane")
     end
-    
+
     it "adds an overview" do
       $browser.find_element(:class, "add-overview").click
       expect($browser.title).to eq("Edit")
-      
+
       $browser.execute_script("tinyMCE.activeEditor.setContent('Jane is a wonderful professor')");
       $browser.find_element(:id, "submit").click
       expect($browser.title).to eq("Faculty, Jane")
       expect($browser.find_element(:tag_name, "body").text).to include("wonderful professor")
     end
-    
+
     it "finds the faculty member on the home page" do
       $vivo.wait_for_indexing
       $browser.find_element(:link_text, "Home").click
@@ -51,7 +51,7 @@ describe "Create People" do
       $selenium.wait_for_jQuery
       $browser.find_element(:link_text, "Faculty, Jane")
     end
-    
+
     it "logs out" do
       admin_menu = $browser.find_element(:link_text, "Admin")
       $browser.action.move_to(admin_menu).perform
@@ -59,6 +59,7 @@ describe "Create People" do
       expect($browser.title).to eq("VIVO")
     end
   end
+
   describe "Create a Librarian" do
     it "logs in as Admin" do
       $browser.navigate.to $vivo.vivo_url("/")
@@ -72,7 +73,7 @@ describe "Create People" do
       $browser.find_element(:name, "loginForm").click
       expect($browser.title).to eq("VIVO")
     end
-    
+
     it "decides to add a librarian" do
       $browser.find_element(:link_text, "Site Admin").click
       expect($browser.title).to eq("VIVO Site Administration")
@@ -83,7 +84,7 @@ describe "Create People" do
       expect($browser.title).to eq("Edit")
       expect($browser.find_element(:tag_name, "body").text).to include("Create a new Librarian")
     end
-    
+
     it "creates with the basic info" do
       $browser.find_element(:id, "firstName").send_keys("Lily")
       $browser.find_element(:id, "middleName").send_keys("Lou")
@@ -92,53 +93,27 @@ describe "Create People" do
       expect($browser.title).to eq("Librarian, Lily Lou")
     end
     
- end
+    it "adds a preferred title" do
+      $browser.find_element(:css, "li[groupname=contact]").click
+      $browser.find_element(:css, "h3#ARG_2000028 > a.add-ARG_2000028").click
+      expect($browser.title).to eq("Edit")
+      expect($browser.find_element(:tag_name, "body").text).to include("preferred title for")
+
+      $browser.find_element(:id, "preferredTitle").send_keys("Assistant Librarian")
+      $browser.find_element(:id, "submit").click
+      expect($browser.title).to eq("Librarian, Lily Lou")
+
+      expect($browser.find_element(:tag_name, "body").text).to include("Librarian, Lily Lou")
+      $browser.find_element(:css, "li[groupname=contact]").click
+      expect($browser.find_element(:tag_name, "body").text).to include("Assistant Librarian")
+    end
+
+  end
 end
 
 =begin
 <!--Create Librarian person-->
-<!--Make individual an Assistant Librarian-->
-<tr>
-  <td>clickAndWait</td>
-  <td>css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>Edit</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>id=preferredTitle</td>
-  <td>Assistant Librarian</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>id=submit</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>Librarian, Lily Lou</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
 <!--Verify that librarian was added sucessfully-->
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Librarian, Lily Lou</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Assistant Librarian</td>
-  <td></td>
-</tr>
 <!--Browse for new librarian-->
 <tr>
   <td>clickAndWait</td>
