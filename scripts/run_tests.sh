@@ -91,5 +91,3 @@ java -Dcatalina.base=$OUT_DIR \
      --out $OUT_DIR/logs/jetty_runner.log \
      --log $OUT_DIR/logs/request.log \
      --path /vivo $OUT_DIR/context/vivo
-
-#     --jar $BASEDIR/../transience/target/vivo-acceptance-tests-transient-stores-0.1-SNAPSHOT.jar \

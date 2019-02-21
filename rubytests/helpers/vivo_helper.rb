@@ -7,8 +7,12 @@ class VivoHelper
   
   # TODO if logging, write the elapsed time.
   def wait_for_indexing
-    puts "wait from #{Time.new}"
+    start_time = Time.new
+    sleep(2)
+    puts "wait from #{start_time}"
     res = Net::HTTP.get_response(URI(vivo_url("/admin/wait")))
-    puts "wait till #{Time.new}, code=#{res.code}"
+    end_time = Time.new
+    puts "wait till #{end_time}, code=#{res.code}"
+    puts "wait #{end_time.to_i - start_time.to_i} seconds."
   end
 end

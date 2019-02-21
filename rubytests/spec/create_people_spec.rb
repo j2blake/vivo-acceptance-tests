@@ -43,13 +43,27 @@ describe "Create People" do
       expect($browser.find_element(:tag_name, "body").text).to include("wonderful professor")
     end
 
+    it "adds a preferred title" do
+      $browser.find_element(:css, "section#preferredTitle a.add-ARG_2000028").click
+      expect($browser.title).to eq("Edit")
+      expect($browser.find_element(:tag_name, "body").text).to include("preferred title for")
+
+      $browser.find_element(:id, "preferredTitle").send_keys("Associate Professor")
+      $browser.find_element(:id, "submit").click
+      expect($browser.title).to eq("Faculty, Jane")
+      expect($browser.find_element(:tag_name, "body").text).to include("Associate Professor")
+    end
+
     it "finds the faculty member on the home page" do
       $vivo.wait_for_indexing
+      
       $browser.find_element(:link_text, "Home").click
       expect($browser.title).to eq("VIVO")
 
       $selenium.wait_for_jQuery
       $browser.find_element(:link_text, "Faculty, Jane")
+
+      expect($browser.find_element(:id, "research-faculty-mbrs").text).to include("Associate Professor")
     end
 
     it "logs out" do
@@ -92,10 +106,9 @@ describe "Create People" do
       $browser.find_element(:id, "submit").click
       expect($browser.title).to eq("Librarian, Lily Lou")
     end
-    
+
     it "adds a preferred title" do
-      $browser.find_element(:css, "li[groupname=contact]").click
-      $browser.find_element(:css, "h3#ARG_2000028 > a.add-ARG_2000028").click
+      $browser.find_element(:css, "section#preferredTitle a.add-ARG_2000028").click
       expect($browser.title).to eq("Edit")
       expect($browser.find_element(:tag_name, "body").text).to include("preferred title for")
 
@@ -104,192 +117,71 @@ describe "Create People" do
       expect($browser.title).to eq("Librarian, Lily Lou")
 
       expect($browser.find_element(:tag_name, "body").text).to include("Librarian, Lily Lou")
-      $browser.find_element(:css, "li[groupname=contact]").click
       expect($browser.find_element(:tag_name, "body").text).to include("Assistant Librarian")
     end
 
+    it "finds the librarian and the faculty member in the index" do
+      $vivo.wait_for_indexing
+
+      $browser.find_element(:link_text, "Index").click
+      expect($browser.title).to eq("Index of Contents")
+
+      $browser.find_element(:link_text, "Faculty Member")
+      expect($browser.find_element(:tag_name, "body").text).to include("Faculty Member (1)")
+      $browser.find_element(:link_text, "Librarian")
+      expect($browser.find_element(:tag_name, "body").text).to include("Librarian (1)")
+      $browser.find_element(:link_text, "Person")
+      expect($browser.find_element(:tag_name, "body").text).to include("Person (2)")
+    end
+    
+    it "inspects the index of librarians" do
+      $browser.find_element(:link_text, "Librarian").click
+      expect($browser.title).to eq("Librarian")
+
+      $browser.find_element(:link_text, "Librarian, Lily Lou")
+      expect($browser.find_element(:tag_name, "body").text).to include("Librarian, Lily Lou Assistant Librarian")
+    end
+    
+    it "searches for the librarian" do
+      $browser.find_element(:name, "querytext").send_keys("librarian")
+      $browser.find_element(:css, "#search-field > input.search").click
+      expect($browser.title).to eq("VIVO - Search results for 'librarian'")
+      
+      expect($browser.find_element(:tag_name, "body").text).to include("Search results for 'librarian'")
+      $browser.find_element(:link_text, "Librarian, Lily Lou")
+      expect($browser.find_element(:tag_name, "body").text).to include("Librarian, Lily Lou Assistant Librarian")
+    end
+    
+    it "follows the home page link to People browsing page" do
+      $browser.find_element(:link_text, "Home").click
+      expect($browser.title).to eq("VIVO")
+
+      $selenium.wait_for_jQuery
+      expect($browser.find_element(:tag_name, "body").text).to include("No research content found.")
+      $browser.find_element(:link_text, "View all ...").click
+      expect($browser.title).to eq("People")
+
+#      $selenium.wait_for_jQuery
+      $browser.find_element(:link_text, "Person (2)").click
+    end
+    
+    it "examines the entries for the librarian and the faculty member" do
+      $selenium.wait_for_jQuery
+      $browser.find_element(:link_text, "Faculty, Jane")
+      expect($browser.find_element(:tag_name, "body").text).to include("Associate Professor")
+
+      $browser.find_element(:link_text, "Librarian, Lily Lou")
+      expect($browser.find_element(:tag_name, "body").text).to include("Assistant Librarian")
+    end
+
+    it "logs out" do
+      admin_menu = $browser.find_element(:link_text, "Admin")
+      $browser.action.move_to(admin_menu).perform
+      $browser.find_element(:link_text, "Log out").click
+      expect($browser.title).to eq("VIVO")
+    end
   end
 end
 
 =begin
-<!--Create Librarian person-->
-<!--Verify that librarian was added sucessfully-->
-<!--Browse for new librarian-->
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Index</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Faculty Member</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Faculty Member (1)</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Librarian</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Librarian (1)</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Person</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Person (2)</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Librarian</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>Librarian</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Librarian, Lily Lou</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Librarian, Lily Lou Assistant Librarian</td>
-  <td></td>
-</tr>
-<!--Search for new librarian-->
-<tr>
-  <td>type</td>
-  <td>querytext</td>
-  <td>librarian</td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//input[@value='Search']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>librarian - VIVO Search Results</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Search results for 'librarian'</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Librarian, Lily Lou</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Librarian, Lily Lou Assistant Librarian</td>
-  <td></td>
-</tr>
-<!--Verify front page updated-->
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Home</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>VIVO</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>No research content found.</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>5000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Faculty, Jane</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=View all ...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>link=View all ...</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>People</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Person (2)</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>10000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Faculty, Jane</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Assistant Professor</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyElementPresent</td>
-  <td>link=Librarian, Lily Lou</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Assistant Librarian</td>
-  <td></td>
-</tr>
-<!--Logout-->
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Home</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>link=Log out</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTitle</td>
-  <td>VIVO</td>
-  <td></td>
-</tr>
-</tbody></table>
-</body>
-</html>
-
 =end
