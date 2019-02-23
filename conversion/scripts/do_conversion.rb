@@ -1,13 +1,13 @@
 #! /usr/bin/env ruby
 
 require 'fileutils'
-require_relative 'converter/converter'
-require_relative 'converter/compressor'
-require_relative 'converter/white_space_remover'
-require_relative 'converter/commenter'
-require_relative 'converter/common_tag_replacer'
-require_relative 'converter/it_grouper'
-require_relative 'converter/wrapper_replacer'
+require_relative 'converter/testfile/converter'
+require_relative 'converter/testfile/compressor'
+require_relative 'converter/testfile/white_space_remover'
+require_relative 'converter/testfile/commenter'
+require_relative 'converter/testfile/common_tag_replacer'
+require_relative 'converter/testfile/it_grouper'
+require_relative 'converter/testfile/wrapper_replacer'
 
 input_dirname = "../tests_in_html"
 output_dirname = "../tests_in_ruby"
@@ -18,7 +18,7 @@ output_dir = File.expand_path('../tests_in_ruby', File.dirname(__FILE__))
 FileUtils.remove_dir(output_dir) if File.exist?(output_dir)
 Dir.mkdir(output_dir)
 
-converter = Converter::Converter.new(input_dir, output_dir)
+converter = Converter::Testfile::Converter.new(input_dir, output_dir)
 converter.convert("CreatePeople/AddFacultyInfo.html")
 
 # TODO:
