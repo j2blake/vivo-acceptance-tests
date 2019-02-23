@@ -39,6 +39,7 @@ module Converter
           #     #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[29]</td><td></td></tr>
           # Is this another valid syntax?
           #
+          #     #<tr><td>open</td><td>/vivo/</td><td></td></tr>
         end
       end
 

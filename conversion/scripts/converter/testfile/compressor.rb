@@ -42,6 +42,7 @@ module Converter
       def dump_buffer_to_lines
         @lines << @buffer
         @buffering = false
+        $reporter.compressed_tag(@buffer)
       end
 
       def write_line_to_lines

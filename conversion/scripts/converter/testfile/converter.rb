@@ -6,29 +6,30 @@ module Converter
         @output_dir = output_dir
       end
 
-      def convert(relative_input_path)
-        relative_output_path = relative_input_path.sub(/html$/, "rb")
-        input_path = File.expand_path(relative_input_path, @input_dir)
-        output_path = File.expand_path(relative_output_path, @output_dir)
+      def convert(suite_name, filename)
+        $reporter.convert_test_file(suite_name, filename)
 
-        create_directory_for(output_path)
+        input_path = File.expand_path(filename, File.expand_path(suite_name, @input_dir))
+        output_path = File.expand_path(output_filename(filename), File.expand_path(suite_name, @output_dir))
 
-        scratchpad = Scratchpad.new(File.read(input_path), create_label(input_path))
+        Utils::create_directory_for(output_path)
+
+        scratchpad = Scratchpad.new(File.read(input_path), label(input_path))
         IO.write(output_path, scratchpad.to_s)
-
-        puts "Converted #{input_path}"
       end
 
-      def create_directory_for(path)
-        dir = File.dirname(path)
-        FileUtils.mkdir_p(dir) unless File.directory?(dir)
-      end
-
-      def create_label(path)
+      def label(path)
         base = File.basename(path)
         base.gsub!(/\.html$/, '')
         base.gsub!(/([A-Z])/, ' \1')
         base.strip
+      end
+      
+      def output_filename(path)
+        base = File.basename(path)
+        base.gsub!(/\.html$/, '.rb')
+        base.gsub!(/([A-Z])/, '_\1')
+        base.downcase.strip
       end
     end
 
@@ -41,6 +42,7 @@ module Converter
         @contents = WrapperReplacer.new(@contents.to_s, label).to_s
         @contents = CommonTagReplacer.new(@contents).to_s
         @contents = ItGrouper.new(@contents).to_s
+        $reporter.tags_remaining(TagCounter.new(@contents).how_many)
       end
 
       def to_s

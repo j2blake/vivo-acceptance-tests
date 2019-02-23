@@ -1,6 +1,10 @@
 #! /usr/bin/env ruby
 
 require 'fileutils'
+
+require_relative 'converter/reporter'
+require_relative 'converter/file_copier'
+require_relative 'converter/utils'
 require_relative 'converter/testfile/converter'
 require_relative 'converter/testfile/compressor'
 require_relative 'converter/testfile/white_space_remover'
@@ -8,18 +12,52 @@ require_relative 'converter/testfile/commenter'
 require_relative 'converter/testfile/common_tag_replacer'
 require_relative 'converter/testfile/it_grouper'
 require_relative 'converter/testfile/wrapper_replacer'
+require_relative 'converter/testfile/tag_counter'
+require_relative 'converter/suitefile/converter'
 
 input_dirname = "../tests_in_html"
 output_dirname = "../tests_in_ruby"
 
-input_dir = File.expand_path('../tests_in_html', File.dirname(__FILE__))
-output_dir = File.expand_path('../tests_in_ruby', File.dirname(__FILE__))
-  
+def is_suite_file(f)
+  f.downcase == "suite.html"
+end
+
+def process_suite(suite_dir, suite_name, test_converter, suite_converter, file_copier)
+  children = Dir.children(suite_dir)
+  $reporter.missing_suite_file(suite_name) unless children.any? {|f| is_suite_file(f) }
+
+  children.each do |filename|
+    if is_suite_file(filename)
+      suite_converter.convert(suite_name)
+    elsif (File.extname(filename) == ".html")
+      test_converter.convert(suite_name, filename)
+    else
+      file_copier.copy(suite_name, filename)
+    end
+  end
+end
+
+input_dir = File.expand_path(input_dirname, File.dirname(__FILE__))
+output_dir = File.expand_path(output_dirname, File.dirname(__FILE__))
+
+$reporter = Converter::Reporter.new
+$reporter.command_line([ input_dir, output_dir ])
+
 FileUtils.remove_dir(output_dir) if File.exist?(output_dir)
 Dir.mkdir(output_dir)
 
-converter = Converter::Testfile::Converter.new(input_dir, output_dir)
-converter.convert("CreatePeople/AddFacultyInfo.html")
+test_converter = Converter::Testfile::Converter.new(input_dir, output_dir)
+suite_converter = Converter::Suitefile::Converter.new(input_dir, output_dir)
+file_copier = Converter::FileCopier.new(input_dir, output_dir)
+
+Dir.each_child(input_dir) do |suite_name|
+  suite_dir = File.expand_path(suite_name, input_dir)
+  if File.directory?(suite_dir)
+    process_suite(suite_dir, suite_name, test_converter, suite_converter, file_copier)
+  end
+end
+
+$reporter.report
 
 # TODO:
 #
