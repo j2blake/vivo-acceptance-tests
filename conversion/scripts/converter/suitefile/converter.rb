@@ -28,11 +28,16 @@ module Converter
     class Scratchpad
       def initialize(contents, suite_name)
         @contents = contents
-        @suite_name = suite_name
+        @contents = Common::Compressor.new(@contents).to_s
+        @contents = Common::WhiteSpaceRemover.new(@contents).to_s
+        @contents = Common::Commenter.new(@contents).to_s
+        @contents = RemoveUnneededLines.new(@contents).to_s
+        @contents = WrapperReplacer.new(@contents, suite_name).to_s
+        @contents = LinkReplacer.new(@contents).to_s
       end
 
       def to_s
-        @suite_name
+        @contents
       end
     end
   end

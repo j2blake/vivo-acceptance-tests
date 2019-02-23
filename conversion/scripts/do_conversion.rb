@@ -6,20 +6,27 @@ require_relative 'converter/reporter'
 require_relative 'converter/file_copier'
 require_relative 'converter/utils'
 require_relative 'converter/testfile/converter'
-require_relative 'converter/testfile/compressor'
-require_relative 'converter/testfile/white_space_remover'
-require_relative 'converter/testfile/commenter'
 require_relative 'converter/testfile/common_tag_replacer'
 require_relative 'converter/testfile/it_grouper'
 require_relative 'converter/testfile/wrapper_replacer'
 require_relative 'converter/testfile/tag_counter'
 require_relative 'converter/suitefile/converter'
+require_relative 'converter/suitefile/wrapper_replacer'
+require_relative 'converter/suitefile/link_replacer'
+require_relative 'converter/suitefile/remove_unneeded_lines'
+require_relative 'converter/common/commenter'
+require_relative 'converter/common/compressor'
+require_relative 'converter/common/white_space_remover'
 
 input_dirname = "../tests_in_html"
 output_dirname = "../tests_in_ruby"
 
 def is_suite_file(f)
   f.downcase == "suite.html"
+end
+
+def is_index_rebuilder(f)
+  f == "RebuildSearchIndex.html"
 end
 
 def process_suite(suite_dir, suite_name, test_converter, suite_converter, file_copier)
@@ -29,6 +36,8 @@ def process_suite(suite_dir, suite_name, test_converter, suite_converter, file_c
   children.each do |filename|
     if is_suite_file(filename)
       suite_converter.convert(suite_name)
+    elsif is_index_rebuilder(filename)
+      # skip it
     elsif (File.extname(filename) == ".html")
       test_converter.convert(suite_name, filename)
     else
@@ -61,10 +70,6 @@ $reporter.report
 
 # TODO:
 #
-# Go though all folders in the input directory
-# Create suite file
-# Create test files (with correct names)
-# Summarize? (how many suites, how many files, how many steps)
 # Summarize the un-converted tags (how many, list first 20 with locations)
 #
 # Remove wait for tinymce

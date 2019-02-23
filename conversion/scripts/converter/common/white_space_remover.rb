@@ -1,5 +1,8 @@
+#
+# Remove any spaces between the tags of <tr> and <td>, so they are in canonical form.
+#
 module Converter
-  module Testfile
+  module Common
     class WhiteSpaceRemover
       def initialize(contents)
         @contents = contents

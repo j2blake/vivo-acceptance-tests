@@ -1,5 +1,9 @@
+#
+# If we find a <tr> element stretched across multiple lines, 
+# compress it into a single line.
+#
 module Converter
-  module Testfile
+  module Common
     class Compressor
       def initialize(contents)
         @lines = []

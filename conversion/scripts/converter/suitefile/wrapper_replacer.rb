@@ -1,14 +1,15 @@
 #
-# Discard the lines at the top and bottom of the file, 
+# Discard the lines at the top and bottom of the file,
 # and replace them with better lines.
 #
 module Converter
-  module Testfile
+  module Suitefile
     class WrapperReplacer
-      def initialize(contents, label)
-        @label = label
+      def initialize(contents, suite_name)
+        @suite_name = suite_name
         @lines = []
         @discarding = true
+        @testfiles = collect_test_filenames(contents)
 
         contents.each_line do |line|
           @line = line.chomp
@@ -26,6 +27,15 @@ module Converter
         end
       end
 
+      def collect_test_filenames(contents)
+        contents.each_line.reduce([]) do |names, line|
+          line.match(/.*<a href="(.*)">.*/) do |m|
+            names << m[1]
+          end
+          names
+        end
+      end
+
       def last_discard_at_top
         @line.include? "<tbody>"
       end
@@ -35,7 +45,12 @@ module Converter
       end
 
       def write_top_wrapper_lines
-        @lines << "shared_examples \"%s\" do" % [ @label ]
+        @lines << "require_relative '../configuration'"
+        @testfiles.each do |fn|
+          @lines << "require_relative '%s'" % [ Utils::test_output_filename(fn) ]
+        end
+        @lines << ""
+        @lines << "describe '%s' do" % [ Utils::text_label(@suite_name) ]
         @discarding = false
       end
 

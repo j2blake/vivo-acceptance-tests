@@ -1,5 +1,8 @@
+# 
+# Turn every line of the file into a Ruby comment, so the file will run.
+#
 module Converter
-  module Testfile
+  module Common
     class Commenter
       def initialize(contents)
         @contents = contents
