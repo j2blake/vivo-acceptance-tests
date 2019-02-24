@@ -5,14 +5,14 @@ module SeleniumHelpers
   #
   # Get the page text, so we can test for particular content.
   #
-  def page_text
+  def browser_page_text
     $browser.find_element(:tag_name, "body").text
   end
 
   #
   # Selenium can't easily manipulate a <select> list unless it is wrapped.
   #
-  def find_select_list(selector, value)
+  def browser_find_select_list(selector, value)
     Selenium::WebDriver::Support::Select.new($browser.find_element(selector, value))
   end
 
@@ -30,7 +30,7 @@ module SeleniumHelpers
   #
   # Wait for the jQuery AJAX calls to complete before proceeding.
   #
-  def wait_for_jQuery
+  def browser_wait_for_jQuery
     sleep 0.5
     Selenium::WebDriver::Wait.new.until {
       $browser.execute_script("return ($.active == 0)")
