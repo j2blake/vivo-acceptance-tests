@@ -2,11 +2,11 @@ module Converter
   module Testfile
     class TagCounter
       def initialize(contents)
-        @how_many = contents.split("\n").keep_if { |line| line.match? /\s*#<tr>.*/ }.size
+        @tags = contents.split("\n").keep_if { |line| line.match? /\s*#<tr>.*/ }
       end
 
-      def how_many
-        @how_many
+      def tags
+        @tags
       end
     end
   end

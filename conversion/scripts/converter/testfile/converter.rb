@@ -26,9 +26,10 @@ module Converter
         @contents = Common::WhiteSpaceRemover.new(@contents).to_s
         @contents = Common::Commenter.new(@contents).to_s
         @contents = WrapperReplacer.new(@contents.to_s, label).to_s
+        @contents = UselessTagRemover.new(@contents).to_s
         @contents = CommonTagReplacer.new(@contents).to_s
         @contents = ItGrouper.new(@contents).to_s
-        $reporter.tags_remaining(TagCounter.new(@contents).how_many)
+        $reporter.tags_remaining(TagCounter.new(@contents).tags)
       end
 
       def to_s

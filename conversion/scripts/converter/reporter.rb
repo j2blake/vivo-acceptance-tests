@@ -6,6 +6,7 @@ module Converter
       @step_count = 0
       @copy_count = 0
       @tags_remaining = 0
+      @tags = []
       @missing_suite_count = 0
     end
 
@@ -32,8 +33,9 @@ module Converter
       @step_count += 1
     end
 
-    def tags_remaining(how_many)
-      @tags_remaining += how_many
+    def tags_remaining(tag_array)
+      @tags_remaining += tag_array.size
+      @tags = @tags.concat(tag_array).first(20)
     end
 
     def missing_suite_file(suite_name)
@@ -49,6 +51,7 @@ module Converter
       puts "%d missing suite files." % [ @missing_suite_count ]
       puts
       puts "%d UNKNOWN TAGS REMAIN." % [ @tags_remaining ]
+      @tags.each { |t| puts t }
       puts
     end
   end
