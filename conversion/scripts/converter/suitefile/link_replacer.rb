@@ -17,7 +17,7 @@ module Converter
       end
 
       def match_it(line)
-        line.match(/.*<a href="(.*?)">.*/)
+        line.match(/<a href="(.*?)">/)
       end
 
       def create_line(m)

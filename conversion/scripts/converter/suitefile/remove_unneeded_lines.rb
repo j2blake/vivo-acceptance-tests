@@ -15,11 +15,11 @@ module Converter
       end
 
       def is_rebuild_search_index(line)
-        line.match? %r{.*<a href="RebuildSearchIndex.html">.*}
+        line.match? %r{<a href="RebuildSearchIndex.html">}
       end
 
       def is_table_header(line)
-        line.match? %r{.*<b>Test Suite</b>.*}
+        line.match? %r{<b>Test Suite</b>}
       end
 
       def to_s

@@ -27,11 +27,11 @@ module Converter
       end
 
       def starting_buffer
-        (@line.match? %r{.*<tr>.*}) && ! (@line.match? %r{.*</tr>.*})
+        (@line.match? %r{<tr>}) && ! (@line.match? %r{</tr>})
       end
 
       def ending_buffer
-        @line.match? %r{.*</tr>.*}
+        @line.match? %r{</tr>}
       end
 
       def start_buffer

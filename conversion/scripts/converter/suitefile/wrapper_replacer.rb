@@ -29,7 +29,7 @@ module Converter
 
       def collect_test_filenames(contents)
         contents.each_line.reduce([]) do |names, line|
-          line.match(/.*<a href="(.*)">.*/) do |m|
+          line.match(/<a href="(.*)">/) do |m|
             names << m[1]
           end
           names

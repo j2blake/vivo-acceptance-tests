@@ -10,11 +10,11 @@ module Converter
       end
 
       def is_delete_cookies_tag
-        @line.match? %r{.*<td>deleteAllVisibleCookies</td>.*}
+        @line.match? %r{<td>deleteAllVisibleCookies</td>}
       end
 
       def is_wait_for_tinymce
-        @line.match? %r{.*<td>waitForElementPresent</td><td>tinymce</td>.*}
+        @line.match? %r{<td>waitForElementPresent</td><td>tinymce</td>}
       end
 
       def to_s
