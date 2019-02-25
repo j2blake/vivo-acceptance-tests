@@ -8,6 +8,8 @@ module Converter
           @line = line.chomp
 
           @replace =
+          replace_assert_confirmation ||
+          replace_assert_text_present ||
           replace_assert_title ||
           replace_click ||
           replace_click_and_wait ||
@@ -15,8 +17,12 @@ module Converter
           replace_select ||
           replace_tinymce ||
           replace_type ||
+          replace_verify_element_not_present ||
           replace_verify_element_present ||
-          replace_verify_text_present
+          replace_verify_text ||
+          replace_verify_text_not_present ||
+          replace_verify_text_present ||
+          replace_verify_value
 
           if @replace
             buffer += @replace + "    " + @line + "\n"
@@ -30,16 +36,28 @@ module Converter
           #     #<tr><td>sendKeys</td><td>id=object</td><td>${KEY_DOWN}</td></tr>
           # something like:     $browser.find_element(id: "object").send_keys(Selenium::WebDriver::Keys.down)
           #
-          # pause
-          #
-          # <tr><td>assertConfirmation</td><td>Are you SURE you want to delete this individual? If in doubt, CANCEL.</td><td></td></tr>
-          # <tr><td>waitForPageToLoad</td><td>10000</td><td></td></tr>
-          # Becomes (according to https://stackoverflow.com/questions/10178584/what-would-be-webdriver-equivalent-for-assertconfirmation)
-          #   final String text = "Are you sure you want to logout?";
-          #   assertTrue(driver.switchTo().alert().getText().equals(text));
+        end
+      end
 
-          #
-          # Actually, this is also what the official docs recommend: "findElement should not be used to look for non-present elements, use findElements(By) and assert zero length response instead."
+      #
+      # #<tr><td>assertConfirmation</td><td>Are you SURE you want to delete this individual?</td><td></td></tr>
+      #   becomes
+      # expect($browser.switchTo.alert.text).to eq("Are you SURE you want to delete this individual?")
+      #
+      def replace_assert_confirmation()
+        @line.match %r{<td>assertConfirmation</td><td>(.+?)</td>} do |m|
+          interpret("expect($browser.switchTo.alert.text).to eq(\"%s\")", value(m[1]))
+        end
+      end
+
+      #
+      # <tr><td>assertTextPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
+      #   becomes
+      # expect(browser_page_text).to include("Librarian, Lily Lou")
+      #
+      def replace_assert_text_present()
+        @line.match %r{<td>assertTextPresent</td><td>(.+?)</td>} do |m|
+          interpret("expect(browser_page_text).to include(\"%s\")", value(m[1]))
         end
       end
 
@@ -115,8 +133,19 @@ module Converter
       # $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
       #
       def replace_type()
-        @line.match %r{td>type</td><td>(.+?)</td><td>(.+?)</td>} do |m|
+        @line.match %r{td>type</td><td>(.+?)</td><td>(.*?)</td>} do |m|
           interpret("$browser.find_element(\"%s\").send_keys(\"%s\")", element_spec(m[1]), value(m[2]))
+        end
+      end
+
+      #
+      # <tr><td>verifyElementNotPresent</td><td>link=Faculty, Jane</td><td></td></tr>
+      #   becomes
+      # expect($browser.find_elements(:link_name, "Faculty, Jane")).size.to eq(0)
+      #
+      def replace_verify_element_not_present()
+        @line.match %r{<td>verifyElementNotPresent</td><td>(.+?)</td>} do |m|
+          interpret("expect($browser.find_elements(\"%s\")).size.to eq(0)", element_spec(m[1]))
         end
       end
 
@@ -132,6 +161,28 @@ module Converter
       end
 
       #
+      # <tr><td>verifyText</td><td>css=h2.searchResultsHeader</td><td>Search results for 'lecturer'</td></tr>
+      #   becomes
+      # expect($browser.find_element(:css, 'h2.searchResultsHeader').text).to eq("Search results for 'lecturer'")
+      #
+      def replace_verify_text()
+        @line.match %r{td>verifyText</td><td>(.+?)</td><td>(.+?)</td>} do |m|
+          interpret("expect($browser.find_element(%s).text).to eq(\"%s\")", element_spec(m[1]), value(m[2]))
+        end
+      end
+
+      #
+      # <tr><td>verifyTextNotPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
+      #   becomes
+      # expect(browser_page_text).not_to include("Librarian, Lily Lou")
+      #
+      def replace_verify_text_not_present()
+        @line.match %r{<td>verifyTextNotPresent</td><td>(.+?)</td>} do |m|
+          interpret("expect(browser_page_text).not_to include(\"%s\")", value(m[1]))
+        end
+      end
+
+      #
       # <tr><td>verifyTextPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
       #   becomes
       # expect(browser_page_text).to include("Librarian, Lily Lou")
@@ -139,6 +190,17 @@ module Converter
       def replace_verify_text_present()
         @line.match %r{<td>verifyTextPresent</td><td>(.+?)</td>} do |m|
           interpret("expect(browser_page_text).to include(\"%s\")", value(m[1]))
+        end
+      end
+
+      #
+      # <tr><td>verifyValue</td><td>id=offerCreate</td><td>Add a new item of this type</td></tr>
+      #   becomes
+      # expect($browser.find_element(:id, "offerCreate")["value"]).to eq("Add a new item of this type")
+      #
+      def replace_verify_value()
+        @line.match %r{td>verifyValue</td><td>(.+?)</td><td>(.+?)</td>} do |m|
+          interpret("expect($browser.find_element(%s)[\"value\"]).to eq(\"%s\")", element_spec(m[1]), value(m[2]))
         end
       end
 

@@ -5,8 +5,7 @@ module Converter
       @test_count = 0
       @step_count = 0
       @copy_count = 0
-      @tags_remaining = 0
-      @tags = []
+      @tags_remaining = []
       @missing_suite_count = 0
     end
 
@@ -34,8 +33,7 @@ module Converter
     end
 
     def tags_remaining(tag_array)
-      @tags_remaining += tag_array.size
-      @tags = @tags.concat(tag_array).first(20)
+      @tags_remaining = @tags_remaining.concat(tag_array)
     end
 
     def missing_suite_file(suite_name)
@@ -50,8 +48,8 @@ module Converter
       puts "Copied %d files." % [ @copy_count ]
       puts "%d missing suite files." % [ @missing_suite_count ]
       puts
-      puts "%d UNKNOWN TAGS REMAIN." % [ @tags_remaining ]
-      @tags.each { |t| puts t }
+      puts "%d UNKNOWN TAGS REMAIN." % [ @tags_remaining.size ]
+      @tags_remaining.shuffle.first(20).each { |t| puts t }
       puts
     end
   end
