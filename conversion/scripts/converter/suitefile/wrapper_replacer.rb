@@ -45,12 +45,12 @@ module Converter
       end
 
       def write_top_wrapper_lines
-        @lines << "require_relative '../configuration'"
+        @lines << "require_relative '../../configuration'"
         @testfiles.each do |fn|
           @lines << "require_relative '%s'" % [ Utils::test_output_filename(fn) ]
         end
         @lines << ""
-        @lines << "describe '%s' do" % [ Utils::text_label(@suite_name) ]
+        @lines << "describe '%s' do" % [ Utils::step_label(@suite_name) ]
         @discarding = false
       end
 

@@ -36,7 +36,9 @@ module Converter
       end
 
       def start_buffer
-        @buffer = [ @line.sub(%r{#\s*<!--(.*)-->\s*}, '  it "\1" do') ]
+        step_name = escape_quotes(@line.match(%r{<!--(.*)-->})[1])
+        @buffer = []
+        @buffer << "  it \"%s\" do" %  [ step_name ]
         @buffering = true
       end
 
@@ -53,6 +55,10 @@ module Converter
 
       def write_line_to_lines
         @lines << @line
+      end
+      
+      def escape_quotes(raw)
+        raw.gsub(%r{"}, "_")
       end
 
       def to_s

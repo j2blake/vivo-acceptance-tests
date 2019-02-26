@@ -4,7 +4,8 @@
 module Converter
   module Suitefile
     class LinkReplacer
-      def initialize(contents)
+      def initialize(contents, suite_name)
+        @suite_name = suite_name
         @lines = []
         contents.each_line do |line|
           m = match_it(line)
@@ -17,12 +18,13 @@ module Converter
       end
 
       def match_it(line)
-        line.match(/<a href="(.*?)">/)
+        line.match(/<a href="(.*?)\">/)
       end
 
       def create_line(m)
-        label = Utils::text_label(m[1])
-        "  describe '%s' { include_examples '%s' }" % [ label, label ]
+        examples_label = Utils::shared_examples_label(@suite_name, m[1])
+        step_label = Utils::step_label(m[1])
+        "  describe '%s' do \n    include_examples '%s' \n  end" % [ step_label, examples_label ]
       end
 
       def to_s

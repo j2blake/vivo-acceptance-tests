@@ -48,8 +48,9 @@ def process_suite(suite_dir, suite_name, test_converter, suite_converter, file_c
   end
 end
 
+# TODO: generalize these paths!
 input_dir = File.expand_path(input_dirname, File.dirname(__FILE__))
-output_dir = File.expand_path(output_dirname, File.dirname(__FILE__))
+output_dir = "/Users/jeb228/Development/VIVO/AcceptanceTests/projects/vivo-acceptance-tests/rubytests/spec/converted"
 
 $reporter = Converter::Reporter.new
 $reporter.command_line([ input_dir, output_dir ])
@@ -71,8 +72,6 @@ end
 $reporter.report
 
 # TODO:
-#
-# Summarize the un-converted tags (how many, list first 20 with locations)
 #
 # Remove wait for tinymce
 # Replace login and logout

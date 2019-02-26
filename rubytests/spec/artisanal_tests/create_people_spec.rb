@@ -1,4 +1,4 @@
-require_relative 'configuration'
+require_relative '../configuration'
 require_relative '_create_faculty_member'
 require_relative '_create_librarian'
 

@@ -79,7 +79,7 @@ module Converter
       #
       def replace_click()
         @line.match %r{<td>click</td><td>(.+?)</td>} do |m|
-          interpret("$browser.find_element(\"%s\").click", element_spec(m[1]))
+          interpret("$browser.find_element(%s).click", element_spec(m[1]))
         end
       end
 
@@ -90,7 +90,7 @@ module Converter
       #
       def replace_click_and_wait()
         @line.match %r{<td>clickAndWait</td><td>(.+?)</td>} do |m|
-          interpret("$browser.find_element(\"%s\").click", element_spec(m[1]))
+          interpret("$browser.find_element(%s).click", element_spec(m[1]))
         end
       end
 
@@ -112,30 +112,42 @@ module Converter
       #
       def replace_select()
         @line.match %r{<td>select</td><td>(.+?)</td><td>label=(.+?)</td>} do |m|
-          interpret("browser_find_select_list(\"%s\").select_by(:text, \"%s\"))", element_spec(m[1]), value(m[2]))
+          interpret("browser_find_select_list(%s).select_by(:text, \"%s\")", element_spec(m[1]), value(m[2]))
         end
       end
 
       #
       # <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('I study monkeys.')</td><td></td></tr>
       #   becomes
-      # browser_fill_tinyMCE('I study monkeys')
+      # browser_fill_tinyMCE("I study monkeys")
       #
       def replace_tinymce()
-        @line.match %r{<td>tinyMCE.activeEditor.setContent\((.*)\)</td>} do |m|
-          interpret("browser_fill_tinyMCE(%s)", value(m[1]))
+        @line.match %r{<td>tinyMCE.activeEditor.setContent\(['"](.*)['"]\)</td>} do |m|
+          interpret("browser_fill_tinyMCE(\"%s\")", value(m[1]))
         end
       end
 
       #
-      #<tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
+      # Special case for typing file paths:
+      # <tr><td>type</td><td>name=rdfStream</td><td>C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8</td></tr>
+      #   becomes
+      # $browser.find_element(:name, "rdfStream").send_keys(tester_filepath("Test-utf8"))
+      #
+      # Else:
+      # <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
       #   becomes
       # $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
       #
       def replace_type()
-        @line.match %r{td>type</td><td>(.+?)</td><td>(.*?)</td>} do |m|
-          interpret("$browser.find_element(\"%s\").send_keys(\"%s\")", element_spec(m[1]), value(m[2]))
+        response = @line.match %r{td>type</td><td>(.+?)</td><td>C:(.*?)</td>} do |m|
+          interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\"))", element_spec(m[1]), strip_file_path(m[2]))
         end
+        unless response
+          response = @line.match %r{td>type</td><td>(.+?)</td><td>(.*?)</td>} do |m|
+            interpret("$browser.find_element(%s).send_keys(\"%s\")", element_spec(m[1]), value(m[2]))
+          end
+        end
+        response
       end
 
       #
@@ -145,7 +157,7 @@ module Converter
       #
       def replace_verify_element_not_present()
         @line.match %r{<td>verifyElementNotPresent</td><td>(.+?)</td>} do |m|
-          interpret("expect($browser.find_elements(\"%s\")).size.to eq(0)", element_spec(m[1]))
+          interpret("expect($browser.find_elements(%s)).size.to eq(0)", element_spec(m[1]))
         end
       end
 
@@ -156,7 +168,7 @@ module Converter
       #
       def replace_verify_element_present()
         @line.match %r{<td>verifyElementPresent</td><td>(.+?)</td>} do |m|
-          interpret("$browser.find_element(\"%s\")", element_spec(m[1]))
+          interpret("$browser.find_element(%s)", element_spec(m[1]))
         end
       end
 
@@ -262,6 +274,18 @@ module Converter
       #
       def value(raw)
         CGI.unescapeHTML(raw.strip).gsub('"', '\"')
+      end
+
+      # Convert a windows-based absolute file path to just the name.ext
+      #
+      # C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8.n3
+      #   becomes
+      # Test-utf8.n3
+      #
+      def strip_file_path(absolute)
+        absolute.match %r{[^\\]*$} do |m|
+          m[0]
+        end
       end
 
       def to_s

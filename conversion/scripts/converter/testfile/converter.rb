@@ -14,7 +14,7 @@ module Converter
 
         Utils::create_directory_for(output_path)
 
-        scratchpad = Scratchpad.new(File.read(input_path), Utils::text_label(input_path))
+        scratchpad = Scratchpad.new(File.read(input_path), Utils::shared_examples_label(suite_name, input_path))
         IO.write(output_path, scratchpad.to_s)
       end
     end

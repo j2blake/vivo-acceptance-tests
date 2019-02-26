@@ -3,8 +3,8 @@
 #
 require "selenium-webdriver"
 
-require_relative "../helpers/selenium_helpers"
-require_relative "../helpers/vivo_helpers"
+require_relative "helpers/selenium_helpers"
+require_relative "helpers/vivo_helpers"
 
 #
 # At startup, fix the configuration the way we like it.
@@ -39,10 +39,13 @@ RSpec.configure do |config|
   #
   # If a test fails, save a screen-shot and the HTML.
   #
+  # TODO Parameterize the location!
+  #
   config.after(:each) do |example|
+    failure_path = "/Users/jeb228/Development/VIVO/AcceptanceTests/output/failures/"
     if example.exception
-      $browser.save_screenshot(example.full_description + ".png")
-      File.open(example.full_description + ".html", "w") do |f|
+      $browser.save_screenshot(failure_path + example.full_description + ".png")
+      File.open(failure_path + example.full_description + ".html", "w") do |f|
         f.puts $browser.page_source
       end
     end

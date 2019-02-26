@@ -48,8 +48,16 @@ cp -r $BASEDIR/rdf/* $OUT_DIR/home/rdf
 #
 if [ -d "$OUT_DIR/logs" ]; then
   rm -r $OUT_DIR/logs
-  mkdir $OUT_DIR/logs
 fi
+mkdir $OUT_DIR/logs
+
+#
+# Ensure that a clean directory exists for failure recording (in output directory)
+#
+if [ -d "$OUT_DIR/failures" ]; then
+  rm -r $OUT_DIR/failures
+fi
+mkdir $OUT_DIR/failures
 
 #
 # Assemble the context directory (in the output directory)
