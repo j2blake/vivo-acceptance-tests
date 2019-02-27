@@ -27,6 +27,7 @@ module Converter
         @contents = Common::Commenter.new(@contents).to_s
         @contents = WrapperReplacer.new(@contents.to_s, label).to_s
         @contents = UselessTagRemover.new(@contents).to_s
+        @contents = PhraseReplacer.new(@contents, label).to_s
         @contents = UncertainTagDeferrer.new(@contents).to_s
         @contents = CommonTagReplacer.new(@contents).to_s
         @contents = ItGrouper.new(@contents).to_s
