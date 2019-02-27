@@ -1,6 +1,6 @@
 shared_examples "Create a Faculty Member" do
   it "logs in as Admin" do
-    vivo_login_as("test_admin@mydomain.edu", "Password")
+    vivo_login_as("testAdmin@mydomain.edu", "Password")
   end
 
   it "decides to add a faculty member" do

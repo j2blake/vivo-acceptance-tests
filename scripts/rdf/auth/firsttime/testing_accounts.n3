@@ -8,7 +8,7 @@
         a                        auth:UserAccount ;
         auth:firstName           "Admin" ;
         auth:lastName            "Tester" ;
-        auth:emailAddress        "test_admin@mydomain.edu" ;
+        auth:emailAddress        "testAdmin@mydomain.edu" ;
         auth:hasPermissionSet    auth:ADMIN ;
         auth:argon2password      "$argon2i$v=19$m=1024,t=1000,p=1$vL+CP9m8CxFsJ9Kok5wwmA$3c95CBIq7I3fz0tniH/JIZkDiJl92Upk5pV+iP8bHc4" ;
         auth:lastLoginTime       "1550599178615"^^xsd:long ;

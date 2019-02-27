@@ -256,8 +256,8 @@ module Converter
         raw.match %r{^(//.+)} do |m| # implicit XPath
           return ":xpath, \"%s\"" % adjust_xpath(value(m[1]))
         end
-        raw.match %r{^(.+)} do |m| # implicit name
-          return ":name, \"%s\"" % adjust_xpath(value(m[1]))
+        raw.match %r{^(.+)} do |m| # implicit id
+          return ":id, \"%s\"" % adjust_xpath(value(m[1]))
         end
         nil
       end

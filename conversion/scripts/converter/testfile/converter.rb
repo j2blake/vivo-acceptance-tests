@@ -28,6 +28,10 @@ module Converter
         @contents = WrapperReplacer.new(@contents.to_s, label).to_s
         @contents = UselessTagRemover.new(@contents).to_s
 
+        @parsed = Parser.new.parse(@contents)
+        @parsed = UserAccountReplacer.new(@parsed).go
+        @contents = Parser.new.unparse(@parsed)
+
         @contents = PhraseReplacer.new(@contents, label).to_s
         @contents = UncertainTagDeferrer.new(@contents).to_s
         

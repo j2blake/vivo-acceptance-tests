@@ -1,6 +1,6 @@
 shared_examples "Create a Librarian" do
   it "logs in as Admin" do
-    vivo_login_as("test_admin@mydomain.edu", "Password")
+    vivo_login_as("testAdmin@mydomain.edu", "Password")
   end
 
   it "decides to add a librarian" do
