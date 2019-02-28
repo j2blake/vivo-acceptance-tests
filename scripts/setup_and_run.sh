@@ -98,4 +98,5 @@ java -Dcatalina.base=$OUT_DIR \
      -jar $BASEDIR/jetty/jetty-runner-9.4.9.v20180320.jar \
      --out $OUT_DIR/logs/jetty_runner.log \
      --log $OUT_DIR/logs/request.log \
-     --path /vivo $OUT_DIR/context/vivo
+     --path /vivo $OUT_DIR/context/vivo \
+     --stop-port 8181 --stop-key abc123

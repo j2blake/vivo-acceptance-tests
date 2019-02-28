@@ -4,6 +4,8 @@
 require "selenium-webdriver"
 
 require_relative "helpers/selenium_helpers"
+require_relative "helpers/settings"
+require_relative "helpers/webserver"
 require_relative "helpers/vivo_helpers"
 
 #
@@ -31,21 +33,35 @@ RSpec.configure do |config|
     options.add_argument('--headless')
     options.add_argument('--window-size=1200x1200')
     $browser = Selenium::WebDriver.for :chrome, options: options
+    $settings = Settings.new
+    $webserver = Webserver.new
+    
+    if $webserver.running?
+      puts
+      puts "The webserver wasn't shut down."
+      puts
+      exit(false)
+    end
+    $webserver.start
   end
   config.after(:all) do
     $browser.quit
+  end
+ 
+  # 
+  # Failure or not, stop the webserver at the end of each suite.
+  #
+  config.after(:all) do
+    $webserver.stop
   end
 
   #
   # If a test fails, save a screen-shot and the HTML.
   #
-  # TODO Parameterize the location!
-  #
   config.after(:each) do |example|
-    failure_path = "/Users/jeb228/Development/VIVO/AcceptanceTests/output/failures/"
     if example.exception
-      $browser.save_screenshot(failure_path + example.full_description + ".png")
-      File.open(failure_path + example.full_description + ".html", "w") do |f|
+      $browser.save_screenshot($settings.failure_path + example.full_description + ".png")
+      File.open($settings.failure_path + example.full_description + ".html", "w") do |f|
         f.puts $browser.page_source
       end
     end

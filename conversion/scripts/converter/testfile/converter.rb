@@ -30,9 +30,9 @@ module Converter
 
         @parsed = Parser.new.parse(@contents)
         @parsed = UserAccountReplacer.new(@parsed).go
+        @parsed = PhraseReplacer.new(@parsed, label).go
         @contents = Parser.new.unparse(@parsed)
 
-        @contents = PhraseReplacer.new(@contents, label).to_s
         @contents = UncertainTagDeferrer.new(@contents).to_s
         
         @parsed = Parser.new.parse(@contents)

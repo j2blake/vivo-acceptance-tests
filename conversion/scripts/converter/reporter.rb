@@ -1,6 +1,7 @@
 module Converter
   class Reporter
     def initialize
+      @args = ARGV
       @suite_count = 0
       @test_count = 0
       @step_count = 0

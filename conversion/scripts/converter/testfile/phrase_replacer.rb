@@ -1,15 +1,15 @@
 module Converter
   module Testfile
     class PhraseReplacer
-      def initialize(contents, label)
+      def initialize(lines, label)
         @label = label
-        @lines = contents.split("\n")
-        @lines = LoginReplacer.new(@lines).lines
-        @lines = LogoutReplacer.new(@lines).lines
+        @lines = lines
       end
 
-      def to_s
-        @lines.join("\n")
+      def go
+        @lines = LoginReplacer.new(@lines).lines
+        @lines = LogoutReplacer.new(@lines).lines
+        @lines
       end
     end
 
@@ -17,61 +17,70 @@ module Converter
       def initialize(lines)
         @lines = lines
 
-        find_first_line &&
-        find_matching_last_line &&
-        validate_range &&
-        extend_beginning &&
-        find_login_name &&
-        find_password &&
-        replace
+        while
+          find_first_line &&
+          find_matching_last_line &&
+          validate_range &&
+          extend_beginning &&
+          find_login_name &&
+          find_password do
+          replace
+        end
       end
 
       def find_first_line
-        @first_index = @lines.find_index { |line| line.match? %r{<td>clickAndWait</td><td>link=Log in</td>} }
+        @first_index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log in$/) }
       end
 
       def find_matching_last_line
-        found = @lines[@first_index..-1].find_index { |line| line.match? %r{<td>clickAndWait</td><td>loginForm</td>} }
+        found = @lines[@first_index..-1].find_index { |line| line.match(/^clickAndWait$/, /^loginForm$/) }
         @last_index = found ? found + @first_index : nil
       end
 
       def validate_range
         @lines[(@first_index + 1)..(@last_index - 1)].each do |line|
           return nil unless
-          line.match?(%r{<!--.+-->}) ||
-          line.match?(%r{<td>assertTitle</td>}) ||
-          line.match?(%r{<td>open</td><td>/vivo/</td>}) ||
-          line.match?(%r{<td>type</td><td>loginName</td>}) ||
-          line.match?(%r{<td>type</td><td>loginPassword</td>})
+          line.comment ||
+          line.match(/^assertTitle$/) ||
+          line.match(/^open$/, %r{^/vivo/$}) ||
+          line.match(/^type$/, /^loginName$/) ||
+          line.match(/^type$/, /^loginPassword$/) ||
+          line.match(/^verifyTextPresent$/, /^Log in$/)
         end
         true
       end
 
       def extend_beginning
-        while @lines[@first_index - 1].match?(%r{<!--.+-->}) ||
-          @lines[@first_index - 1].match?(%r{<td>open</td><td>/vivo/</td>}) ||
-          @lines[@first_index - 1].match?(%r{<td>assertTitle</td><td>VIVO</td>})
+        while @lines[@first_index - 1].comment ||
+          @lines[@first_index - 1].match(/^open$/, %r{^/vivo/$}) ||
+          @lines[@first_index - 1].match(/^assertTitle$/, /^VIVO$/)
           @first_index -= 1
         end
         true
       end
 
       def find_login_name
-        @lines[@first_index..@last_index].join(" ").match(%r{<td>type</td><td>loginName</td><td>(.*?)</td>}) do |m|
-          @login_name = m[1]
+        @lines[@first_index..@last_index].each do |line|
+          line.match(/^type$/, /^loginName$/) do |m|
+            return @login_name = m[2][0]
+          end
         end
+        nil
       end
 
       def find_password
-        @lines[@first_index..@last_index].join(" ").match(%r{<td>type</td><td>loginPassword</td><td>(.*?)</td>}) do |m|
-          @password = m[1]
+        @lines[@first_index..@last_index].each do |line|
+          line.match(/^type$/, /^loginPassword$/) do |m|
+            return @password = m[2][0]
+          end
         end
+        nil
       end
 
       def replace
-        replacement = "vivo_login_as(\"#{@login_name}\", \"#{@password}\")"
-        comments = @lines[@first_index..@last_index].select { |l| l.match?(%r{<!--.+-->}) }
-          
+        replacement = Line.new("vivo_login_as(\"#{@login_name}\", \"#{@password}\")")
+        comments = @lines[@first_index..@last_index].select { |l| l.comment }
+
         @lines = @lines[0..(@first_index - 1)].concat(comments).append(replacement).concat(@lines[(@last_index + 1)..-1])
         $reporter.replace_phrase(:login, @last_index + 1 - @first_index - comments.size)
       end
@@ -84,25 +93,39 @@ module Converter
     class LogoutReplacer
       def initialize(lines)
         @lines = lines
-        if start_line = find_start
-          if end_line = find_end
-            if lines_are_valid
-              replace_range
-            end
-          end
+
+        while
+          find_first_line &&
+          find_matching_second_line &&
+          extend_beginning &&
+          replace
         end
       end
 
-      def find_start
+      def find_first_line
+        @first_index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log out$/) }
       end
 
-      def find_end
+      def find_matching_second_line
+        @lines[@first_index + 1].match(/^assertTitle$/, /^VIVO$/) do
+          @last_index = @first_index + 1
+        end
       end
 
-      def lines_are_valid
+      def extend_beginning
+        while @lines[@first_index - 1].comment ||
+          @lines[@first_index - 1].match(/^clickAndWait$/, /^link=Home$/)
+          @first_index -= 1
+        end
+        true
       end
 
-      def replace_range
+      def replace
+        replacement = Line.new("vivo_logout")
+        comments = @lines[@first_index..@last_index].select { |l| l.comment }
+
+        @lines = @lines[0..(@first_index - 1)].concat(comments).append(replacement).concat(@lines[(@last_index + 1)..-1])
+        $reporter.replace_phrase(:logout, @last_index + 1 - @first_index - comments.size)
       end
 
       def lines

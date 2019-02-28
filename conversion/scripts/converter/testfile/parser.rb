@@ -43,7 +43,11 @@ module Converter
         (m1 = @field2.match(regex2)) &&
         (m2 = @field3.match(regex3))
           # puts "%s: match '%s', '%s', '%s' ==> '%s', '%s', '%s'" % [ self, regex1, regex2, regex3, m0, m1, m2 ]
-          yield [ m0, m1, m2 ] if block_given?
+          if block_given?
+            yield [ m0, m1, m2 ]
+          else
+            true
+          end
         else
           nil
         end

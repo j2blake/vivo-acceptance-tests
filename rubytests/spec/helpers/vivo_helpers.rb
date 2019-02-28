@@ -55,6 +55,8 @@ module VivoHelpers
   #
   # The relative URL should begin with a '/'
   #
+  # TODO - get the base URL from Settings, join with a slash if needed.
+  #
   def vivo_url(page)
     "http://localhost:8080/vivo%s" % [page]
   end
