@@ -31,7 +31,6 @@ module VivoHelpers
     admin_menu = $browser.find_element(:id, "user-menu")
     $browser.action.move_to(admin_menu).perform
     $browser.find_element(:link_text, "Log out").click
-    expect($browser.title).to eq("VIVO")
   end
 
   #

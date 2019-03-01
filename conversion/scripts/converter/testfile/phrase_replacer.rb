@@ -95,37 +95,20 @@ module Converter
         @lines = lines
 
         while
-          find_first_line &&
-          find_matching_second_line &&
-          extend_beginning &&
+          find_logout_line &&
           replace
         end
       end
 
-      def find_first_line
-        @first_index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log out$/) }
-      end
-
-      def find_matching_second_line
-        @lines[@first_index + 1].match(/^assertTitle$/, /^VIVO$/) do
-          @last_index = @first_index + 1
-        end
-      end
-
-      def extend_beginning
-        while @lines[@first_index - 1].comment ||
-          @lines[@first_index - 1].match(/^clickAndWait$/, /^link=Home$/)
-          @first_index -= 1
-        end
-        true
+      def find_logout_line
+        @index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log out$/) }
       end
 
       def replace
         replacement = Line.new("vivo_logout")
-        comments = @lines[@first_index..@last_index].select { |l| l.comment }
 
-        @lines = @lines[0..(@first_index - 1)].concat(comments).append(replacement).concat(@lines[(@last_index + 1)..-1])
-        $reporter.replace_phrase(:logout, @last_index + 1 - @first_index - comments.size)
+        @lines = @lines[0..(@index - 1)].append(replacement).concat(@lines[(@index + 1)..-1])
+        $reporter.replace_phrase(:logout, 1)
       end
 
       def lines
