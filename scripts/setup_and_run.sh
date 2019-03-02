@@ -86,6 +86,9 @@ cp /Users/jeb228/.m2/repository/org/apache/lucene/lucene-sandbox/7.6.0/lucene-sa
 cp $BASEDIR/kluge/catalina.jar $OUT_DIR/context/vivo/WEB-INF/lib
 cp $BASEDIR/kluge/startup_listeners.txt $OUT_DIR/context/vivo/WEB-INF/resources
 
+# Locate VIVOSOLR War
+cp $VIVODIR/installer/solr/target/vivosolr.war $OUT_DIR
+
 #
 # Run it
 #
@@ -95,8 +98,10 @@ cp $BASEDIR/kluge/startup_listeners.txt $OUT_DIR/context/vivo/WEB-INF/resources
 #
 java -Dcatalina.base=$OUT_DIR \
      -Dvitro.home=$OUT_DIR/home \
+     -Dsolr.solr.home=$OUT_DIR/home/solr \
      -jar $BASEDIR/jetty/jetty-runner-9.4.9.v20180320.jar \
      --out $OUT_DIR/logs/jetty_runner.log \
      --log $OUT_DIR/logs/request.log \
+     --path /vivosolr $OUT_DIR/vivosolr.war \
      --path /vivo $OUT_DIR/context/vivo \
      --stop-port 8181 --stop-key abc123

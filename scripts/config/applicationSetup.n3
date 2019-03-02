@@ -68,8 +68,8 @@
 :instrumentedSearchEngineWrapper 
     a   vitroWebapp:searchengine.InstrumentedSearchEngineWrapper , 
         vitroWebapp:modules.searchEngine.SearchEngine ;
-#    :wraps :solrSearchEngine .
-    :wraps :transientSearchEngine .
+    :wraps :solrSearchEngine .
+#    :wraps :transientSearchEngine .
 
 :solrSearchEngine
     a   vitroWebapp:searchengine.solr.SolrSearchEngine ,
