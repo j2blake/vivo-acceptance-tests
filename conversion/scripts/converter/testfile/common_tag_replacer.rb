@@ -145,7 +145,7 @@ module Converter
     #
     def replace_type()
       response = @line.match(/^type$/, /.*/, /^C:(.*)$/) do |m|
-        interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\"))", element_spec(m[1][0]), strip_file_path(m[2][1]))
+        interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\", __FILE__))", element_spec(m[1][0]), strip_file_path(m[2][1]))
       end
       unless response
         response = @line.match(/^type$/) do |m|

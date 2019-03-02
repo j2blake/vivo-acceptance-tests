@@ -5,6 +5,7 @@ require "selenium-webdriver"
 
 require_relative "helpers/selenium_helpers"
 require_relative "helpers/settings"
+require_relative "helpers/tester_helpers"
 require_relative "helpers/webserver"
 require_relative "helpers/vivo_helpers"
 
@@ -17,6 +18,7 @@ RSpec.configure do |config|
   # Make these helper methods available to the tests.
   #
   config.include SeleniumHelpers
+  config.include TesterHelpers
   config.include VivoHelpers
 
   #
