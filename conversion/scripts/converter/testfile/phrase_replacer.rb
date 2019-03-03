@@ -1,3 +1,5 @@
+require_relative 'parsing_utils'
+
 module Converter
   module Testfile
     class PhraseReplacer
@@ -9,6 +11,7 @@ module Converter
       def go
         @lines = LoginReplacer.new(@lines).lines
         @lines = LogoutReplacer.new(@lines).lines
+        @lines = SubmitReplacer.new(@lines).lines
         @lines
       end
     end
@@ -109,6 +112,75 @@ module Converter
 
         @lines = @lines[0..(@index - 1)].append(replacement).concat(@lines[(@index + 1)..-1])
         $reporter.replace_phrase(:logout, 1)
+      end
+
+      def lines
+        @lines
+      end
+    end
+
+    #
+    # When do we need to wait for indexing? Usually when clicking the submit on an editing
+    # form.
+    #
+    # So, if we see
+    # 1) We go to an editing form:
+    #       <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+    # 2) We do some stuff
+    #       ...Anything that doesn't include an "assertTitle"...
+    # 3) We click the "submit" button
+    #       #<tr><td>clickAndWait</td><td>id=submit</td><td></td></tr>
+    # 4) And it takes us to another page
+    #       #<tr><td>assertTitle</td><td>...anything...</td><td></td></tr>
+    # Then,
+    #  1) Replace the submit button with a call to vivo_click_and_wait_for_indexing
+    #
+    class SubmitReplacer
+      include ParsingUtils
+      #
+      def initialize(lines)
+        @lines = lines
+
+        @lines.each_index do |index|
+          if is_first_line(index) && find_submit_line && goes_immediately_to_new_page
+            replace
+          end
+        end
+      end
+
+      def is_first_line(index)
+        @lines[index].match(/^assertTitle$/, /^Edit$/) do
+          @first_index = index
+        end
+      end
+
+      def find_submit_line
+        puts "finding submit_line"
+        ((@first_index + 1)...@lines.size).each do |index|
+          line = @lines[index]
+          if line.match(/^assertTitle$/)
+            return nil
+          elsif line.match(/^clickAndWait$/)
+            puts "field2 '#{line.field2}'"
+            if ["submit", "id=submit", "css=input.submit"].include?(line.field2)
+              @submit_spec = element_spec(line.field2)
+              return @submit_index = index
+            end
+          end
+        end
+        nil
+      end
+
+      def goes_immediately_to_new_page
+        puts "check new page"
+        @lines[@submit_index + 1].match(/^assertTitle$/)
+      end
+
+      def replace
+        "replace"
+        replacement = Line.new("vivo_logout")
+        @lines[@submit_index] = Line.new("vivo_click_and_wait_for_indexing(%s)" % [ @submit_spec ])
+        $reporter.replace_phrase(:submit, 1)
       end
 
       def lines

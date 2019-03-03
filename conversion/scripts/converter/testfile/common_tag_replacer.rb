@@ -1,8 +1,11 @@
 require("cgi")
+require_relative 'parsing_utils'
 
 module Converter
   module Testfile
     class CommonTagReplacer
+      include ParsingUtils
+      #
       def initialize(parsed)
         @parsed = parsed
       end
@@ -110,117 +113,117 @@ module Converter
         end
       end
 
-    #
-    # <tr><td>select</td><td>typeSelector</td><td>label=Academic Article</td></tr>
-    #   becomes
-    # browser_find_select_list(:name, "typeSelector").select_by(:text, "Academic Article")
-    #
-    def replace_select()
-      @line.match(/^select$/, /.*/, /^label=/) do
-        interpret("browser_find_select_list(%s).select_by(:text, \"%s\")", element_spec(@line.field2), value(@line.field3[6..-1]))
-      end
-    end
-
-    #
-    # <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('I study monkeys.')</td><td></td></tr>
-    #   becomes
-    # browser_fill_tinyMCE("I study monkeys")
-    #
-    def replace_tinymce()
-      @line.match(/^runScript$/, /^tinyMCE.activeEditor.setContent\(['"](.*)['"]\)$/) do |m|
-        interpret("browser_fill_tinyMCE(\"%s\")", value(m[1][1]))
-      end
-    end
-        
-    #
-    # Special case for typing file paths:
-    # <tr><td>type</td><td>name=rdfStream</td><td>C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8</td></tr>
-    #   becomes
-    # $browser.find_element(:name, "rdfStream").send_keys(tester_filepath("Test-utf8"))
-    #
-    # Else:
-    # <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
-    #   becomes
-    # $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
-    #
-    def replace_type()
-      response = @line.match(/^type$/, /.*/, /^C:(.*)$/) do |m|
-        interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\", __FILE__))", element_spec(m[1][0]), strip_file_path(m[2][1]))
-      end
-      unless response
-        response = @line.match(/^type$/) do |m|
-          interpret("$browser.find_element(%s).send_keys(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+      #
+      # <tr><td>select</td><td>typeSelector</td><td>label=Academic Article</td></tr>
+      #   becomes
+      # browser_find_select_list(:name, "typeSelector").select_by(:text, "Academic Article")
+      #
+      def replace_select()
+        @line.match(/^select$/, /.*/, /^label=/) do
+          interpret("browser_find_select_list(%s).select_by(:text, \"%s\")", element_spec(@line.field2), value(@line.field3[6..-1]))
         end
       end
-      response
-    end
 
-    #
-    # <tr><td>verifyElementNotPresent</td><td>link=Faculty, Jane</td><td></td></tr>
-    #   becomes
-    # expect($browser.find_elements(:link_name, "Faculty, Jane")).size.to eq(0)
-    #
-    def replace_verify_element_not_present()
-      @line.match(/^verifyElementNotPresent$/) do |m|
-        interpret("expect($browser.find_elements(%s)).size.to eq(0)", element_spec(m[1][0]))
+      #
+      # <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('I study monkeys.')</td><td></td></tr>
+      #   becomes
+      # browser_fill_tinyMCE("I study monkeys")
+      #
+      def replace_tinymce()
+        @line.match(/^runScript$/, /^tinyMCE.activeEditor.setContent\(['"](.*)['"]\)$/) do |m|
+          interpret("browser_fill_tinyMCE(\"%s\")", value(m[1][1]))
+        end
       end
-    end
 
-    #
-    # <tr><td>verifyElementPresent</td><td>css=a[title=&quot;name&quot;]</td><td></td></tr>
-    #   becomes
-    # $browser.find_element(:css, "a[title=\"name\"]")
-    #
-    def replace_verify_element_present()
-      @line.match(/^verifyElementPresent$/) do |m|
-        interpret("$browser.find_element(%s)", element_spec(m[1][0]))
+      #
+      # Special case for typing file paths:
+      # <tr><td>type</td><td>name=rdfStream</td><td>C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8</td></tr>
+      #   becomes
+      # $browser.find_element(:name, "rdfStream").send_keys(tester_filepath("Test-utf8"))
+      #
+      # Else:
+      # <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
+      #   becomes
+      # $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
+      #
+      def replace_type()
+        response = @line.match(/^type$/, /.*/, /^C:(.*)$/) do |m|
+          interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\", __FILE__))", element_spec(m[1][0]), strip_file_path(m[2][1]))
+        end
+        unless response
+          response = @line.match(/^type$/) do |m|
+            interpret("$browser.find_element(%s).send_keys(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+          end
+        end
+        response
       end
-    end
 
-    #
-    # <tr><td>verifyText</td><td>css=h2.searchResultsHeader</td><td>Search results for 'lecturer'</td></tr>
-    #   becomes
-    # expect($browser.find_element(:css, 'h2.searchResultsHeader').text).to eq("Search results for 'lecturer'")
-    #
-    def replace_verify_text()
-      @line.match(/^verifyText$/) do |m|
-        interpret("expect($browser.find_element(%s).text).to eq(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+      #
+      # <tr><td>verifyElementNotPresent</td><td>link=Faculty, Jane</td><td></td></tr>
+      #   becomes
+      # expect($browser.find_elements(:link_name, "Faculty, Jane")).size.to eq(0)
+      #
+      def replace_verify_element_not_present()
+        @line.match(/^verifyElementNotPresent$/) do |m|
+          interpret("expect($browser.find_elements(%s)).size.to eq(0)", element_spec(m[1][0]))
+        end
       end
-    end
 
-    #
-    # <tr><td>verifyTextNotPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
-    #   becomes
-    # expect(browser_page_text).not_to include("Librarian, Lily Lou")
-    #
-    def replace_verify_text_not_present()
-      @line.match(/^verifyTextNotPresent$/) do |m|
-        interpret("expect(browser_page_text).not_to include(\"%s\")", value(m[1][0]))
+      #
+      # <tr><td>verifyElementPresent</td><td>css=a[title=&quot;name&quot;]</td><td></td></tr>
+      #   becomes
+      # $browser.find_element(:css, "a[title=\"name\"]")
+      #
+      def replace_verify_element_present()
+        @line.match(/^verifyElementPresent$/) do |m|
+          interpret("$browser.find_element(%s)", element_spec(m[1][0]))
+        end
       end
-    end
 
-    #
-    # <tr><td>verifyTextPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
-    #   becomes
-    # expect(browser_page_text).to include("Librarian, Lily Lou")
-    #
-    def replace_verify_text_present()
-      @line.match(/^verifyTextPresent$/) do |m|
-        interpret("expect(browser_page_text).to include(\"%s\")", value(m[1][0]))
+      #
+      # <tr><td>verifyText</td><td>css=h2.searchResultsHeader</td><td>Search results for 'lecturer'</td></tr>
+      #   becomes
+      # expect($browser.find_element(:css, 'h2.searchResultsHeader').text).to eq("Search results for 'lecturer'")
+      #
+      def replace_verify_text()
+        @line.match(/^verifyText$/) do |m|
+          interpret("expect($browser.find_element(%s).text).to eq(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+        end
       end
-    end
 
-    #
-    # <tr><td>verifyValue</td><td>id=offerCreate</td><td>Add a new item of this type</td></tr>
-    #   becomes
-    # expect($browser.find_element(:id, "offerCreate")["value"]).to eq("Add a new item of this type")
-    #
-    def replace_verify_value()
-      @line.match(/^verifyValue$/) do |m|
-        interpret("expect($browser.find_element(%s)[\"value\"]).to eq(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+      #
+      # <tr><td>verifyTextNotPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
+      #   becomes
+      # expect(browser_page_text).not_to include("Librarian, Lily Lou")
+      #
+      def replace_verify_text_not_present()
+        @line.match(/^verifyTextNotPresent$/) do |m|
+          interpret("expect(browser_page_text).not_to include(\"%s\")", value(m[1][0]))
+        end
       end
-    end
-      
+
+      #
+      # <tr><td>verifyTextPresent</td><td>Librarian, Lily Lou</td><td></td></tr>
+      #   becomes
+      # expect(browser_page_text).to include("Librarian, Lily Lou")
+      #
+      def replace_verify_text_present()
+        @line.match(/^verifyTextPresent$/) do |m|
+          interpret("expect(browser_page_text).to include(\"%s\")", value(m[1][0]))
+        end
+      end
+
+      #
+      # <tr><td>verifyValue</td><td>id=offerCreate</td><td>Add a new item of this type</td></tr>
+      #   becomes
+      # expect($browser.find_element(:id, "offerCreate")["value"]).to eq("Add a new item of this type")
+      #
+      def replace_verify_value()
+        @line.match(/^verifyValue$/) do |m|
+          interpret("expect($browser.find_element(%s)[\"value\"]).to eq(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
+        end
+      end
+
       #
       # Make the replacement and return the string, providing that none of the
       # values are nil.
@@ -230,66 +233,6 @@ module Converter
           Line.new((template % values) + "    " + @line.text)
         else
           nil
-        end
-      end
-
-      #
-      # Do we recognize this as a valid element specifier in Selenium-HTML?
-      # Reformat it for Selenium-Ruby, or return nil.
-      #
-      def element_spec(raw)
-        raw.match %r{^css=(.+)} do |m|
-          return ":css, \"%s\"" % value(m[1])
-        end
-        raw.match %r{^id=(.+)} do |m|
-          return ":id, \"%s\"" % value(m[1])
-        end
-        raw.match %r{^link=(.+)} do |m|
-          return ":link_text, \"%s\"" % value(m[1])
-        end
-        raw.match %r{^name=(.+)} do |m|
-          return ":name, \"%s\"" % value(m[1])
-        end
-        raw.match %r{^xpath=(.+)} do |m|
-          return ":xpath, \"%s\"" % adjust_xpath(value(m[1]))
-        end
-        raw.match %r{^(//.+)} do |m| # implicit XPath
-          return ":xpath, \"%s\"" % adjust_xpath(value(m[1]))
-        end
-        raw.match %r{^(.+)} do |m| # implicit id
-          return ":id, \"%s\"" % adjust_xpath(value(m[1]))
-        end
-        nil
-      end
-
-      #
-      # Selenium-HTML allowed xpath's to start with "//" to specify "anywhere in
-      # the document". Selenium-Ruby requires ".//"
-      #
-      def adjust_xpath(raw)
-        raw.gsub(%r{//}, './/')
-      end
-
-      #
-      # Some values were HTML-encoded, in order to be specified in the HTML-based
-      # tests. Now, they should be Ruby-string-encoded instead.
-      #
-      # These values include text to be typed, CSS specifiers, XPath
-      # specifiers, and maybe more.
-      #
-      def value(raw)
-        CGI.unescapeHTML(raw.strip).gsub('"', '\"')
-      end
-
-      # Convert a windows-based absolute file path to just the name.ext
-      #
-      # C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8.n3
-      #   becomes
-      # Test-utf8.n3
-      #
-      def strip_file_path(absolute)
-        absolute.match %r{[^\\]*$} do |m|
-          m[0]
         end
       end
 

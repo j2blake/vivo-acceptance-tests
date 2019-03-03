@@ -50,6 +50,14 @@ module VivoHelpers
   end
 
   #
+  # Click on the specified element, and then wait for search indexing.
+  #
+  def vivo_click_and_wait_for_indexing(how, what)
+    $browser.find_element(how, what).click
+    vivo_wait_for_indexing
+  end
+  
+  #
   # Turn a relative VIVO URL into an absolute one.
   #
   # The relative URL should begin with a '/'
