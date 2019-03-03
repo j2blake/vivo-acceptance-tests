@@ -12,6 +12,7 @@ module Converter
         @lines = LoginReplacer.new(@lines).lines
         @lines = LogoutReplacer.new(@lines).lines
         @lines = SubmitReplacer.new(@lines).lines
+        @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
         @lines
       end
     end
@@ -155,13 +156,11 @@ module Converter
       end
 
       def find_submit_line
-        puts "finding submit_line"
         ((@first_index + 1)...@lines.size).each do |index|
           line = @lines[index]
           if line.match(/^assertTitle$/)
             return nil
           elsif line.match(/^clickAndWait$/)
-            puts "field2 '#{line.field2}'"
             if ["submit", "id=submit", "css=input.submit"].include?(line.field2)
               @submit_spec = element_spec(line.field2)
               return @submit_index = index
@@ -172,7 +171,6 @@ module Converter
       end
 
       def goes_immediately_to_new_page
-        puts "check new page"
         @lines[@submit_index + 1].match(/^assertTitle$/)
       end
 
@@ -187,13 +185,149 @@ module Converter
         @lines
       end
     end
+
+    #
+    # Work your way through the lines; loop based on @lines.size, so we will
+    # adjust properly if the array expands or contracts.
+    #
+    # Call check_for_match, passing the array of lines and the current index.
+    # If a match exists based on the current index, return first_index,
+    # last_index, and an array of replacement lines.
+    #
+    # Replace the lines. Advance the index to the end of the replaced lines.
+    # Repeat until we reach the end of the lines.
+    #
+    class BasePhraseReplacer
+      include ParsingUtils
+      #
+      def initialize(key, lines)
+        @key = key
+        @lines = lines
+        iterate
+      end
+
+      def iterate
+        index = 0
+        while index < @lines.size
+          first_index, past_index, replacements = locate_range_on_line(index)
+          if first_index
+            @lines = @lines[0...first_index].concat(replacements).concat(@lines[past_index..-1])
+            $reporter.replace_phrase(@key, replacements.size)
+          end
+          index += 1
+        end
+      end
+
+      def lines
+        @lines
+      end
+
+      def pull_comments(some_lines)
+        some_lines.select { |line| line.comment }
+      end
+    end
+
+    #
+    # What does it look like when we use the auto-complete feature?
+    #
+    # In most cases, it's
+    # 1) Type zero characters into a fields
+    #       <tr><td>type</td><td>id=object</td><td></td></tr>
+    # 2) Send some keys to that same field
+    #       <tr><td>sendKeys</td><td>id=object</td><td>Primate His</td></tr>
+    # 3) Pause for 5 seconds
+    #       <tr><td>pause</td><td>5000</td><td></td></tr>
+    # 4) Send the KEY_DOWN key to that same field
+    #       <tr><td>sendKeys</td><td>id=object</td><td>${KEY_DOWN}</td></tr>
+    # 5) Click on the active menu item
+    #       <tr><td>click</td><td>id=ui-active-menuitem</td><td></td></tr>
+    #    or
+    #       <tr><td>click</td><td>ui-active-menuitem</td><td></td></tr>
+    # This should become:
+    # 1) Send keys to the field
+    # 2) Wait for jquery to complete
+    # 3) Send :down_arrow and :return to that field
+    #
+    class AutoCompleteReplacer < BasePhraseReplacer
+      def locate_range_on_line(index)
+        if is_empty_type_command(index) &&
+        skip_comments &&
+        is_send_keys_to_same_field &&
+        skip_comments &&
+        is_pause &&
+        skip_comments &&
+        is_key_down &&
+        skip_comments &&
+        is_click_active_item
+          return @first_index, @past_index, replace_lines
+        else
+          nil
+        end
+      end
+
+      def is_empty_type_command(index)
+        @lines[index].match(/^type$/, /.*/, /^$/) do |m|
+          @past_index = 1 + @first_index = index
+          @raw_spec = m[1][0]
+          true
+        end
+      end
+
+      def skip_comments
+        (@past_index...@lines.size).each do |index|
+          unless @lines[index].comment
+            return @past_index = index
+          end
+        end
+      end
+
+      def is_send_keys_to_same_field
+        line = @lines[@past_index]
+        if line.field1 == "sendKeys"
+          if @raw_spec == line.field2
+            @text = value(line.field3)
+            @past_index += 1
+          else
+            nil
+          end
+        else
+          nil
+        end
+      end
+
+      def is_pause
+        @lines[@past_index].match(/^pause$/) do
+          @past_index += 1
+        end
+      end
+
+      def is_key_down
+        @lines[@past_index].match(/^sendKeys$/, /.*/, /^\${KEY_DOWN}$/) do |m|
+          if @raw_spec == m[1][0]
+            @past_index += 1
+          else
+            nil
+          end
+        end
+      end
+
+      def is_click_active_item
+        @lines[@past_index].match(/^click$/) do |m|
+          if (element_spec(m[1][0]) == ':id, "ui-active-menuitem"')
+            @past_index += 1
+          else
+            nil
+          end
+        end
+      end
+
+      def replace_lines
+        replacement = pull_comments(@lines[@first_index...@past_index])
+        replacement << Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ element_spec(@raw_spec), @text ])
+        replacement << Line.new("browser_wait_for_jQuery")
+        replacement << Line.new("$browser.find_element(%s).send_keys(:arrow_down, :return)" % [ element_spec(@raw_spec) ])
+      end
+    end
+
   end
 end
-
-=begin
-#<tr><td>type</td><td>id=object</td><td></td></tr>
-#<tr><td>sendKeys</td><td>id=object</td><td>United State</td></tr>
-#<tr><td>pause</td><td>5000</td><td></td></tr>
-#<tr><td>sendKeys</td><td>id=object</td><td>${KEY_DOWN}</td></tr>
-
-=end
