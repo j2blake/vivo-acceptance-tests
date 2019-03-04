@@ -20,9 +20,22 @@ module SeleniumHelpers
   # A little script to fill in the contents of a WYSIWYG edit box.
   #
   def browser_fill_tinyMCE(text)
-    $browser.execute_script("tinyMCE.activeEditor.setContent('#{escape_quotes(text)}')")
+    # Create for later - a wait with a 60-second timeout
+    wait = Selenium::WebDriver::Wait.new(:timeout => 60)
+
+    # get into the IFrame
+    iframe = wait.until{$browser.find_element(:id => 'literal_ifr')}
+    $browser.switch_to.frame(iframe)
+    body_element = wait.until{$browser.find_element(:tag_name => 'body')}
+
+    # Clear the contents and enter the new text
+    body_element.clear
+    body_element.send_keys(text)
+
+    # Go back
+    $browser.switch_to.parent_frame
   end
-  
+
   def escape_quotes(text)
     text.gsub(/'/, "\'").gsub(/"/, '\"')
   end
