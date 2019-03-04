@@ -37,11 +37,11 @@ module Converter
         end
       end
 
-      def match(regex1, regex2 = /.*/, regex3 = /.*/)
+      def match(target1, target2 = /.*/, target3 = /.*/)
         if !@comment &&
-        (m0 = @field1.match(regex1)) &&
-        (m1 = @field2.match(regex2)) &&
-        (m2 = @field3.match(regex3))
+        (m0 = match_field(@field1, target1)) &&
+        (m1 = match_field(@field2, target2)) &&
+        (m2 = match_field(@field3, target3))
           # puts "%s: match '%s', '%s', '%s' ==> '%s', '%s', '%s'" % [ self, regex1, regex2, regex3, m0, m1, m2 ]
           if block_given?
             yield [ m0, m1, m2 ]
@@ -51,6 +51,21 @@ module Converter
         else
           nil
         end
+      end
+
+      def match_field(field, target)
+        case target
+        when Regexp
+          field.match(target)
+        when String
+          (field == target) ? [field] : nil
+        when NilClass
+          field
+        end
+      end
+
+      def match?(target1, target2 = /.*/, target3 = /.*/)
+        ! match(target1, target2, target3).nil?
       end
 
       def to_s

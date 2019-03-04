@@ -11,7 +11,7 @@ module Converter
       def go
         @lines = LoginReplacer.new(@lines).lines
         @lines = LogoutReplacer.new(@lines).lines
-        @lines = SubmitReplacer.new(@lines).lines
+        @lines = SubmitReplacer.new(:submit, @lines).lines
         @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
         @lines
       end
@@ -121,6 +121,63 @@ module Converter
     end
 
     #
+    # Work your way through the lines; loop based on @lines.size, so we will
+    # adjust properly if the array expands or contracts.
+    #
+    # Call find_replacements_for_range_based_at_current_index,having set values
+    # for @lines, @index, @first_index, @next_index, @line and @replacements.
+    #
+    # If a match exists based at the current index, adjust @first_index,
+    # @next_index and @replacements accordingly.
+    #
+    # Replace the lines. Advance the index and repeat until we reach the end of
+    # the lines.
+    #
+    class AbstractPhraseReplacer
+      include ParsingUtils
+      #
+      def initialize(key, lines)
+        @key = key
+        @lines = lines
+        iterate
+      end
+
+      def iterate
+        index = 0
+        while index < @lines.size
+          @next_index = 1 + @first_index = @index = index
+          @line = @lines[@index]
+          @replacements = nil
+
+          find_replacements_for_range_based_at_current_index
+
+          if @replacements
+            @lines = @lines[0...@first_index].concat(@replacements).concat(@lines[@next_index..-1])
+            $reporter.replace_phrase(@key, @replacements.size)
+          end
+          index += 1
+        end
+      end
+
+      def advance_to_next_line
+        (@next_index...@lines.size).each do |index|
+          @next_index = 1 + @index = index
+          @line = @lines[@index]
+          return @line unless @line.comment
+        end
+        nil
+      end
+
+      def lines
+        @lines
+      end
+
+      def comments_from_range
+        @lines[@first_index...@next_index].select { |l| l.comment }
+      end
+    end
+
+    #
     # When do we need to wait for indexing? Usually when clicking the submit on an editing
     # form.
     #
@@ -136,94 +193,45 @@ module Converter
     # Then,
     #  1) Replace the submit button with a call to vivo_click_and_wait_for_indexing
     #
-    class SubmitReplacer
-      include ParsingUtils
-      #
-      def initialize(lines)
-        @lines = lines
-
-        @lines.each_index do |index|
-          if is_first_line(index) && find_submit_line && goes_immediately_to_new_page
-            replace
-          end
+    class SubmitReplacer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_assert_title_edit &&
+        encounters_submit_before_another_assert_title &&
+        goes_immediately_to_new_page
+          figure_replacements
+        else
+          nil
         end
       end
 
-      def is_first_line(index)
-        @lines[index].match(/^assertTitle$/, /^Edit$/) do
-          @first_index = index
-        end
+      def is_assert_title_edit
+        @line.match?("assertTitle", "Edit")
       end
 
-      def find_submit_line
-        ((@first_index + 1)...@lines.size).each do |index|
-          line = @lines[index]
-          if line.match(/^assertTitle$/)
+      def encounters_submit_before_another_assert_title
+        while advance_to_next_line do
+          if @line.match?("assertTitle")
             return nil
-          elsif line.match(/^clickAndWait$/)
-            if ["submit", "id=submit", "css=input.submit"].include?(line.field2)
-              @submit_spec = element_spec(line.field2)
-              return @submit_index = index
-            end
+          elsif m =
+          @line.match("clickAndWait", "submit") ||
+          @line.match("clickAndWait", "id=submit") ||
+          @line.match("clickAndWait", "css=input.submit")
+            @submit_spec = element_spec(@line.field2)
+            return @submit_index = @index
           end
         end
         nil
       end
 
       def goes_immediately_to_new_page
-        @lines[@submit_index + 1].match(/^assertTitle$/)
+        advance_to_next_line
+        @line.match?("assertTitle")
       end
 
-      def replace
-        "replace"
-        replacement = Line.new("vivo_logout")
-        @lines[@submit_index] = Line.new("vivo_click_and_wait_for_indexing(%s)" % [ @submit_spec ])
-        $reporter.replace_phrase(:submit, 1)
-      end
-
-      def lines
-        @lines
-      end
-    end
-
-    #
-    # Work your way through the lines; loop based on @lines.size, so we will
-    # adjust properly if the array expands or contracts.
-    #
-    # Call check_for_match, passing the array of lines and the current index.
-    # If a match exists based on the current index, return first_index,
-    # last_index, and an array of replacement lines.
-    #
-    # Replace the lines. Advance the index to the end of the replaced lines.
-    # Repeat until we reach the end of the lines.
-    #
-    class BasePhraseReplacer
-      include ParsingUtils
-      #
-      def initialize(key, lines)
-        @key = key
-        @lines = lines
-        iterate
-      end
-
-      def iterate
-        index = 0
-        while index < @lines.size
-          first_index, past_index, replacements = locate_range_on_line(index)
-          if first_index
-            @lines = @lines[0...first_index].concat(replacements).concat(@lines[past_index..-1])
-            $reporter.replace_phrase(@key, replacements.size)
-          end
-          index += 1
-        end
-      end
-
-      def lines
-        @lines
-      end
-
-      def pull_comments(some_lines)
-        some_lines.select { |line| line.comment }
+      def figure_replacements
+        @next_index = @index = @submit_index + 1
+        @replacements = @lines[@first_index...@submit_index]
+        @replacements << Line.new("vivo_click_and_wait_for_indexing(%s)" % [ @submit_spec ]) 
       end
     end
 
@@ -248,86 +256,59 @@ module Converter
     # 2) Wait for jquery to complete
     # 3) Send :down_arrow and :return to that field
     #
-    class AutoCompleteReplacer < BasePhraseReplacer
-      def locate_range_on_line(index)
-        if is_empty_type_command(index) &&
-        skip_comments &&
-        is_send_keys_to_same_field &&
-        skip_comments &&
-        is_pause &&
-        skip_comments &&
-        is_key_down &&
-        skip_comments &&
-        is_click_active_item
-          return @first_index, @past_index, replace_lines
+    class AutoCompleteReplacer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_empty_type_command &&
+        next_is_send_keys_to_same_field &&
+        next_is_pause &&
+        next_is_key_down_to_same_field &&
+        next_is_click_active_item
+          figure_replacements
         else
           nil
         end
       end
 
-      def is_empty_type_command(index)
-        @lines[index].match(/^type$/, /.*/, /^$/) do |m|
-          @past_index = 1 + @first_index = index
-          @raw_spec = m[1][0]
-          true
+      def is_empty_type_command
+        @line.match("type", /.*/, "") do |m|
+          @raw_element_spec = m[1][0]
         end
       end
 
-      def skip_comments
-        (@past_index...@lines.size).each do |index|
-          unless @lines[index].comment
-            return @past_index = index
-          end
+      def next_is_send_keys_to_same_field
+        advance_to_next_line
+        @line.match("sendKeys", @raw_element_spec) do |m|
+          @raw_text = m[2][0]
         end
       end
 
-      def is_send_keys_to_same_field
-        line = @lines[@past_index]
-        if line.field1 == "sendKeys"
-          if @raw_spec == line.field2
-            @text = value(line.field3)
-            @past_index += 1
-          else
-            nil
-          end
-        else
-          nil
+      def next_is_pause
+        advance_to_next_line
+        @line.match?("pause")
+      end
+
+      def next_is_key_down_to_same_field
+        advance_to_next_line
+        @line.match?("sendKeys", @raw_element_spec, "${KEY_DOWN}")
+      end
+
+      def next_is_click_active_item
+        advance_to_next_line
+        @line.match("click") do |m|
+          # matches either form of the raw spec
+          element_spec(m[1][0]) == ':id, "ui-active-menuitem"'
         end
       end
 
-      def is_pause
-        @lines[@past_index].match(/^pause$/) do
-          @past_index += 1
-        end
-      end
+      def figure_replacements
+        good_spec = element_spec(@raw_element_spec)
+        good_text = value(@raw_text)
 
-      def is_key_down
-        @lines[@past_index].match(/^sendKeys$/, /.*/, /^\${KEY_DOWN}$/) do |m|
-          if @raw_spec == m[1][0]
-            @past_index += 1
-          else
-            nil
-          end
-        end
-      end
-
-      def is_click_active_item
-        @lines[@past_index].match(/^click$/) do |m|
-          if (element_spec(m[1][0]) == ':id, "ui-active-menuitem"')
-            @past_index += 1
-          else
-            nil
-          end
-        end
-      end
-
-      def replace_lines
-        replacement = pull_comments(@lines[@first_index...@past_index])
-        replacement << Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ element_spec(@raw_spec), @text ])
-        replacement << Line.new("browser_wait_for_jQuery")
-        replacement << Line.new("$browser.find_element(%s).send_keys(:arrow_down, :return)" % [ element_spec(@raw_spec) ])
+        @replacements = comments_from_range
+        @replacements << Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ good_spec, good_text ])
+        @replacements << Line.new("browser_wait_for_jQuery")
+        @replacements << Line.new("$browser.find_element(%s).send_keys(:arrow_down, :return)" % [ good_spec ])
       end
     end
-
   end
 end
