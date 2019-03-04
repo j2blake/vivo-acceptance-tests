@@ -27,6 +27,18 @@ RSpec.configure do |config|
   config.order = :defined
 
   #
+  # Create a clean environment for the tests to run in.
+  #
+  config.before(:suite) do
+    $settings = Settings.new
+    $webserver = Webserver.new
+
+    $webserver.setup
+  end
+
+  #
+  # Start the webserver.
+  #
   # Create the Chrome driver as a global variable, and delete it when we are
   # done.
   #
@@ -35,9 +47,7 @@ RSpec.configure do |config|
     options.add_argument('--headless')
     options.add_argument('--window-size=1200x1200')
     $browser = Selenium::WebDriver.for :chrome, options: options
-    $settings = Settings.new
-    $webserver = Webserver.new
-    
+
     if $webserver.running?
       puts
       puts "The webserver wasn't shut down."
@@ -46,11 +56,12 @@ RSpec.configure do |config|
     end
     $webserver.start
   end
+  
   config.after(:all) do
     $browser.quit
   end
- 
-  # 
+
+  #
   # Failure or not, stop the webserver at the end of each suite.
   #
   config.after(:all) do

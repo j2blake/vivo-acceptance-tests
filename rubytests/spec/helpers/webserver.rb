@@ -2,6 +2,11 @@ class Webserver
   #
   private # --------------------------------------------------------------------
   #
+  
+  def run_setup_script
+    system("sh", $settings.webserver_setup_script)
+  end
+  
   def run_start_script
     output_file = File.expand_path("logs/stdout.txt", $settings.output_path)
     spawn("sh", $settings.webserver_start_script, out: output_file, err: output_file + "2")
@@ -56,5 +61,12 @@ class Webserver
     puts ""
     run_stop_script
     sleep(5)
+  end
+  
+  def setup
+    puts ""
+    puts "       >>>>> SETTING UP THE ENVIRONMENT <<<<<<"
+    puts ""
+    run_setup_script
   end
 end

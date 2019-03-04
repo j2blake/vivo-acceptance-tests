@@ -2,6 +2,7 @@ class Settings
     attr_accessor :output_path
     attr_accessor :failure_path
     attr_accessor :vivo_base_url
+    attr_accessor :webserver_setup_script
     attr_accessor :webserver_start_script
     attr_accessor :webserver_stop_script
   def initialize
@@ -15,7 +16,8 @@ class Settings
     # Should this even be offered on its own? Hard-code it as being in the output directory!!!
     
     # Default is relative to this script
-    @webserver_start_script = "/Users/jeb228/Development/VIVO/AcceptanceTests/projects/vivo-acceptance-tests/scripts/setup_and_run.sh"
+    @webserver_setup_script = "/Users/jeb228/Development/VIVO/AcceptanceTests/projects/vivo-acceptance-tests/scripts/setup.sh"
+    @webserver_start_script = "/Users/jeb228/Development/VIVO/AcceptanceTests/projects/vivo-acceptance-tests/scripts/startup.sh"
     @webserver_stop_script = "/Users/jeb228/Development/VIVO/AcceptanceTests/projects/vivo-acceptance-tests/scripts/shutdown.sh"
     
     # This is the default. If it has no trailing slash, add one

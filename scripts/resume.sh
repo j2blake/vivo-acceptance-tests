@@ -1,4 +1,9 @@
 #
+# For diagnostic purporses, start the server without clearing any of the 
+# directories.
+#
+
+#
 # Figure out what directory the script is in (absolute path)
 #
 # TODO 

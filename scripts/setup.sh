@@ -1,4 +1,12 @@
 #
+# Create the output directory, with places for logs and for failure recordings.
+# Create the VIVO context, and the Solr WAR.
+#
+# Don't create the home directory, since we want that to be fresh each time the 
+# server starts up.
+#
+
+#
 # Figure out what directory the script is in (absolute path)
 #
 # TODO 
@@ -27,21 +35,6 @@ OUT_DIR=/Users/jeb228/Development/VIVO/AcceptanceTests/output
 if [ ! -d "$OUT_DIR" ]; then
   mkdir $OUT_DIR
 fi
-
-#
-# Assemble the home directory (in the output directory)
-#
-# TODO
-#   Make this independent of VIVO version number.
-#   If any of the required don't exist, exit.
-#
-if [ -d "$OUT_DIR/home" ]; then
-  rm -r $OUT_DIR/home
-fi
-cp -R $VIVODIR/installer/home/target/vivo-installer-home-1.11.0-SNAPSHOT/ $OUT_DIR/home
-cp $BASEDIR/config/applicationSetup.n3 $OUT_DIR/home/config
-cp $BASEDIR/config/runtime.properties $OUT_DIR/home/config
-cp -r $BASEDIR/rdf/* $OUT_DIR/home/rdf
 
 #
 # Ensure that a clean directory exists for logs (in output directory)
@@ -88,20 +81,3 @@ cp $BASEDIR/kluge/startup_listeners.txt $OUT_DIR/context/vivo/WEB-INF/resources
 
 # Locate VIVOSOLR War
 cp $VIVODIR/installer/solr/target/vivosolr.war $OUT_DIR
-
-#
-# Run it
-#
-# TODO
-#   Check that the executable exists. 
-#   Make this independent of the project version number
-#
-java -Dcatalina.base=$OUT_DIR \
-     -Dvitro.home=$OUT_DIR/home \
-     -Dsolr.solr.home=$OUT_DIR/home/solr \
-     -jar $BASEDIR/jetty/jetty-runner-9.4.9.v20180320.jar \
-     --out $OUT_DIR/logs/jetty_runner.log \
-     --log $OUT_DIR/logs/request.log \
-     --path /vivosolr $OUT_DIR/vivosolr.war \
-     --path /vivo $OUT_DIR/context/vivo \
-     --stop-port 8181 --stop-key abc123
