@@ -58,14 +58,14 @@ module VivoHelpers
   end
   
   #
-  # Turn a relative VIVO URL into an absolute one.
+  # Turn a relative VIVO URL into an absolute one. 
   #
-  # The relative URL should begin with a '/'
-  #
-  # TODO - get the base URL from Settings, join with a slash if needed.
+  # Insure that the base and the page are joined by exactly one '/'.
   #
   def vivo_url(page)
-    "http://localhost:8080/vivo%s" % [page]
+    first_part = $settings.vivo_base_url.chomp('/')
+    between = page.start_with?('/') ? '' : '/'
+    first_part + between + page
   end
 
 end

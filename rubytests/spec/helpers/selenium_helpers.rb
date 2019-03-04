@@ -21,7 +21,7 @@ module SeleniumHelpers
   #
   def browser_fill_tinyMCE(text)
     # Create for later - a wait with a 60-second timeout
-    wait = Selenium::WebDriver::Wait.new(:timeout => 60)
+    wait = Selenium::WebDriver::Wait.new(:timeout => 5)
 
     # get into the IFrame
     iframe = wait.until{$browser.find_element(:id => 'literal_ifr')}
