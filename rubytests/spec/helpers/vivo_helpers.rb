@@ -17,9 +17,6 @@ module VivoHelpers
     $browser.find_element(:name, "loginName").send_keys(email)
     $browser.find_element(:name, "loginPassword").send_keys(password)
     $browser.find_element(:name, "loginForm").click
-    
-    # If login failed, we will still be on the login page.
-    expect($browser.title).to eq("VIVO")
   end
 
   #

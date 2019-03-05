@@ -116,7 +116,6 @@ module Converter
     #       <tr><td>type</td><td>loginPassword</td><td>Password</td></tr>
     #          or the field might be specified as "id=loginPassword"
     #       <tr><td>clickAndWait</td><td>name=loginForm</td><td></td></tr>
-    #       <tr><td>assertTitle</td><td>VIVO</td><td></td></tr>
     #
     # If all of these are satisfied, replace it with
     #        vivo_login_as(email, password)
@@ -126,11 +125,10 @@ module Converter
         if is_click_on_login &&
         maybe_back_up_for_clicking_the_link &&
         maybe_back_up_for_open &&
-        next_is_login_page
+        next_is_login_page &&
         next_is_enter_login_name &&
         next_is_enter_password &&
-        next_is_submit_form &&
-        maybe_next_is_assert_title
+        next_is_submit_form
           figure_replacements
         else
           nil
@@ -148,7 +146,7 @@ module Converter
       def maybe_back_up_for_open
         look_for_optional_backup("open", "/vivo/")
       end
-      
+
       def next_is_login_page
         advance_to_next_line
         @line.match?("assertTitle", "Log in to VIVO")
@@ -156,7 +154,6 @@ module Converter
 
       def next_is_enter_login_name
         advance_to_next_line
-        puts "next_is_enter_login_name: #{@line.text}"
         if m = @line.match("type", "loginName") || @line.match("type", "id=loginName")
           @login_name = m[2][0]
         else
@@ -165,7 +162,6 @@ module Converter
       end
 
       def next_is_enter_password
-        puts "next_is_enter_password"
         advance_to_next_line
         if m = @line.match("type", "loginPassword") || @line.match("type", "id=loginPassword")
           @password = m[2][0]
@@ -175,24 +171,12 @@ module Converter
       end
 
       def next_is_submit_form
-        puts "next_is_submit_form"
         advance_to_next_line
         @line.match?("clickAndWait", "loginForm") ||
         @line.match?("clickAndWait", "name=loginForm")
       end
 
-      def maybe_next_is_assert_title
-        puts "next_is_assert_title"
-        save_index = @index
-        advance_to_next_line
-        unless @line.match?("assertTitle", "VIVO")
-          @next_index = 1 + @index = save_index
-        end
-        true
-      end
-
       def figure_replacements
-        puts "figure_replacements"
         @replacements = comments_from_range
         @replacements << Line.new("vivo_login_as(\"%s\", \"%s\")" % [ @login_name, @password ])
       end
@@ -201,11 +185,12 @@ module Converter
         (@first_index - 1).downto(0) do |index|
           line = @lines[index]
           if line.match?(target1, target2, target3)
-            return @first_index = index
+            @first_index = index
+            return true
           elsif line.comment
             # keep looking
           else
-            return "NOT FOUND"
+            return true
           end
         end
       end

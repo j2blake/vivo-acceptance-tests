@@ -61,6 +61,8 @@ module Converter
           (field == target) ? [field] : nil
         when NilClass
           field
+        else
+          raise "bad target class: '#{target}'"
         end
       end
 
