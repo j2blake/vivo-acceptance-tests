@@ -38,14 +38,6 @@ module Converter
         end
 
         @result
-
-        #    #<tr><td>sendKeys</td><td>id=object</td><td>Afri</td></tr>
-        # something like:     $browser.find_element(id: "object").send_keys("Afri")
-        #
-        #     #<tr><td>sendKeys</td><td>id=object</td><td>${KEY_DOWN}</td></tr>
-        # something like:     $browser.find_element(id: "object").send_keys(Selenium::WebDriver::Keys.down)
-        #
-
       end
 
       #

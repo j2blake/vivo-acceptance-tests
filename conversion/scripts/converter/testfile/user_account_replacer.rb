@@ -5,7 +5,17 @@ module Converter
   module Testfile
     class UserAccountReplacer < AbstractParsedLinesReplacer
       def replacement
-        @line.match(/^type$/, /^loginName$/, /^(.*)@cornell.edu$/) do
+        replace_login_name || replace_rick_rookie
+      end
+      
+      def replace_login_name
+        @line.match(/^type$/, /loginName$/, /^(.*)@cornell.edu$/) do
+          Line.new(@line.text.gsub(/cornell\.edu/, "mydomain.edu"))
+        end
+      end
+      
+      def replace_rick_rookie
+        @line.text.match(/RickRookie@cornell.edu/) do
           Line.new(@line.text.gsub(/cornell\.edu/, "mydomain.edu"))
         end
       end

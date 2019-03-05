@@ -8,6 +8,7 @@ module Converter
       @copy_count = 0
       @tags_remaining = []
       @phrases_replaced = Hash.new([0, 0])
+      @tags_cleaned = Hash.new(0)
       @missing_suite_count = 0
     end
 
@@ -48,6 +49,10 @@ module Converter
       @phrases_replaced[key] = [ already[0] + 1, already[1] + line_count]
     end
 
+    def clean_tag(key)
+      already = @tags_cleaned[key] += 1
+    end
+
     def report
       puts
       puts "Command line: #{@args.join(" ")}"
@@ -55,6 +60,7 @@ module Converter
       puts "Copied %d files." % [ @copy_count ]
       puts "%d missing suite files." % [ @missing_suite_count ]
       @phrases_replaced.each { |k, v| puts "replaced %d '%s' phrases (%d lines)" % [ v[0], k, v[1] ] }
+      @tags_cleaned.each { |k, v| puts "cleaned %d '%s' tags" % [ v, k ] }
       puts
       puts "%d UNKNOWN TAGS REMAIN." % [ @tags_remaining.size ]
       @tags_remaining.shuffle.first(20).each { |t| puts t }

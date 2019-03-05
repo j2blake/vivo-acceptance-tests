@@ -15,3 +15,39 @@
         auth:loginCount          "1"^^xsd:int ;
         auth:passwordLinkExpires "0"^^xsd:long ;
         auth:status              "ACTIVE" .
+
+<http://vivo.mydomain.edu/individual/testCurator>
+        a                        auth:UserAccount ;
+        auth:firstName           "John" ;
+        auth:lastName            "Curator" ;
+        auth:emailAddress        "johnCurator@mydomain.edu" ;
+        auth:hasPermissionSet    auth:CURATOR ;
+        auth:argon2password      "$argon2i$v=19$m=1024,t=1000,p=1$vL+CP9m8CxFsJ9Kok5wwmA$3c95CBIq7I3fz0tniH/JIZkDiJl92Upk5pV+iP8bHc4" ;
+        auth:lastLoginTime       "1550599178615"^^xsd:long ;
+        auth:loginCount          "1"^^xsd:int ;
+        auth:passwordLinkExpires "0"^^xsd:long ;
+        auth:status              "ACTIVE" .
+
+<http://vivo.mydomain.edu/individual/testEditor>
+        a                        auth:UserAccount ;
+        auth:firstName           "Sally" ;
+        auth:lastName            "Editor" ;
+        auth:emailAddress        "sallyEditor@mydomain.edu" ;
+        auth:hasPermissionSet    auth:EDITOR ;
+        auth:argon2password      "$argon2i$v=19$m=1024,t=1000,p=1$vL+CP9m8CxFsJ9Kok5wwmA$3c95CBIq7I3fz0tniH/JIZkDiJl92Upk5pV+iP8bHc4" ;
+        auth:lastLoginTime       "1550599178615"^^xsd:long ;
+        auth:loginCount          "1"^^xsd:int ;
+        auth:passwordLinkExpires "0"^^xsd:long ;
+        auth:status              "ACTIVE" .
+
+<http://vivo.mydomain.edu/individual/testSelfEditor>
+        a                        auth:UserAccount ;
+        auth:firstName           "Self" ;
+        auth:lastName            "Editor" ;
+        auth:emailAddress        "joeUser@mydomain.edu" ;
+        auth:hasPermissionSet    auth:SELF_EDITOR ;
+        auth:argon2password      "$argon2i$v=19$m=1024,t=1000,p=1$vL+CP9m8CxFsJ9Kok5wwmA$3c95CBIq7I3fz0tniH/JIZkDiJl92Upk5pV+iP8bHc4" ;
+        auth:lastLoginTime       "1550599178615"^^xsd:long ;
+        auth:loginCount          "1"^^xsd:int ;
+        auth:passwordLinkExpires "0"^^xsd:long ;
+        auth:status              "ACTIVE" .
