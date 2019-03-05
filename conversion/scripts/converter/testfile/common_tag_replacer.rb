@@ -1,4 +1,5 @@
 require("cgi")
+
 require_relative 'parsing_utils'
 
 module Converter
@@ -37,7 +38,7 @@ module Converter
         end
 
         @result
-        
+
         #    #<tr><td>sendKeys</td><td>id=object</td><td>Afri</td></tr>
         # something like:     $browser.find_element(id: "object").send_keys("Afri")
         #
@@ -74,10 +75,17 @@ module Converter
       #   becomes
       # expect($browser.title).to eq("Faculty, Jane")
       #
+      # For search results, change the expected title.
+      #
       def replace_assert_title()
-        @line.match(/^assertTitle$/) do
-          interpret("expect($browser.title).to eq(\"%s\")", value(@line.field2))
+        @line.match("assertTitle") do |m|
+          title = adjust_title(m[1][0])
+          interpret("expect($browser.title).to eq(\"%s\")", value(title))
         end
+      end
+
+      def adjust_title(text)
+        text.gsub(/^(.*) - VIVO Search Results$/, "Search for '\\1'")
       end
 
       #
