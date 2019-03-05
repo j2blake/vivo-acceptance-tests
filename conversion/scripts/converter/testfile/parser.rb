@@ -46,7 +46,7 @@ module Converter
           if block_given?
             yield [ m0, m1, m2 ]
           else
-            true
+            [ m0, m1, m2 ]
           end
         else
           nil

@@ -9,88 +9,11 @@ module Converter
       end
 
       def go
-        @lines = LoginReplacer.new(@lines).lines
+        @lines = LoginReplacer.new(:login, @lines).lines
         @lines = LogoutReplacer.new(@lines).lines
         @lines = SubmitReplacer.new(:submit, @lines).lines
         @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
         @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
-        @lines
-      end
-    end
-
-    class LoginReplacer
-      def initialize(lines)
-        @lines = lines
-
-        while
-          find_first_line &&
-          find_matching_last_line &&
-          validate_range &&
-          extend_beginning &&
-          find_login_name &&
-          find_password do
-          replace
-        end
-      end
-
-      def find_first_line
-        @first_index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log in$/) }
-      end
-
-      def find_matching_last_line
-        found = @lines[@first_index..-1].find_index { |line| line.match(/^clickAndWait$/, /^loginForm$/) }
-        @last_index = found ? found + @first_index : nil
-      end
-
-      def validate_range
-        @lines[(@first_index + 1)..(@last_index - 1)].each do |line|
-          return nil unless
-          line.comment ||
-          line.match(/^assertTitle$/) ||
-          line.match(/^open$/, %r{^/vivo/$}) ||
-          line.match(/^type$/, /^loginName$/) ||
-          line.match(/^type$/, /^loginPassword$/) ||
-          line.match(/^verifyTextPresent$/, /^Log in$/)
-        end
-        true
-      end
-
-      def extend_beginning
-        while @lines[@first_index - 1].comment ||
-          @lines[@first_index - 1].match(/^open$/, %r{^/vivo/$}) ||
-          @lines[@first_index - 1].match(/^assertTitle$/, /^VIVO$/)
-          @first_index -= 1
-        end
-        true
-      end
-
-      def find_login_name
-        @lines[@first_index..@last_index].each do |line|
-          line.match(/^type$/, /^loginName$/) do |m|
-            return @login_name = m[2][0]
-          end
-        end
-        nil
-      end
-
-      def find_password
-        @lines[@first_index..@last_index].each do |line|
-          line.match(/^type$/, /^loginPassword$/) do |m|
-            return @password = m[2][0]
-          end
-        end
-        nil
-      end
-
-      def replace
-        replacement = Line.new("vivo_login_as(\"#{@login_name}\", \"#{@password}\")")
-        comments = @lines[@first_index..@last_index].select { |l| l.comment }
-
-        @lines = @lines[0..(@first_index - 1)].concat(comments).append(replacement).concat(@lines[(@last_index + 1)..-1])
-        $reporter.replace_phrase(:login, @last_index + 1 - @first_index - comments.size)
-      end
-
-      def lines
         @lines
       end
     end
@@ -175,6 +98,116 @@ module Converter
 
       def comments_from_range
         @lines[@first_index...@next_index].select { |l| l.comment }
+      end
+    end
+
+    #
+    # Replace a login sequence with a call to vivo_login_as(email, password)
+    #
+    # The login sequence must start with
+    #       <tr><td>clickAndWait</td><td>link=Log in</td><td></td></tr>
+    # It might optionally be preceded by
+    #       <tr><td>assertTitle</td><td>VIVO</td><td></td></tr>
+    #    (with any title), which might be preceded by
+    #       <tr><td>open</td><td>/vivo/</td><td></td></tr>
+    # It must be followed by these
+    #       <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
+    #          or the field might be specified as "id=loginName"
+    #       <tr><td>type</td><td>loginPassword</td><td>Password</td></tr>
+    #          or the field might be specified as "id=loginPassword"
+    #       <tr><td>clickAndWait</td><td>name=loginForm</td><td></td></tr>
+    #       <tr><td>assertTitle</td><td>VIVO</td><td></td></tr>
+    #
+    # If all of these are satisfied, replace it with
+    #        vivo_login_as(email, password)
+    #
+    class LoginReplacer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_click_on_login &&
+        maybe_back_up_for_clicking_the_link &&
+        maybe_back_up_for_open &&
+        next_is_login_page
+        next_is_enter_login_name &&
+        next_is_enter_password &&
+        next_is_submit_form &&
+        maybe_next_is_assert_title
+          figure_replacements
+        else
+          nil
+        end
+      end
+
+      def is_click_on_login
+        @line.match?("clickAndWait", "link=Log in")
+      end
+
+      def maybe_back_up_for_clicking_the_link
+        look_for_optional_backup("assertTitle", "VIVO")
+      end
+
+      def maybe_back_up_for_open
+        look_for_optional_backup("open", "/vivo/")
+      end
+      
+      def next_is_login_page
+        advance_to_next_line
+        @line.match?("assertTitle", "Log in to VIVO")
+      end
+
+      def next_is_enter_login_name
+        advance_to_next_line
+        puts "next_is_enter_login_name: #{@line.text}"
+        if m = @line.match("type", "loginName") || @line.match("type", "id=loginName")
+          @login_name = m[2][0]
+        else
+          nil
+        end
+      end
+
+      def next_is_enter_password
+        puts "next_is_enter_password"
+        advance_to_next_line
+        if m = @line.match("type", "loginPassword") || @line.match("type", "id=loginPassword")
+          @password = m[2][0]
+        else
+          nil
+        end
+      end
+
+      def next_is_submit_form
+        puts "next_is_submit_form"
+        advance_to_next_line
+        @line.match?("clickAndWait", "loginForm") ||
+        @line.match?("clickAndWait", "name=loginForm")
+      end
+
+      def maybe_next_is_assert_title
+        puts "next_is_assert_title"
+        save_index = @index
+        advance_to_next_line
+        unless @line.match?("assertTitle", "VIVO")
+          @next_index = 1 + @index = save_index
+        end
+        true
+      end
+
+      def figure_replacements
+        puts "figure_replacements"
+        @replacements = comments_from_range
+        @replacements << Line.new("vivo_login_as(\"%s\", \"%s\")" % [ @login_name, @password ])
+      end
+
+      def look_for_optional_backup(target1, target2 = /.*/, target3 = /.*/)
+        (@first_index - 1).downto(0) do |index|
+          line = @lines[index]
+          if line.match?(target1, target2, target3)
+            return @first_index = index
+          elsif line.comment
+            # keep looking
+          else
+            return "NOT FOUND"
+          end
+        end
       end
     end
 
@@ -335,7 +368,7 @@ module Converter
       end
 
       def is_funky_click_and_wait
-        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual") 
+        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual")
       end
 
       def next_is_edit_page

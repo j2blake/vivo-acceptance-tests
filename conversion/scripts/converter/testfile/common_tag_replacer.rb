@@ -75,7 +75,8 @@ module Converter
       #   becomes
       # expect($browser.title).to eq("Faculty, Jane")
       #
-      # For search results, change the expected title.
+      # For search results, change the expected title. 
+      # For failed login attempts, change the expected title.
       #
       def replace_assert_title()
         @line.match("assertTitle") do |m|
@@ -85,7 +86,7 @@ module Converter
       end
 
       def adjust_title(text)
-        text.gsub(/^(.*) - VIVO Search Results$/, "Search for '\\1'")
+        text.gsub(/^(.*) - VIVO Search Results$/, "Search for '\\1'").gsub(/^Log in to VIVO$/, "Log in - VIVO")
       end
 
       #

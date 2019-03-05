@@ -1,0 +1,101 @@
+AddNonPersonThings
+AddPublications
+AddRoles
+AdminSecurity
+CheckMapOfScience
+CheckVisualizations
+CreateAccounts
+CreateClasses
+CreatePeople
+CreateProperties
+CustomAdvisesForm
+    CustomAdvisesForm/_add_advises.rb:63
+    
+
+CustomAwardsForm
+    CustomAwardsForm/_create_test_faculty_member.rb:27
+    ACTION: same phrase as CustomPositionsForm
+    DONE
+
+CustomEducationForm
+    CustomEducationForm/_create_test_faculty_member.rb:28
+    can't locate: $browser.find_element(:css, "header > #ARG_2000028 > a.add-ARG_2000028").click    #<tr><td>clickAndWait</td><td>css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028</td><td></td></tr>
+    ACTION: same phrase as CustomPositionsForm
+    DONE
+
+CustomPositionsForm
+    CustomPositionsForm/_create_test_faculty_member.rb:27
+    can't locate preferred title this way: $browser.find_element(:css, "header > #ARG_2000028 > a.add-ARG_2000028 > img.add-individual").click
+    ACTION: change to [title="Add new preferred title entry"]
+       Do it with phrase-replace?
+           #<tr><td>clickAndWait</td><td>css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual</td><td></td></tr>
+           #<tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+           #<tr><td>type</td><td>id=preferredTitle</td><td>Assistant Professor</td></tr>
+    DONE
+
+InitialSetup
+    InitialSetup/_edit_site_info.rb:25
+    can't find $browser.find_element(:css, "#home-stats > h4")
+    This section isn't present if there is no data.
+    ACTION: remove the check for this element (twice)
+
+LanguageSupport
+    No pause before using the Index.
+    ACTION: insert wait_for_indexing before clicks on Index
+
+LinkedOpenData
+    expect($browser.title).to eq("Log in to VIVO")
+    Didn't replace the Login phrase -- why not?
+    ACTION: Expand the capabilities of the Login phrase replacer.
+
+MultiLabels
+    No button to manage labels: $browser.find_element(:css, "a.add-label > img.add-individual")
+    Check the instructions on the checklist. Does this need to be enabled somehow?
+    ACTION: ???? 
+
+OntologyManagement
+    Fields for name, URI, and prefix should be specified by name, not ID
+	ACTION: change the HTML for all three fields to include "name="
+
+OpenSocialGadgets
+    PROBABLY WILL NEVER WORK
+    Index doesn't show faculty member, even though we have waited for indexing
+    ACTION: Change default wait time to 3 seconds
+
+ProcessRDFData
+    Expecting:     $browser.find_element(:id, "rdfUrl")
+       from: #<tr><td>type</td><td>rdfUrl</td><td>http://www.geonames.org/ontology/ontology_v2.0_Lite.rdf</td></tr>
+    But it should be: $browser.find_element(:name, "rdfUrl")
+    ACTION: Change the HTML to include "name="
+
+ProxyEditing
+    TinyMCE is not there: browser_fill_tinyMCE("JaneFaculty@cornell.edu")
+    ACTION: Expect text field "id=literal" when editing $browser.find_element(:css, "a.add-researcherId > img.add-individual").click
+
+SearchBoost
+    expect($browser.title).to eq("faculty - VIVO Search Results")
+    ACTION: change to: Search for 'faculty'
+
+SearchExclusion
+    $browser.find_element(:css, "header > #ARG_2000028 > a.add-ARG_2000028").click
+    ACTION: change to [title="Add new preferred title entry"]
+
+SearchTextDiscovery
+    expect($browser.title).to eq("baker - VIVO Search Results")
+    ACTION: change to: Search for 'baker'
+
+SelfEditing
+	What is the deal with _add_self_editor_id2.rb?
+	No indexing prior to Index, so no Faculty Member
+	ACTION: insert wait_for_indexing before clicks on Index
+
+ShortViews
+    Index is showing the departments, but without location
+    ACTION: ????
+
+SparqlQueryApi
+  
+
+SparqlUpdateApi 
+    Won't run without the test app. What can we do instead?
+    ACTION ????
