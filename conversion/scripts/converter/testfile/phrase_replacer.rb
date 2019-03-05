@@ -13,6 +13,7 @@ module Converter
         @lines = LogoutReplacer.new(@lines).lines
         @lines = SubmitReplacer.new(:submit, @lines).lines
         @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
+        @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
         @lines
       end
     end
@@ -231,7 +232,7 @@ module Converter
       def figure_replacements
         @next_index = @index = @submit_index + 1
         @replacements = @lines[@first_index...@submit_index]
-        @replacements << Line.new("vivo_click_and_wait_for_indexing(%s)" % [ @submit_spec ]) 
+        @replacements << Line.new("vivo_click_and_wait_for_indexing(%s)" % [ @submit_spec ])
       end
     end
 
@@ -308,6 +309,48 @@ module Converter
         @replacements << Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ good_spec, good_text ])
         @replacements << Line.new("browser_wait_for_jQuery")
         @replacements << Line.new("$browser.find_element(%s).send_keys(:arrow_down, :return)" % [ good_spec ])
+      end
+    end
+
+    #
+    # The old way of locating the "add preferred title" link, no longer works.
+    #
+    # If you find this sequence:
+    #   <tr><td>clickAndWait</td><td>css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual</td><td></td></tr>
+    #   <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+    #   <tr><td>type</td><td>id=preferredTitle</td><td>Assistant Professor</td></tr>
+    # Replace the first line with this one:
+    #   <tr><td>clickAndWait</td><td>css=[title="Add new preferred title entry"]</td><td></td></tr>
+    # Then let the usual "clickAndWait" replacer do it's work.
+    #
+    class PreferredTitleLocator < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_funky_click_and_wait &&
+        next_is_edit_page &&
+        next_is_type_in_preferred_title
+          figure_replacements
+        else
+          nil
+        end
+      end
+
+      def is_funky_click_and_wait
+        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual") 
+      end
+
+      def next_is_edit_page
+        advance_to_next_line
+        @line.match("assertTitle", "Edit")
+      end
+
+      def next_is_type_in_preferred_title
+        advance_to_next_line
+        @line.match?("type", "id=preferredTitle")
+      end
+
+      def figure_replacements
+        @next_index = @first_index + 1
+        @replacements = [ Line.new("#<tr><td>clickAndWait</td><td>css=[title=\"Add new preferred title entry\"]</td><td></td></tr>") ]
       end
     end
   end
