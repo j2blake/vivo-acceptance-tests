@@ -26,7 +26,6 @@ module Converter
           replace_open ||
           replace_select ||
           replace_tinymce ||
-          replace_type ||
           replace_verify_element_not_present ||
           replace_verify_element_present ||
           replace_verify_text ||
@@ -137,36 +136,13 @@ module Converter
       end
 
       #
-      # Special case for typing file paths:
-      # <tr><td>type</td><td>name=rdfStream</td><td>C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8</td></tr>
-      #   becomes
-      # $browser.find_element(:name, "rdfStream").send_keys(tester_filepath("Test-utf8"))
-      #
-      # Else:
-      # <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
-      #   becomes
-      # $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
-      #
-      def replace_type()
-        response = @line.match(/^type$/, /.*/, /^C:(.*)$/) do |m|
-          interpret("$browser.find_element(%s).send_keys(tester_filepath(\"%s\", __FILE__))", element_spec(m[1][0]), strip_file_path(m[2][1]))
-        end
-        unless response
-          response = @line.match(/^type$/) do |m|
-            interpret("$browser.find_element(%s).send_keys(\"%s\")", element_spec(m[1][0]), value(m[2][0]))
-          end
-        end
-        response
-      end
-
-      #
       # <tr><td>verifyElementNotPresent</td><td>link=Faculty, Jane</td><td></td></tr>
       #   becomes
       # expect($browser.find_elements(:link_name, "Faculty, Jane")).size.to eq(0)
       #
       def replace_verify_element_not_present()
         @line.match(/^verifyElementNotPresent$/) do |m|
-          interpret("expect($browser.find_elements(%s)).size.to eq(0)", element_spec(m[1][0]))
+          interpret("expect($browser.find_elements(%s).size).to eq(0)", element_spec(m[1][0]))
         end
       end
 

@@ -10,36 +10,13 @@ module Converter
 
       def go
         @lines = LoginReplacer.new(:login, @lines).lines
-        @lines = LogoutReplacer.new(@lines).lines
+        @lines = LogoutReplacer.new(:logout, @lines).lines
         @lines = SubmitReplacer.new(:submit, @lines).lines
         @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
         @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
-        @lines
-      end
-    end
-
-    class LogoutReplacer
-      def initialize(lines)
-        @lines = lines
-
-        while
-          find_logout_line &&
-          replace
-        end
-      end
-
-      def find_logout_line
-        @index = @lines.find_index { |line| line.match(/^clickAndWait$/, /^link=Log out$/) }
-      end
-
-      def replace
-        replacement = Line.new("vivo_logout")
-
-        @lines = @lines[0..(@index - 1)].append(replacement).concat(@lines[(@index + 1)..-1])
-        $reporter.replace_phrase(:logout, 1)
-      end
-
-      def lines
+        @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
+        
+        @lines = TypeReplacer.new(:type, @lines).lines
         @lines
       end
     end
@@ -78,8 +55,10 @@ module Converter
           if @replacements
             @lines = @lines[0...@first_index].concat(@replacements).concat(@lines[@next_index..-1])
             $reporter.replace_phrase(@key, @replacements.size)
+            index += @replacements.size
+          else
+            index += 1
           end
-          index += 1
         end
       end
 
@@ -192,6 +171,72 @@ module Converter
           else
             return true
           end
+        end
+      end
+    end
+
+    #
+    # Logout is a one-for-one replacement.
+    #
+    # This:
+    #     <tr><td>clickAndWait</td><td>link=Log out</td><td></td></tr>
+    # Becomes this:
+    #     vivo_logout
+    #
+    class LogoutReplacer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_logout_line
+          figure_replacements
+        else
+          nil
+        end
+      end
+
+      def is_logout_line
+        @line.match("clickAndWait", "link=Log out")
+      end
+
+      def figure_replacements
+        @replacements = [ Line.new("vivo_logout") ]
+      end
+    end
+
+    #
+    # Type tag:
+    #    <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
+    # Becomes:
+    #    $browser.find_element(:name, "loginName").clear
+    #    $browser.find_element(:name, "loginName").send_keys("testAdmin@cornell.edu")
+    #
+    # With a special case for file paths:
+    #    <tr><td>type</td><td>name=rdfStream</td><td>C:\VIVO\vivo\utilities\acceptance-tests\suites\LanguageSupport\Test-utf8</td></tr>
+    # Becomes:
+    #    $browser.find_element(:name, "rdfStream").clear
+    #    $browser.find_element(:name, "rdfStream").send_keys(tester_filepath("Test-utf8"))
+    class TypeReplacer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        replace_type_file_path || replace_type
+      end
+
+      def replace_type_file_path
+        @line.match("type", nil, /^C:(.*)$/) do |m|
+          element = element_spec(m[1][0])
+          value = strip_file_path(m[2][1])
+          @replacements = [
+            Line.new("$browser.find_element(%s).clear" % element),
+            Line.new("$browser.find_element(%s).send_keys(tester_filepath(\"%s\", __FILE__))" % [ element, value ] )
+          ]
+        end
+      end
+
+      def replace_type
+        @line.match("type") do |m|
+          element = element_spec(m[1][0])
+          value = value(m[2][0])
+          @replacements = [
+            Line.new("$browser.find_element(%s).clear" % element),
+            Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ element, value ] )
+          ]
         end
       end
     end
@@ -371,5 +416,36 @@ module Converter
         @replacements = [ Line.new("#<tr><td>clickAndWait</td><td>css=[title=\"Add new preferred title entry\"]</td><td></td></tr>") ]
       end
     end
+
+    #
+    # The "My account" link is not visible unless we hover over it first.
+    # Same for "My profile" and "Log out"
+    #
+    # So, for any of these:
+    #    <tr><td>verifyElementPresent</td><td>link=My account</td><td></td></tr>
+    #    <tr><td>verifyElementNotPresent</td><td>link=My account</td><td></td></tr>
+    #    <tr><td>clickAndWait</td><td>link=My account</td><td></td></tr>
+    #    #<tr><td>verifyTextPresent</td><td>My account</td><td></td></tr>
+    # Insert this line before it:
+    #    $browser.action.move_to($browser.find_element(:id, "user-menu")).perform
+    #
+    # Same for "My profile and "Log out"
+    #
+    class AdminMenuHoverer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        op_matcher = /^(verifyElementPresent|verifyElementNotPresent|clickAndWait|verifyTextPresent)$/
+        link_matcher = /(My profile|My account|Log out)$/
+        if @line.match(op_matcher, link_matcher)
+          @replacements = [
+            Line.new("$browser.action.move_to($browser.find_element(:id, \"user-menu\")).perform"),
+            @line
+          ]
+        else
+          nil
+        end
+      end
+
+    end
+
   end
 end

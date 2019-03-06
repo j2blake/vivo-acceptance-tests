@@ -203,3 +203,41 @@ SparqlUpdateApi
     SparqlUpdateApi/_test_api_disabled.rb:4
     Won't run without the test app. What can we do instead?
     ACTION ????
+
+---------------------------------------------
+ACTIONS
+---------------------------------------------
+
+REplace expectations of TinyMCE, with use of text field. Set it up so it's extensible.
+
+In expected text, replace sequences of non-breaking spaces with a single space
+
+Remove selectWindow/null tags, any others?
+
+Create curator, editor and self accounts.
+
+Code some way to change id= to name= for specific fields. Maybe after the other replacements have happened?
+
+Try inserting a wait_for_jQuery every time we load the home page (expectTitle = VIVO)
+
+Try inserting a wait_for_indexing every time we are about to look at the Index page
+
+Look at the instructions on the checklist. What tests will simply not work as written? How to disable them?
+
+Replace TinyMCE with text fields, based on editing sequence. Have we already done this?
+
+Clear the username field before typing -- how many places does that come into effect?
+One thing to try: ctrl-A before other keys
+    $browser.find_element(:name, "loginName").clear
+    $browser.find_element(:name, "loginName").send_keys("RickRookie@mydomain.edu")    #<tr><td>type</td><td>name=loginName</td><td>RickRookie@mydomain.edu</td></tr>
+
+Hover over user-menu before asking about My account
+        admin_menu = $browser.find_element(:id, "user-menu")
+    $browser.action.move_to(admin_menu).perform
+    $browser.find_element(:link_text, "My account")    #<tr><td>verifyElementPresent</td><td>link=My account</td><td></td></tr>
+
+    Also:
+    $browser.find_element(:link_text, "My account").click
+
+Need a new way of verifyingElementNotPresent -- just move the parenthesis??
+    expect($browser.find_elements(:link_text, "My profile")).size.to eq(0)    #<tr><td>verifyElementNotPresent</td><td>link=My profile</td><td></td></tr>

@@ -20,7 +20,7 @@ module Converter
           replacement =
           convert_default_specs_to_name_specs(
           %w{clickAndWait type select},
-          %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword loginForm})
+          %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword loginForm passwordChangeForm})
 
           @result.concat([ *(replacement || @line) ])
         end
