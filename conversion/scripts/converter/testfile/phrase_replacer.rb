@@ -16,6 +16,7 @@ module Converter
         @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
         @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
         @lines = AssertConfirmation.new(:confirmation, @lines).lines
+        @lines = LiteralInsteadOfTinymce.new(:confirmation, @lines).lines
         @lines = TypeReplacer.new(:type, @lines).lines
         @lines
       end
@@ -90,9 +91,9 @@ module Converter
     #    (with any title), which might be preceded by
     #       <tr><td>open</td><td>/vivo/</td><td></td></tr>
     # It must be followed by these
-    #       <tr><td>type</td><td>loginName</td><td>testAdmin@cornell.edu</td></tr>
+    #       <tr><td>type</td><td>name=loginName</td><td>testAdmin@cornell.edu</td></tr>
     #          or the field might be specified as "id=loginName"
-    #       <tr><td>type</td><td>loginPassword</td><td>Password</td></tr>
+    #       <tr><td>type</td><td>name=loginPassword</td><td>Password</td></tr>
     #          or the field might be specified as "id=loginPassword"
     #       <tr><td>clickAndWait</td><td>name=loginForm</td><td></td></tr>
     #
@@ -147,7 +148,7 @@ module Converter
 
       def next_is_enter_login_name
         advance_to_next_line
-        if m = @line.match("type", "loginName") || @line.match("type", "id=loginName")
+        if m = @line.match("type", "id=loginName") || @line.match("type", "name=loginName")
           @login_name = m[2][0]
         else
           nil
@@ -156,7 +157,7 @@ module Converter
 
       def next_is_enter_password
         advance_to_next_line
-        if m = @line.match("type", "loginPassword") || @line.match("type", "id=loginPassword")
+        if m = @line.match("type", "id=loginPassword") || @line.match("type", "name=loginPassword")
           @password = m[2][0]
         else
           nil
@@ -238,7 +239,7 @@ module Converter
       end
 
       def replace_type_file_path
-        @line.match("type", nil, /^C:(.*)$/) do |m|
+        @line.match("type", /.*/, /^C:(.*)$/) do |m|
           element = element_spec(m[1][0])
           value = strip_file_path(m[2][1])
           @replacements = [
@@ -417,7 +418,8 @@ module Converter
       end
 
       def is_funky_click_and_wait
-        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual")
+        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028 &gt; img.add-individual") ||
+        @line.match?("clickAndWait", "css=header &gt; #ARG_2000028 &gt; a.add-ARG_2000028")
       end
 
       def next_is_edit_page
@@ -502,6 +504,68 @@ module Converter
         @replacements = [
           Line.new("expect($browser.switch_to.alert.text).to eq(\"%s\")" % value(@text)),
           Line.new("$browser.switch_to.alert.accept")
+        ]
+      end
+    end
+
+    #
+    # The application has changed so literal strings are not handled by TinyMCE.
+    # We have a list of fields for which this is true.
+    #
+    # So, if we click on a link in our list, and it leads to the Edit page, and
+    # we enter text into TinyMCE, then:
+    #    <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
+    #    <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+    #    <tr><td>waitForElementPresent</td><td>tinymce</td><td></td></tr>
+    #    <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('Gorillas')</td><td></td>
+    # Becomes:
+    #    <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
+    #    <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+    #    <tr><td>type</td><td>literal</td><td>Gorillas</td></tr>
+    #
+    class LiteralInsteadOfTinymce < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_click_on_a_recognized_field &&
+        next_is_edit_page &&
+        next_is_wait_for_tinymce &&
+        next_is_enter_to_tinymce
+          figure_replacements
+        else
+          nil
+        end
+      end
+
+      def is_click_on_a_recognized_field
+        [ "click", "clickAndWait"].include?(@line.field1) &&
+        [
+          "//h3[@id='freetextKeyword']/a/img",
+          "//h3[@id='abbreviation']/a/img",
+          "css=a.add-researcherId &gt; img.add-individual"
+        ].include?(@line.field2)
+      end
+
+      def next_is_edit_page
+        advance_to_next_line
+        @line.match?("assertTitle", "Edit")
+      end
+
+      def next_is_wait_for_tinymce
+        advance_to_next_line
+        @line.match?("waitForElementPresent", "tinymce")
+      end
+
+      def next_is_enter_to_tinymce
+        advance_to_next_line
+        @line.match("runScript", /^tinyMCE.activeEditor.setContent(['"].*['"])$/) do |m|
+          @content = m[1][1]
+        end
+      end
+
+      def figure_replacements
+        @replacements = [
+          @lines[@first_index],
+          @lines[@first_index + 1],
+          Line.new("<tr><td>type</td><td>literal</td><td>%s</td></tr>" % @content)
         ]
       end
     end

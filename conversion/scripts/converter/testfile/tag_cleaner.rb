@@ -20,7 +20,8 @@ module Converter
           replacement =
           convert_default_specs_to_name_specs(
           %w{click clickAndWait type select},
-          %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword loginForm passwordChangeForm deleteAccount delete-account})
+          %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword} +
+          %w{loginForm passwordChangeForm deleteAccount delete-account rdfUrl queryText})
 
           @result.concat([ *(replacement || @line) ])
         end

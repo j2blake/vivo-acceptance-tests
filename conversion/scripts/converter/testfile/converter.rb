@@ -29,6 +29,7 @@ module Converter
         @contents = UselessTagRemover.new(@contents).to_s
 
         @parsed = Parser.new.parse(@contents)
+        @parsed = TagCleaner.new(@parsed).go
         @parsed = UserAccountReplacer.new(@parsed).go
         @parsed = PhraseReplacer.new(@parsed, label).go
         @contents = Parser.new.unparse(@parsed)
@@ -36,7 +37,6 @@ module Converter
         @contents = UncertainTagDeferrer.new(@contents).to_s
         
         @parsed = Parser.new.parse(@contents)
-        @parsed = TagCleaner.new(@parsed).go
         @parsed = CommonTagReplacer.new(@parsed).go
         @contents = Parser.new.unparse(@parsed)
 

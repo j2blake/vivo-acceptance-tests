@@ -1,37 +1,11 @@
 AddNonPersonThings
-    AddNonPersonThings/_create_organization.rb:264
+    AddNonPersonThings/_create_organization.rb:304
     $browser.find_element(:xpath, "(.//img[@alt='add'])[14]").click    
-        #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[14]</td><td></td></tr>
-    Selenium::WebDriver::Error::ElementNotVisibleError:
+       #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[14]</td><td></td></tr>
     ACTION: Find out what field is sought, and how to make it visible.
 
-    AddNonPersonThings/_create_organization.rb:257
-    No TinyMCE
-    Replace expectation of TinyMCE, if 
-      <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
-      <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
-      <tr><td>waitForElementPresent</td><td>tinymce</td><td></td></tr>
-      <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('Gorillas')</td><td></td>
-    Becomes (appears at 14 locations)
-      <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
-      <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
-      <tr><td>type</td><td>literal</td><td>Gorillas</td></tr>
-    Also
-      <tr><td>clickAndWait</td><td>//h3[@id='abbreviation']/a/img</td><td></td></tr>
-      <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
-      <tr><td>waitForElementPresent</td><td>tinymce</td><td></td></tr>
-      <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('PCoA')</td><td></td>
-    Becomes (appears at 2 locations)
-      <tr><td>clickAndWait</td><td>//h3[@id='abbreviation']/a/img</td><td></td></tr>
-      <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
-      <tr><td>type</td><td>id=literal</td><td>PCoA</td></tr>
-
-    How many other phrases can we do the same with?
-    How to generalize?
-    ACTION: write the phrase replacer(s)
-
 AddPublications
-    AddPublications/_validate_fields.rb:104
+    AddPublications/_validate_fields.rb:115
     expect(browser_page_text).to include("Nintendo O.K. for Kids.&nbsp;&nbsp;Raising Children in the 21st Century. Ed. Mouse, Minnie.&nbsp;&nbsp;New York: Marcel Dekker. 123-144. 2009")    
         #<tr><td>verifyTextPresent</td><td>Nintendo O.K. for Kids.&nbsp;&nbsp;Raising Children in the 21st Century. Ed. Mouse, Minnie.&nbsp;&nbsp;New York: Marcel Dekker. 123-144. 2009</td><td></td></tr>
     Found: Nintendo O.K. for Kids</a>. 
@@ -43,7 +17,7 @@ AddPublications
     ACTION: change to replace the non-breaking spaces with a single space. Apply to all verifyTextPresent
 
 AddRoles
-    AddRoles/_add_faculty_member_roles2.rb:23
+    AddRoles/_add_faculty_member_roles2.rb:24
     expect(browser_page_text).to include("Create research activity entry for Faculty, Jane")    
         #<tr><td>verifyTextPresent</td><td>Create research activity entry for Faculty, Jane</td><td></td></tr>
     But instead found 
@@ -51,17 +25,18 @@ AddRoles
     ACTION: Change this expected text. Looks like the page format has simply changed.
 
 AdminSecurity
-    AdminSecurity/_admin_bad_login.rb:6
-    DONE: Tweaked the login replacer
+    AdminSecurity/_admin_login_logout.rb:21
+    Expecting that testAdmin's first name is Test, but it's now Admin
+    DONE: What to do?
 
 CheckMapOfScience
-    CheckMapOfScience/_add_test_faculty.rb:29
-    Preferred title: should have been addressed by the phrase replacer, 
-      but the sequence is interrupted by selectWindow/null tags.
-    ACTION: Remove those tags, prior to the phrase replacer
+    CheckMapOfScience/_add_publications.rb:35
+    $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
+    Not visible
+    ACTION: Find out what field is sought, and how to make it visible.
 
 CheckVisualizations
-    CheckVisualizations/_add_publications.rb:45
+    CheckVisualizations/_add_publications.rb:47
     $browser.find_element(:css, "a.add-placeOfPublication > img.add-individual").click    
         #<tr><td>clickAndWait</td><td>css=a.add-placeOfPublication &gt; img.add-individual</td><td></td></tr>
     Selenium::WebDriver::Error::ElementNotVisibleError:
@@ -77,44 +52,37 @@ CreateClasses
     ACTION: Start setting exception cases in element_spec() ?
 
 CreatePeople
-    CreatePeople/_create_faculty_member.rb:44
+    CreatePeople/_create_faculty_member.rb:47
     Can't find it
     $browser.find_element(:link_text, "Faculty, Jane")    
         #<tr><td>verifyElementPresent</td><td>link=Faculty, Jane</td><td></td></tr>
-    Didn't wait for jQuery?
+    Didn't wait for jQuery!!
     ACTION try inserting a wait_for_jquery (perhaps every time we visit the Home page)
 
 CreateProperties
-    CreateProperties/_add_property_group_place.rb:20
-    undefined method `size' for #<RSpec::Expectations::ExpectationTarget:0x00007fcb704ecc38>
-    Is this a timing issue? Does the verifyElementNotPresent translation work successfully anywhere?
-    ACTION: Google it.
+    CreateProperties/_add_property_group_place.rb:26
+    ACTION: default element spec. should be fixed.
 
 CustomAdvisesForm
-    CustomAdvisesForm/_add_advises.rb:63
-    expect(browser_page_text).to include("You must enter a value in the Last Name field.")   
-        #<tr><td>verifyTextPresent</td><td>You must enter a value in the Last Name field. </td><td></td></tr>
-    ACTION: wait for jQuery?
+    CustomAdvisesForm/_add_advises.rb:105
+    Non-breaking spaces
+    ACTION: Fix it. Like AddPublications
 
 CustomAwardsForm
-    CustomAwardsForm/_add_awards.rb:52
-    expect(browser_page_text).to include("Best Professor, conferred by Carroll College, 2012")
-        #<tr><td>verifyTextPresent</td><td>Best Professor, conferred by Carroll College, 2012</td><td></td></tr>
-    THIS LOOKS LIKE SOMETHING BROKEN
-    ACTION: Investigate?
+    CustomAwardsForm/_add_awards.rb:132
+    Non-breaking spaces
+    ACTION: Fix it. Like AddPublications
 
 CustomEducationForm
-    CustomEducationForm/_create_test_faculty_member.rb:28
+    CustomEducationForm/_create_test_faculty_member.rb:29
      Preferred title: should have been addressed by the phrase replacer, 
       but the sequence is interrupted by selectWindow/null tags.
-    ACTION: Remove those tags, prior to the phrase replacer
+    ACTION: Should be fixed
 
 CustomPositionsForm
-    CustomPositionsForm/_add_positions.rb:62
-    browser_find_select_list(:id, "positionType").select_by(:text, "Faculty Administrative Position")
-        #<tr><td>select</td><td>positionType</td><td>label=Faculty Administrative Position</td></tr>
-    Should have been name=,
-    ACTION Same as CreateClasses. Set the exception.
+    CustomPositionsForm/_search_positions.rb:8
+    Find queryText by name
+    ACTION: Should be fixed
 
 InitialSetup
     InitialSetup/_edit_site_info.rb:25
@@ -123,21 +91,19 @@ InitialSetup
     ACTION: remove the check for this element (twice)
 
 LanguageSupport
-    LanguageSupport/_check_english_overview.rb:4
-    No pause before using the Index.
-    ACTION: insert wait_for_indexing before clicks on Index
+    LanguageSupport/_add_r_d_f_data.rb:20
+    Busted replacer for C:\file.path
+    ACTION: Fixed?
 
 LinkedOpenData
-    LinkedOpenData/_add_test_r_d_f.rb:3
-    expect($browser.title).to eq("Log in to VIVO")
-    Didn't replace the Login phrase -- why not?
-    ACTION: Check to see whether this has been fixed
+    LinkedOpenData/_add_test_r_d_f.rb:12
+    Busted replacer for C:\file.path
+    ACTION: Fixed?
 
 MultiLabels
-    MultiLabels/_manage_labels.rb:14
-    No button to manage labels: $browser.find_element(:css, "a.add-label > img.add-individual")
-    Check the instructions on the checklist. Does this need to be enabled somehow?
-    ACTION: ???? 
+    MultiLabels/_add_r_d_f_data.rb:20
+    Busted replacer for C:\file.path
+    ACTION: Fixed?
 
 OntologyManagement
     OntologyManagement/_add_ontology.rb:29
@@ -145,7 +111,7 @@ OntologyManagement
 	ACTION: change the HTML for all three fields to include "name="
 
 OpenSocialGadgets
-    OpenSocialGadgets/_check_gadgets.rb:24
+    OpenSocialGadgets/_add_test_faculty.rb:33
     PROBABLY WILL NEVER WORK
     ACTION: verify that this will not work
 
@@ -158,6 +124,7 @@ ProcessRDFData
 
 ProxyEditing
     ProxyEditing/_create_new_faculty_member.rb:28
+    ProxyEditing/_create_new_faculty_member.rb:30
     TinyMCE is not there: browser_fill_tinyMCE("JaneFaculty@cornell.edu")
         $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[18]").click    
             #<tr><td>click</td><td>//div[@id='wrapper-content']/ul/li[18]</td><td></td></tr>
@@ -167,32 +134,33 @@ ProxyEditing
             #<tr><td>assertTitle</td><td>Edit</td><td></td></tr>
         browser_fill_tinyMCE("JaneFaculty@cornell.edu")    
             #<tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('JaneFaculty@cornell.edu')</td><td></td></tr>
-    ACTION: Expect text field "id=literal" 
+    ACTION: Should already be fixed 
 
 SearchBoost
-    SearchBoost/_test_individual_boost.rb:27
-    expect(browser_page_text).to include("Baker, Able Faculty Member")    
-        #<tr><td>verifyTextPresent</td><td>Baker, Able Faculty Member</td><td></td></tr>
+    SearchBoost/_create_test_people.rb:91
+    expect(browser_page_text).to include("Faculty Member (4)") but sees (1) instead.
+    Reverting - why didn't the indexing complete?
     MAY NEVER WORK
-    ACTION: investigate
+    ACTION: Wait for indexing to complete before checking the index?
 
 SearchExclusion
-    SearchExclusion/_create_test_faculty_member.rb:28
+    SearchExclusion/_create_test_faculty_member.rb:29
     $browser.find_element(:css, "header > #ARG_2000028 > a.add-ARG_2000028").click
     ACTION: change to [title="Add new preferred title entry"]
     ACTION: Why didn't this work? Investigate
 
 SearchTextDiscovery
-    SearchTextDiscovery/_text_discovery.rb:27
+    SearchTextDiscovery/_text_discovery.rb:31
     expect($browser.title).to eq("baker - VIVO Search Results")
     ACTION: DON'T KNOW
 
 SelfEditing
-    SelfEditing/_first_time_self_editor_login.rb:9
-    ACTION: Might be fixed by login changes.
+    SelfEditing/_add_self_editor_id.rb:14
+    No faculty members in the index, after a fresh login.
+    ACTION: Wait for indexing to complete before checking the index?
 
 ShortViews
-    ShortViews/_create_test_departments.rb:47
+    ShortViews/_create_test_departments.rb:50
     Index is showing the departments, but without location
     ACTION: ????
 
@@ -225,19 +193,3 @@ Try inserting a wait_for_indexing every time we are about to look at the Index p
 Look at the instructions on the checklist. What tests will simply not work as written? How to disable them?
 
 Replace TinyMCE with text fields, based on editing sequence. Have we already done this?
-
-Clear the username field before typing -- how many places does that come into effect?
-One thing to try: ctrl-A before other keys
-    $browser.find_element(:name, "loginName").clear
-    $browser.find_element(:name, "loginName").send_keys("RickRookie@mydomain.edu")    #<tr><td>type</td><td>name=loginName</td><td>RickRookie@mydomain.edu</td></tr>
-
-Hover over user-menu before asking about My account
-        admin_menu = $browser.find_element(:id, "user-menu")
-    $browser.action.move_to(admin_menu).perform
-    $browser.find_element(:link_text, "My account")    #<tr><td>verifyElementPresent</td><td>link=My account</td><td></td></tr>
-
-    Also:
-    $browser.find_element(:link_text, "My account").click
-
-Need a new way of verifyingElementNotPresent -- just move the parenthesis??
-    expect($browser.find_elements(:link_text, "My profile")).size.to eq(0)    #<tr><td>verifyElementNotPresent</td><td>link=My profile</td><td></td></tr>
