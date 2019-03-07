@@ -28,7 +28,8 @@
     :hasFileStorage               :ptiFileStorage ;
     :hasContentTripleSource       :tdbContentTripleSource ;
 #    :hasContentTripleSource       :transientContentTripleSource ;
-    :hasConfigurationTripleSource :transientConfigurationTripleSource ;
+    :hasConfigurationTripleSource :tdbConfigurationTripleSource ;
+#    :hasConfigurationTripleSource :transientConfigurationTripleSource ;
     :hasTBoxReasonerModule        :jfactTBoxReasonerModule .
 
 # ----------------------------
@@ -141,9 +142,9 @@
 #    It requires no parameters.
 #
 
-#:tdbConfigurationTripleSource
-#    a   vitroWebapp:triplesource.impl.tdb.ConfigurationTripleSourceTDB ,
-#        vitroWebapp:modules.tripleSource.ConfigurationTripleSource .
+:tdbConfigurationTripleSource
+    a   vitroWebapp:triplesource.impl.tdb.ConfigurationTripleSourceTDB ,
+        vitroWebapp:modules.tripleSource.ConfigurationTripleSource .
         
 :transientConfigurationTripleSource
     a   vitroWebapp:triplesource.impl.transience.ConfigurationTripleSourceTransient ,

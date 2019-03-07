@@ -8,7 +8,8 @@ module Converter
           @lines << @line unless 
           is_delete_cookies_tag || 
           is_wait_for_tinymce || 
-          is_set_timeout
+          is_set_timeout ||
+          is_select_window
         end
       end
 
@@ -23,7 +24,11 @@ module Converter
       def is_set_timeout
         @line.match? %r{<td>setTimeout</td><td>.+</td><td></td>}
       end
-
+      
+      def is_select_window
+        @line.match? %r{<td>selectWindow</td><td>null</td>}
+      end
+      
       def to_s
         @lines.join("\n")
       end

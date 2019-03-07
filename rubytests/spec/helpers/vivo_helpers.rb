@@ -8,9 +8,6 @@ module VivoHelpers
   # Throw an exception if not successful.
   #
   def vivo_login_as(email, password)
-    $browser.navigate.to vivo_url("/")
-    expect($browser.title).to eq("VIVO")
-
     $browser.find_element(:link_text, "Log in").click
     expect($browser.title).to eq("Log in - VIVO")
 
@@ -19,6 +16,18 @@ module VivoHelpers
     $browser.find_element(:name, "loginForm").click
   end
 
+  #
+  # Go to the home page and login.
+  #
+  # Useful if the login link isn't present on the current page. Especially 
+  # useful at the beginning of the test.
+  #
+  def vivo_login_from_home_page_as(email, password)
+    $browser.navigate.to vivo_url("/")
+    expect($browser.title).to eq("VIVO")
+    vivo_login_as(email, password)
+  end
+  
   #
   # Logout.
   #

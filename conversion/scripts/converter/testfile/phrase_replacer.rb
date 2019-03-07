@@ -101,29 +101,43 @@ module Converter
     #
     class LoginReplacer < AbstractPhraseReplacer
       def find_replacements_for_range_based_at_current_index
-        if is_click_on_login &&
-        maybe_back_up_for_clicking_the_link &&
-        maybe_back_up_for_open &&
+        if is_go_to_home_page_and_login
+          replace_go_to_home_page_and_login
+        elsif is_simple_login
+          replace_simple_login
+        else
+          nil
+        end
+      end
+      
+      def is_go_to_home_page_and_login
+        is_click_on_login &&
+        back_up_for_clicking_the_link &&
+        back_up_for_open &&
         next_is_login_page &&
         next_is_enter_login_name &&
         next_is_enter_password &&
         next_is_submit_form
-          figure_replacements
-        else
-          nil
-        end
+      end
+      
+      def is_simple_login
+        is_click_on_login &&
+        next_is_login_page &&
+        next_is_enter_login_name &&
+        next_is_enter_password &&
+        next_is_submit_form
       end
 
       def is_click_on_login
         @line.match?("clickAndWait", "link=Log in")
       end
 
-      def maybe_back_up_for_clicking_the_link
-        look_for_optional_backup("assertTitle", "VIVO")
+      def back_up_for_clicking_the_link
+        look_for_backup("assertTitle", "VIVO")
       end
 
-      def maybe_back_up_for_open
-        look_for_optional_backup("open", "/vivo/")
+      def back_up_for_open
+        look_for_backup("open", "/vivo/")
       end
 
       def next_is_login_page
@@ -155,12 +169,17 @@ module Converter
         @line.match?("clickAndWait", "name=loginForm")
       end
 
-      def figure_replacements
+      def replace_go_to_home_page_and_login
+        @replacements = comments_from_range
+        @replacements << Line.new("vivo_login_from_home_page_as(\"%s\", \"%s\")" % [ @login_name, @password ])
+      end
+
+      def replace_simple_login
         @replacements = comments_from_range
         @replacements << Line.new("vivo_login_as(\"%s\", \"%s\")" % [ @login_name, @password ])
       end
 
-      def look_for_optional_backup(target1, target2 = /.*/, target3 = /.*/)
+      def look_for_backup(target1, target2 = /.*/, target3 = /.*/)
         (@first_index - 1).downto(0) do |index|
           line = @lines[index]
           if line.match?(target1, target2, target3)
@@ -169,7 +188,7 @@ module Converter
           elsif line.comment
             # keep looking
           else
-            return true
+            return nil
           end
         end
       end
