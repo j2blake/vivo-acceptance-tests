@@ -15,7 +15,7 @@ module Converter
         @lines = AutoCompleteReplacer.new(:auto_complete, @lines).lines
         @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
         @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
-        
+        @lines = AssertConfirmation.new(:confirmation, @lines).lines
         @lines = TypeReplacer.new(:type, @lines).lines
         @lines
       end
@@ -109,7 +109,7 @@ module Converter
           nil
         end
       end
-      
+
       def is_go_to_home_page_and_login
         is_click_on_login &&
         back_up_for_clicking_the_link &&
@@ -119,7 +119,7 @@ module Converter
         next_is_enter_password &&
         next_is_submit_form
       end
-      
+
       def is_simple_login
         is_click_on_login &&
         next_is_login_page &&
@@ -463,7 +463,47 @@ module Converter
           nil
         end
       end
+    end
 
+    #
+    # assertConfirmation tag both checks the text of a dialog box, and confirms it.
+    # The tests also (usually) include a waitForPageToLoad, which is no longer needed.
+    #
+    # So,
+    #    <tr><td>assertConfirmation</td><td>Are you SURE? If in doubt, CANCEL.</td><td></td></tr>
+    #    <tr><td>waitForPageToLoad</td><td>5000</td><td></td></tr>
+    # Becomes
+    #    expect($browser.switch_to.alert.text).to eq("Are you SURE? If in doubt, CANCEL.")
+    #    $browser.switch_to.alert.accept
+    #
+    class AssertConfirmation < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_assert_confirmation &&
+        optionally_has_wait_for_page_to_load
+          figure_replacements
+        else
+          nil
+        end
+      end
+
+      def is_assert_confirmation
+        @line.match("assertConfirmation") do |m|
+          @text = m[1][0]
+        end
+      end
+
+      def optionally_has_wait_for_page_to_load
+        if @lines[@index + 1].match?("waitForPageToLoad")
+          @next_index += 1
+        end
+      end
+
+      def figure_replacements
+        @replacements = [
+          Line.new("expect($browser.switch_to.alert.text).to eq(\"%s\")" % value(@text)),
+          Line.new("$browser.switch_to.alert.accept")
+        ]
+      end
     end
 
   end

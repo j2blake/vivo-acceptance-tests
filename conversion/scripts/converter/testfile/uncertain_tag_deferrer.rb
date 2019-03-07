@@ -7,7 +7,7 @@ module Converter
           @line = l.chomp
           @m = @line.match %r{<td>(.*?)</td><td>(.*?)</td><td>(.*?)</td>}
           
-          if @m && %w[pause waitForPageToLoad refreshAndWait].include?(@m[1])
+          if @m && %w[pause refreshAndWait].include?(@m[1])
             @lines << "# " + @line
           else
             @lines << @line

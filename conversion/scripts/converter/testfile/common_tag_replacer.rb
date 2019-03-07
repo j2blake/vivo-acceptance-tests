@@ -18,7 +18,6 @@ module Converter
           @line = line
 
           replacement =
-          replace_assert_confirmation ||
           replace_assert_text_present ||
           replace_assert_title ||
           replace_click ||
@@ -37,17 +36,6 @@ module Converter
         end
 
         @result
-      end
-
-      #
-      # #<tr><td>assertConfirmation</td><td>Are you SURE you want to delete this individual?</td><td></td></tr>
-      #   becomes
-      # expect($browser.switchTo.alert.text).to eq("Are you SURE you want to delete this individual?")
-      #
-      def replace_assert_confirmation()
-        @line.match(/^assertConfirmation$/) do
-          interpret("expect($browser.switchTo.alert.text).to eq(\"%s\")", value(@line.field2))
-        end
       end
 
       #
