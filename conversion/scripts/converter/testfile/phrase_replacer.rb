@@ -17,6 +17,7 @@ module Converter
         @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
         @lines = AssertConfirmation.new(:confirmation, @lines).lines
         @lines = LiteralInsteadOfTinymce.new(:literal, @lines).lines
+        @lines = JQueryWaiter.new(:wait_jquery, @lines).lines
         @lines = TypeReplacer.new(:type, @lines).lines
         @lines
       end
@@ -469,7 +470,8 @@ module Converter
 
     #
     # assertConfirmation tag both checks the text of a dialog box, and confirms it.
-    # The tests also (usually) include a waitForPageToLoad, which is no longer needed.
+    # The tests also (usually) include a waitForPageToLoad. We can replace that with 
+    # the much faster browser_wait_for_jQuery
     #
     # So,
     #    <tr><td>assertConfirmation</td><td>Are you SURE? If in doubt, CANCEL.</td><td></td></tr>
@@ -477,6 +479,7 @@ module Converter
     # Becomes
     #    expect($browser.switch_to.alert.text).to eq("Are you SURE? If in doubt, CANCEL.")
     #    $browser.switch_to.alert.accept
+    #    browser_wait_for_jQuery
     #
     class AssertConfirmation < AbstractPhraseReplacer
       def find_replacements_for_range_based_at_current_index
@@ -505,7 +508,8 @@ module Converter
       def figure_replacements
         @replacements = [
           Line.new("expect($browser.switch_to.alert.text).to eq(\"%s\")" % value(@text)),
-          Line.new("$browser.switch_to.alert.accept")
+          Line.new("$browser.switch_to.alert.accept"),
+          Line.new("browser_wait_for_jQuery")
         ]
       end
     end
@@ -527,7 +531,7 @@ module Converter
     #    <tr><td>verifyTextPresent</td><td>Some text</td><td></td></tr>
     #    <tr><td>type</td><td>literal</td><td>Gorillas</td></tr>
     #
-    # Note: different field specs in the "clickAndWait" result in different 
+    # Note: different field specs in the "clickAndWait" result in different
     # field names in the "type".
     #
     # Note: both "verifyTextPresent" and "waitForElementPresent" are optional.
@@ -583,6 +587,38 @@ module Converter
         @replacements = @lines[@first_index...(@next_index - 1)].reject { |line| line.match?("waitForElementPresent", "tinymce")}
         @replacements << Line.new("<tr><td>type</td><td>%s</td><td>%s</td></tr>" % [ @field_name, @content ])
       end
+    end
+
+    #
+    # When we arrive on the Home page, we need to wait for the AJAX calls before
+    # we can see the entire page. This is true for some other pages as well.
+    #
+    # There are many ways of reaching pages. We can open a page, login, logout,
+    # click the home tab, etc. However, Selenium IDE was kind enough to insert
+    # an "assertTitle" tag after each one of them.
+    #
+    # This is probably overkill, but as with most overkill, it should be effective.
+    #
+    # This is a simple case of finding a line that meets the critria and adding
+    # a line after it.
+    #
+    class JQueryWaiter < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        if is_assert_title
+          insert_wait
+        else
+          nil
+        end
+      end
+
+      def is_assert_title
+        @line.match?("assertTitle")
+      end
+
+      def insert_wait
+        @replacements = [@line, Line.new("browser_wait_for_jQuery")]
+      end
+
     end
 
   end

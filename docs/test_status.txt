@@ -1,23 +1,19 @@
 AddNonPersonThings
-    AddNonPersonThings/_create_organization.rb:304
+    AddNonPersonThings/_create_organization.rb:372
     $browser.find_element(:xpath, "(.//img[@alt='add'])[14]").click    
        #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[14]</td><td></td></tr>
+    May need to add browser_wait_for_jQuery every time we change tabs, but how to do that?
     ACTION: Find out what field is sought, and how to make it visible.
 
 AddPublications
-    AddPublications/_validate_fields.rb:115
-    expect(browser_page_text).to include("Nintendo O.K. for Kids.&nbsp;&nbsp;Raising Children in the 21st Century. Ed. Mouse, Minnie.&nbsp;&nbsp;New York: Marcel Dekker. 123-144. 2009")    
-        #<tr><td>verifyTextPresent</td><td>Nintendo O.K. for Kids.&nbsp;&nbsp;Raising Children in the 21st Century. Ed. Mouse, Minnie.&nbsp;&nbsp;New York: Marcel Dekker. 123-144. 2009</td><td></td></tr>
-    Found: Nintendo O.K. for Kids</a>. 
-                     <em>Raising Children in the 21st Century</em>.
-                    Ed. Mouse, Minnie. 
-                    New York: Marcel Dekker.
-                    123-144.
-             <span class="listDateTime">2009</span>
-    ACTION: change to replace the non-breaking spaces with a single space. Apply to all verifyTextPresent
+    AddPublications/_validate_fields.rb:256
+    $browser.find_element(:id, "returnLink").click
+     Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: investigate
 
 AddRoles
-    AddRoles/_add_faculty_member_roles2.rb:24
+    AddRoles/_add_faculty_member_roles2.rb:28
     expect(browser_page_text).to include("Create research activity entry for Faculty, Jane")    
         #<tr><td>verifyTextPresent</td><td>Create research activity entry for Faculty, Jane</td><td></td></tr>
     But instead found 
@@ -25,18 +21,19 @@ AddRoles
     ACTION: Change this expected text. Looks like the page format has simply changed.
 
 AdminSecurity
-    AdminSecurity/_admin_login_logout.rb:21
-    Expecting that testAdmin's first name is Test, but it's now Admin
-    DONE: What to do?
+    AdminSecurity/_admin_login_logout.rb:57
+    $browser.find_element(:link_text, "SPARQL query builder")
+    Can't locate. why not?
+    ACTION: investigate
 
 CheckMapOfScience
-    CheckMapOfScience/_add_publications.rb:35
+    CheckMapOfScience/_add_publications.rb:40
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     Not visible
     ACTION: Find out what field is sought, and how to make it visible.
 
 CheckVisualizations
-    CheckVisualizations/_add_publications.rb:47
+    CheckVisualizations/_add_publications.rb:56
     $browser.find_element(:css, "a.add-placeOfPublication > img.add-individual").click    
         #<tr><td>clickAndWait</td><td>css=a.add-placeOfPublication &gt; img.add-individual</td><td></td></tr>
     Selenium::WebDriver::Error::ElementNotVisibleError:
@@ -46,120 +43,110 @@ CreateAccounts
     WORKS
 
 CreateClasses
-    CreateClasses/_add_class_group_times.rb:26
-    Public name field is called out as id=PublicName, should be specified as name=PublicName
-    ACTION: Start setting exception cases in element_spec() ?
+    CreateClasses/_add_sub_class_hours.rb:34
+    Unable to locate element: {"method":"id","selector":"GroupURI"}
+    ACTION: find GroupURI name=?
 
 CreatePeople
-    CreatePeople/_create_faculty_member.rb:47
-    Can't find it
-    $browser.find_element(:link_text, "Faculty, Jane")    
-        #<tr><td>verifyElementPresent</td><td>link=Faculty, Jane</td><td></td></tr>
-    Didn't wait for jQuery!!
-    ACTION try inserting a wait_for_jquery (perhaps every time we visit the Home page)
+    CreatePeople/_create_librarian.rb:66
+    $browser.find_element(:id, "querytext").clear
+    ACTION: find queryText name= ?
 
 CreateProperties
-    CreateProperties/_add_property_group_place.rb:26
-    ACTION: default element spec. should be fixed.
+    CreateProperties/_add_property_group_place.rb:31
+    $browser.find_element(:id, "PublicDescription")
+    ACTION: Investigate. Should have been fixed.
 
 CustomAdvisesForm
-    CustomAdvisesForm/_add_advises.rb:105
-    Non-breaking spaces
-    ACTION: Fix it. Like AddPublications
+    CustomAdvisesForm/_search_advises.rb:9
+    $browser.find_element(:id, "querytext").clear
+    ACTION: find queryText name= ?
 
 CustomAwardsForm
-    CustomAwardsForm/_add_awards.rb:132
-    Non-breaking spaces
-    ACTION: Fix it. Like AddPublications
+    CustomAwardsForm/_search_awards.rb:9
+    $browser.find_element(:id, "querytext").clear
+    ACTION: find queryText name= ?
 
 CustomEducationForm
-    CustomEducationForm/_create_test_faculty_member.rb:29
-     Preferred title: should have been addressed by the phrase replacer, 
-      but the sequence is interrupted by selectWindow/null tags.
-    ACTION: Should be fixed
+    CustomEducationForm/_search_education_background.rb:6
+    $browser.find_element(:id, "querytext").clear
+    ACTION: find queryText name= ?
 
 CustomPositionsForm
-    CustomPositionsForm/_search_positions.rb:8
+    CustomPositionsForm/_search_positions.rb:9
     Find queryText by name
-    ACTION: Should be fixed
+    ACTION: find queryText name= ?
 
 InitialSetup
-    InitialSetup/_edit_site_info.rb:25
+    InitialSetup/_edit_site_info.rb:26
     can't find $browser.find_element(:css, "#home-stats > h4")
     This section isn't present if there is no data.
     ACTION: remove the check for this element (twice)
 
 LanguageSupport
-    LanguageSupport/_add_r_d_f_data.rb:20
-    Busted replacer for C:\file.path
-    ACTION: Fixed?
+    LanguageSupport/_check_english_overview.rb:4
+    $browser.find_element(:link_text, "Faculty Member").click
+        #<tr><td>clickAndWait</td><td>link=Faculty Member</td><td></td></tr>
+    ACTION: investigate. name=?
 
 LinkedOpenData
-    LinkedOpenData/_add_test_r_d_f.rb:12
-    Busted replacer for C:\file.path
-    ACTION: Fixed?
+    LinkedOpenData/_test_various_requests.rb:14
+    $browser.find_element(:id, "N3_EXTENSION_button").click
+    ACTION: name=?
 
 MultiLabels
-    MultiLabels/_add_r_d_f_data.rb:20
-    Busted replacer for C:\file.path
-    ACTION: Fixed?
+    MultiLabels/_manage_labels.rb:14
+    $browser.find_element(:link_text, "Furter, Frank").click    
+        #<tr><td>clickAndWait</td><td>link=Furter, Frank</td><td></td></tr>
+        no such element:
+    ACTION: investigate. indexing?
 
 OntologyManagement
-    OntologyManagement/_add_ontology.rb:29
-    Fields for name, URI, and prefix should be specified by name, not ID
-	ACTION: change the HTML for all three fields to include "name="
+    OntologyManagement/_delete_ontology.rb:32
+    $browser.find_element(:id, "_delete").click
+    ACTION: add to name=
 
 OpenSocialGadgets
-    OpenSocialGadgets/_add_test_faculty.rb:33
+    OpenSocialGadgets/_check_gadgets.rb:26
     PROBABLY WILL NEVER WORK
     ACTION: verify that this will not work
 
 ProcessRDFData
-    ProcessRDFData/_add_r_d_f_internet_file.rb:20
-    Expecting:     $browser.find_element(:id, "rdfUrl")
-       from: #<tr><td>type</td><td>rdfUrl</td><td>http://www.geonames.org/ontology/ontology_v2.0_Lite.rdf</td></tr>
-    But it should be: $browser.find_element(:name, "rdfUrl")
+    ProcessRDFData/_add_r_d_f_internet_file.rb:24
+    $browser.find_element(:id, "makeClassgroups").
+    No such element
     ACTION: Change the HTML to include "name="
 
 ProxyEditing
-    ProxyEditing/_create_new_faculty_member.rb:28
-    ProxyEditing/_create_new_faculty_member.rb:30
-    TinyMCE is not there: browser_fill_tinyMCE("JaneFaculty@cornell.edu")
-        $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[18]").click    
-            #<tr><td>click</td><td>//div[@id='wrapper-content']/ul/li[18]</td><td></td></tr>
-        $browser.find_element(:css, "a.add-researcherId > img.add-individual").click    
-            #<tr><td>clickAndWait</td><td>css=a.add-researcherId &gt; img.add-individual</td><td></td></tr>
-        expect($browser.title).to eq("Edit")    
-            #<tr><td>assertTitle</td><td>Edit</td><td></td></tr>
-        browser_fill_tinyMCE("JaneFaculty@cornell.edu")    
-            #<tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('JaneFaculty@cornell.edu')</td><td></td></tr>
-    ACTION: Should already be fixed 
+    ProxyEditing/_validate_admin_proxy.rb:28
+    Selenium::WebDriver::Wait.new.until {
+          $browser.execute_script("return ($.active == 0)")
+        }
+    Timed out
+    ACTION: timed out after 5 seconds 
 
 SearchBoost
-    SearchBoost/_create_test_people.rb:91
-    expect(browser_page_text).to include("Faculty Member (4)") but sees (1) instead.
-    Reverting - why didn't the indexing complete?
+    SearchBoost/_test_individual_boost.rb:30
     MAY NEVER WORK
     ACTION: Wait for indexing to complete before checking the index?
 
 SearchExclusion
-    SearchExclusion/_create_test_faculty_member.rb:29
-    $browser.find_element(:css, "header > #ARG_2000028 > a.add-ARG_2000028").click
-    ACTION: change to [title="Add new preferred title entry"]
-    ACTION: Why didn't this work? Investigate
+    SearchExclusion/_search_found.rb:6
+    $browser.find_element(:id, "querytext").clear
+    ACTION: Is this another name= field?
 
 SearchTextDiscovery
-    SearchTextDiscovery/_text_discovery.rb:31
+    SearchTextDiscovery/_text_discovery.rb:35
     expect($browser.title).to eq("baker - VIVO Search Results")
     ACTION: DON'T KNOW
 
 SelfEditing
-    SelfEditing/_add_self_editor_id.rb:14
+    SelfEditing/_add_self_editor_id.rb:24
     No faculty members in the index, after a fresh login.
     ACTION: Wait for indexing to complete before checking the index?
 
 ShortViews
-    ShortViews/_create_test_departments.rb:50
+    ShortViews/_create_test_departments.rb:61
     Index is showing the departments, but without location
     ACTION: ????
 
