@@ -58,7 +58,7 @@ module Converter
       # specifiers, and maybe more.
       #
       def value(raw)
-        CGI.unescapeHTML(raw.strip).gsub('"', '\"')
+        CGI.unescapeHTML(raw.strip).gsub('"', '\"').gsub(/&nbsp;/, " ")
       end
 
     end

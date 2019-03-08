@@ -16,7 +16,7 @@ module Converter
         @lines = PreferredTitleLocator.new(:preferred_title, @lines).lines
         @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
         @lines = AssertConfirmation.new(:confirmation, @lines).lines
-        @lines = LiteralInsteadOfTinymce.new(:confirmation, @lines).lines
+        @lines = LiteralInsteadOfTinymce.new(:literal, @lines).lines
         @lines = TypeReplacer.new(:type, @lines).lines
         @lines
       end
@@ -517,17 +517,26 @@ module Converter
     #    <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
     #    <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
     #    <tr><td>waitForElementPresent</td><td>tinymce</td><td></td></tr>
+    #    <tr><td>verifyTextPresent</td><td>Some text</td><td></td></tr>
     #    <tr><td>runScript</td><td>tinyMCE.activeEditor.setContent('Gorillas')</td><td></td>
     # Becomes:
     #    <tr><td>clickAndWait</td><td>//h3[@id='freetextKeyword']/a/img</td><td></td></tr>
     #    <tr><td>assertTitle</td><td>Edit</td><td></td></tr>
+    #    <tr><td>verifyTextPresent</td><td>Some text</td><td></td></tr>
     #    <tr><td>type</td><td>literal</td><td>Gorillas</td></tr>
+    #
+    # Note: different field specs in the "clickAndWait" result in different 
+    # field names in the "type".
+    #
+    # Note: both "verifyTextPresent" and "waitForElementPresent" are optional.
+    # If "waitForElementPresent/tinymce" is found, it should be removed.
+    # If "verifyTextPresent" is found, it should remain.
     #
     class LiteralInsteadOfTinymce < AbstractPhraseReplacer
       def find_replacements_for_range_based_at_current_index
         if is_click_on_a_recognized_field &&
         next_is_edit_page &&
-        next_is_wait_for_tinymce &&
+        advance_past_optional_lines &&
         next_is_enter_to_tinymce
           figure_replacements
         else
@@ -536,12 +545,15 @@ module Converter
       end
 
       def is_click_on_a_recognized_field
-        [ "click", "clickAndWait"].include?(@line.field1) &&
-        [
-          "//h3[@id='freetextKeyword']/a/img",
-          "//h3[@id='abbreviation']/a/img",
-          "css=a.add-researcherId &gt; img.add-individual"
-        ].include?(@line.field2)
+        field_specs = {
+          "//h3[@id='freetextKeyword']/a/img" => "literal",
+          "//h3[@id='abbreviation']/a/img" => "literal",
+          "css=a.add-researcherId &gt; img.add-individual" => "literal",
+          "css=a.add-ARG_2000028 &gt; img.add-individual" => "emailAddress"
+        }
+        if [ "click", "clickAndWait"].include?(@line.field1)
+          @field_name = field_specs[@line.field2]
+        end
       end
 
       def next_is_edit_page
@@ -549,24 +561,25 @@ module Converter
         @line.match?("assertTitle", "Edit")
       end
 
-      def next_is_wait_for_tinymce
-        advance_to_next_line
-        @line.match?("waitForElementPresent", "tinymce")
+      def advance_past_optional_lines
+        (@next_index...@lines.size).each do |index|
+          @next_index = 1 + @index = index
+          @line = @lines[@index]
+          return @line unless @line.comment || @line.match?("verifyTextPresent") || @line.match?("waitForElementPresent", "tinymce")
+        end
+        nil
       end
 
       def next_is_enter_to_tinymce
-        advance_to_next_line
-        @line.match("runScript", /^tinyMCE.activeEditor.setContent(['"].*['"])$/) do |m|
+        @line.match("runScript", /^tinyMCE.activeEditor.setContent\('(.*)'\)$/) do |m|
           @content = m[1][1]
         end
       end
 
       def figure_replacements
-        @replacements = [
-          @lines[@first_index],
-          @lines[@first_index + 1],
-          Line.new("<tr><td>type</td><td>literal</td><td>%s</td></tr>" % @content)
-        ]
+        puts ">>>>next_is_replacements"
+        @replacements = @lines[@first_index...(@next_index - 1)].reject { |line| line.match?("waitForElementPresent", "tinymce")}
+        @replacements << Line.new("<tr><td>type</td><td>%s</td><td>%s</td></tr>" % [ @field_name, @content ])
       end
     end
 
