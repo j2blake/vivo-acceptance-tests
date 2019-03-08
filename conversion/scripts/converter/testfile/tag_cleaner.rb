@@ -21,7 +21,8 @@ module Converter
           convert_default_specs_to_name_specs(
           %w{click clickAndWait type select},
           %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword} +
-          %w{loginForm passwordChangeForm deleteAccount delete-account rdfUrl queryText})
+          %w{loginForm passwordChangeForm deleteAccount delete-account rdfUrl queryText} +
+          %w{ApplicationName CopyrightAnchor CopyrightURL})
 
           @result.concat([ *(replacement || @line) ])
         end

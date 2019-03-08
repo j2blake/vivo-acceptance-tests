@@ -95,9 +95,16 @@ module Converter
       #   becomes
       # $browser.navigate.to vivo_url("/")
       #
+      # #<tr><td>open</td><td>http://localhost:8080/vivo/people</td><td></td></tr>
+      #   becomes
+      # $browser.navigate.to vivo_url("/people")
+      #
       def replace_open()
-        @line.match(/^open$/, %r{^/vivo.*}) do
-          interpret("$browser.navigate.to vivo_url(\"%s\")", value(@line.field2[5..-1]))
+        @line.match("open", %r{^/vivo.*}) do
+          return interpret("$browser.navigate.to vivo_url(\"%s\")", value(@line.field2[5..-1]))
+        end
+        @line.match("open", %r{^http://localhost:8080/vivo(.*)}) do |m|
+          return interpret("$browser.navigate.to vivo_url(\"%s\")", value(m[1][1]))
         end
       end
 

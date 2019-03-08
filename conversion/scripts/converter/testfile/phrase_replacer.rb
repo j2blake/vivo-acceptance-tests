@@ -497,6 +497,8 @@ module Converter
       def optionally_has_wait_for_page_to_load
         if @lines[@index + 1].match?("waitForPageToLoad")
           @next_index += 1
+        else
+          true
         end
       end
 

@@ -43,8 +43,7 @@ CheckVisualizations
     ACTION: Find out what field is sought, and how to make it visible.
 
 CreateAccounts
-    CreateAccounts/_create_new_self_editor_user.rb:17
-    ACTION: Include the other three test accounts.
+    WORKS
 
 CreateClasses
     CreateClasses/_add_class_group_times.rb:26
