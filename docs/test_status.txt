@@ -162,20 +162,8 @@ SparqlUpdateApi
 ACTIONS
 ---------------------------------------------
 
-REplace expectations of TinyMCE, with use of text field. Set it up so it's extensible.
-
-In expected text, replace sequences of non-breaking spaces with a single space
-
-Remove selectWindow/null tags, any others?
-
-Create curator, editor and self accounts.
-
-Code some way to change id= to name= for specific fields. Maybe after the other replacements have happened?
-
-Try inserting a wait_for_jQuery every time we load the home page (expectTitle = VIVO)
+Take a less shotgun-like approach to browser_wait_for_jQuery
 
 Try inserting a wait_for_indexing every time we are about to look at the Index page
 
 Look at the instructions on the checklist. What tests will simply not work as written? How to disable them?
-
-Replace TinyMCE with text fields, based on editing sequence. Have we already done this?

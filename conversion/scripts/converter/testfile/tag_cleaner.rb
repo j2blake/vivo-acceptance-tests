@@ -22,7 +22,7 @@ module Converter
           %w{click clickAndWait type select},
           %w{submitAdd PublicName positionType Name URI Prefix loginName loginPassword} +
           %w{loginForm passwordChangeForm deleteAccount delete-account rdfUrl queryText} +
-          %w{ApplicationName CopyrightAnchor CopyrightURL})
+          %w{ApplicationName CopyrightAnchor CopyrightURL querytext})
 
           @result.concat([ *(replacement || @line) ])
         end

@@ -14,6 +14,7 @@ module VivoHelpers
     $browser.find_element(:name, "loginName").send_keys(email)
     $browser.find_element(:name, "loginPassword").send_keys(password)
     $browser.find_element(:name, "loginForm").click
+    browser_wait_for_jQuery
   end
 
   #
