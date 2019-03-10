@@ -202,8 +202,7 @@ module Converter
       #
       def interpret(template, *values)
         if values.all? { |v| v }
-          Line.new((template % values) + "    " + @line.text)
-#          Line.new(template % values)
+          Line.new(template % values)
         else
           nil
         end

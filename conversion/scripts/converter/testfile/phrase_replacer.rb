@@ -17,8 +17,9 @@ module Converter
         @lines = AdminMenuHoverer.new(:admin_menu, @lines).lines
         @lines = AssertConfirmation.new(:confirmation, @lines).lines
         @lines = LiteralInsteadOfTinymce.new(:literal, @lines).lines
-        @lines = JQueryWaiter.new(:wait_jquery, @lines).lines
+        #        @lines = JQueryWaiter.new(:wait_jquery, @lines).lines
         @lines = TypeReplacer.new(:type, @lines).lines
+        @lines = KlugeForcer.new(:kluge, @lines).lines
         @lines
       end
     end
@@ -470,7 +471,7 @@ module Converter
 
     #
     # assertConfirmation tag both checks the text of a dialog box, and confirms it.
-    # The tests also (usually) include a waitForPageToLoad. We can replace that with 
+    # The tests also (usually) include a waitForPageToLoad. We can replace that with
     # the much faster browser_wait_for_jQuery
     #
     # So,
@@ -617,6 +618,33 @@ module Converter
 
       def insert_wait
         @replacements = [@line, Line.new("browser_wait_for_jQuery")]
+      end
+
+    end
+
+    #
+    # FORCE THESE CHANGES
+    #
+    class KlugeForcer < AbstractPhraseReplacer
+      def find_replacements_for_range_based_at_current_index
+        do_force_comment ||
+        do_force_insert
+      end
+
+      def do_force_comment
+        @line.text.match(/^#<!-- FORCE COMMENT (.*) -->$/) do |m|
+          @next_index += 1
+          @replacements = [
+            Line.new("#>>>  " + m[1]),
+            Line.new("#>>>  " + @lines[@index + 1].text)
+          ]
+        end
+      end
+
+      def do_force_insert
+        @line.text.match(/^#<!-- FORCE INSERT (.*) -->$/) do |m|
+          @replacements = [Line.new(m[1])]
+        end
       end
 
     end

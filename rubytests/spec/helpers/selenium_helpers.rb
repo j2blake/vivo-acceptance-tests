@@ -48,5 +48,6 @@ module SeleniumHelpers
     Selenium::WebDriver::Wait.new.until {
       $browser.execute_script("return ($.active == 0)")
     }
+    sleep 0.5
   end
 end
