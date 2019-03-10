@@ -37,7 +37,7 @@ module Converter
       # Replace at the beginning of the path, or if preceded by something other than a "."
       #
       def adjust_xpath(raw)
-        raw.gsub(%r{([^.]//)}, ".\\1").gsub(%r{^//}, ".//")
+        raw.gsub(%r{([^.])//}, "\\1.//").gsub(%r{^//}, ".//")
       end
 
       # Convert a windows-based absolute file path to just the name.ext

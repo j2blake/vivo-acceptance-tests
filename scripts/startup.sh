@@ -60,7 +60,7 @@ if [ -d "$OUT_DIR/home" ]; then
   rm -r $OUT_DIR/home
 fi
 
-cp -R $VIVODIR/installer/home/target/vivo-installer-home-1.11.0-SNAPSHOT/ $OUT_DIR/home
+cp -R $VIVODIR/installer/home/target/vivo-installer-home-* $OUT_DIR/home
 cp $BASEDIR/config/applicationSetup.n3 $OUT_DIR/home/config
 cp $BASEDIR/config/runtime.properties $OUT_DIR/home/config
 cp -r $BASEDIR/rdf/* $OUT_DIR/home/rdf

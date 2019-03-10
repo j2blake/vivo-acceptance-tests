@@ -3,6 +3,7 @@ AddNonPersonThings
     $browser.find_element(:xpath, "(.//img[@alt='add'])[14]").click    
        #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[14]</td><td></td></tr>
     May need to add browser_wait_for_jQuery every time we change tabs, but how to do that?
+    (AUTO-COMPLETE) 
     ACTION: Find out what field is sought, and how to make it visible.
 
 AddPublications
@@ -10,21 +11,20 @@ AddPublications
     $browser.find_element(:id, "returnLink").click
      Selenium::WebDriver::Error::ElementNotVisibleError:
        element not interactable
+    (AUTO-COMPLETE) 
     ACTION: investigate
 
 AddRoles
-    AddRoles/_add_faculty_member_roles2.rb:28
-    expect(browser_page_text).to include("Create research activity entry for Faculty, Jane")    
-        #<tr><td>verifyTextPresent</td><td>Create research activity entry for Faculty, Jane</td><td></td></tr>
-    But instead found 
-        Faculty, Jane : Add a new researcher role
-    ACTION: Change this expected text. Looks like the page format has simply changed.
+    AddRoles/_add_librarian_roles1.rb:137
+    expected: "Edit"
+            got: "VIVO"
+    ACTION: Figure out how the script works?
 
 AdminSecurity
     WORKS
 
 CheckMapOfScience
-    CheckMapOfScience/_add_publications.rb:40
+    CheckMapOfScience/_add_publications.rb:35
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     Not visible
     ACTION: Find out what field is sought, and how to make it visible.
@@ -34,51 +34,53 @@ CheckVisualizations
     $browser.find_element(:css, "a.add-placeOfPublication > img.add-individual").click    
         #<tr><td>clickAndWait</td><td>css=a.add-placeOfPublication &gt; img.add-individual</td><td></td></tr>
     Selenium::WebDriver::Error::ElementNotVisibleError:
+    (AUTO-COMPLETE) 
     ACTION: Find out what field is sought, and how to make it visible.
 
 CreateAccounts
     WORKS
 
 CreateClasses
-    CreateClasses/_add_sub_class_hours.rb:34
+    CreateClasses/_add_sub_class_hours.rb:31
     Unable to locate element: {"method":"id","selector":"GroupURI"}
     ACTION: find GroupURI name=?
 
 CreatePeople
     CreatePeople/_create_librarian.rb:66
     $browser.find_element(:id, "querytext").clear
+    (AUTO-COMPLETE) 
     ACTION: find queryText name= ?
 
 CreateProperties
-    CreateProperties/_add_property_group_place.rb:31
+    CreateProperties/_add_property_group_place.rb:28
     $browser.find_element(:id, "PublicDescription")
-    ACTION: Investigate. Should have been fixed.
+    ACTION: Investigate. Maybe add delay
 
 CustomAdvisesForm
-    CustomAdvisesForm/_search_advises.rb:9
-    $browser.find_element(:id, "querytext").clear
-    ACTION: find queryText name= ?
+    CustomAdvisesForm/_add_advises.rb:78
+    expect(browser_page_text).to include("undergraduate advising relationship")
+    ACTION: add delay?
 
 CustomAwardsForm
-    CustomAwardsForm/_search_awards.rb:9
+    CustomAwardsForm/_search_awards.rb:11
     $browser.find_element(:id, "querytext").clear
+    (AUTO-COMPLETE) 
     ACTION: find queryText name= ?
 
 CustomEducationForm
-    CustomEducationForm/_search_education_background.rb:6
-    $browser.find_element(:id, "querytext").clear
-    ACTION: find queryText name= ?
+    CustomEducationForm/_search_education_background.rb:8
+    expect($browser.title).to eq("Search for 'carroll'")
+             got: "VIVO - Search results for 'carroll'"
+    ACTION: fix title
 
 CustomPositionsForm
-    CustomPositionsForm/_search_positions.rb:9
-    Find queryText by name
-    ACTION: find queryText name= ?
+    CustomPositionsForm/_search_positions.rb:11
+    expect($browser.title).to eq("Search for 'lecturer'")
+             got: "VIVO - Search results for 'lecturer'"
+    ACTION: fix title
 
 InitialSetup
-    InitialSetup/_edit_site_info.rb:26
-    can't find $browser.find_element(:css, "#home-stats > h4")
-    This section isn't present if there is no data.
-    ACTION: remove the check for this element (twice)
+    WORKS
 
 LanguageSupport
     LanguageSupport/_check_english_overview.rb:4
@@ -87,9 +89,7 @@ LanguageSupport
     ACTION: investigate. name=?
 
 LinkedOpenData
-    LinkedOpenData/_test_various_requests.rb:14
-    $browser.find_element(:id, "N3_EXTENSION_button").click
-    ACTION: name=?
+    NOT GOING TO HAPPEN -- based on the test webapp.
 
 MultiLabels
     MultiLabels/_manage_labels.rb:14
@@ -99,7 +99,7 @@ MultiLabels
     ACTION: investigate. indexing?
 
 OntologyManagement
-    OntologyManagement/_delete_ontology.rb:32
+    OntologyManagement/_delete_ontology.rb:28
     $browser.find_element(:id, "_delete").click
     ACTION: add to name=
 
@@ -109,9 +109,9 @@ OpenSocialGadgets
     ACTION: verify that this will not work
 
 ProcessRDFData
-    ProcessRDFData/_add_r_d_f_internet_file.rb:24
-    $browser.find_element(:id, "makeClassgroups").
-    No such element
+    ProcessRDFData/_export_r_d_f_file.rb:17
+    $browser.find_element(:id, "subgraph").click
+        NoSuchElementError:    No such element
     ACTION: Change the HTML to include "name="
 
 ProxyEditing
@@ -120,6 +120,7 @@ ProxyEditing
           $browser.execute_script("return ($.active == 0)")
         }
     Timed out
+    (AUTO-COMPLETE) 
     ACTION: timed out after 5 seconds 
 
 SearchBoost
@@ -128,23 +129,25 @@ SearchBoost
     ACTION: Wait for indexing to complete before checking the index?
 
 SearchExclusion
-    SearchExclusion/_search_found.rb:6
-    $browser.find_element(:id, "querytext").clear
-    ACTION: Is this another name= field?
+    REQUIRES RDF FILE for part of test
+    BREAK into two tests, one with file and one without.
 
 SearchTextDiscovery
-    SearchTextDiscovery/_text_discovery.rb:35
-    expect($browser.title).to eq("baker - VIVO Search Results")
-    ACTION: DON'T KNOW
+    SearchTextDiscovery/_text_discovery.rb:289
+    expect($browser.title).to eq("VIVO - Search results for 'Atlantis'")
+             got: "Search for 'Atlantis'"
+    ACTION: Change the title
 
 SelfEditing
     SelfEditing/_add_self_editor_id.rb:24
     No faculty members in the index, after a fresh login.
+    (AUTO-COMPLETE) 
     ACTION: Wait for indexing to complete before checking the index?
 
 ShortViews
     ShortViews/_create_test_departments.rb:61
     Index is showing the departments, but without location
+    (AUTO-COMPLETE) 
     ACTION: ????
 
 SparqlQueryApi
@@ -153,7 +156,7 @@ SparqlQueryApi
 SparqlUpdateApi 
     SparqlUpdateApi/_test_api_disabled.rb:4
     Won't run without the test app. What can we do instead?
-    ACTION ????
+    NO TEST APP
 
 ---------------------------------------------
 ACTIONS
