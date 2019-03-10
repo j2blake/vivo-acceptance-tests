@@ -21,10 +21,7 @@ AddRoles
     ACTION: Change this expected text. Looks like the page format has simply changed.
 
 AdminSecurity
-    AdminSecurity/_admin_login_logout.rb:57
-    $browser.find_element(:link_text, "SPARQL query builder")
-    Can't locate. why not?
-    ACTION: investigate
+    WORKS
 
 CheckMapOfScience
     CheckMapOfScience/_add_publications.rb:40

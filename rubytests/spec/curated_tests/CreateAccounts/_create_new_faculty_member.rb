@@ -51,12 +51,6 @@ shared_examples "Create Accounts: Create New Faculty Member" do
     browser_fill_tinyMCE("Assistant Professor")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Faculty, Jane")
-    # #<tr><td>pause</td><td>50000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
   end
 
   it "Verify that Jane Faculty was created" do
@@ -80,11 +74,6 @@ shared_examples "Create Accounts: Create New Faculty Member" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("faculty")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
     expect($browser.title).to eq("Search for 'faculty'")
     expect(browser_page_text).to include("Search results for 'faculty'")
     $browser.find_element(:link_text, "Faculty, Jane")
