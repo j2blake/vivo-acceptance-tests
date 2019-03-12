@@ -41,9 +41,7 @@ CreateAccounts
     WORKS
 
 CreateClasses
-    CreateClasses/_add_sub_class_hours.rb:31
-    Unable to locate element: {"method":"id","selector":"GroupURI"}
-    ACTION: find GroupURI name=?
+    WORKS
 
 CreatePeople
     CreatePeople/_create_librarian.rb:66
@@ -133,10 +131,7 @@ SearchExclusion
     BREAK into two tests, one with file and one without.
 
 SearchTextDiscovery
-    SearchTextDiscovery/_text_discovery.rb:289
-    expect($browser.title).to eq("VIVO - Search results for 'Atlantis'")
-             got: "Search for 'Atlantis'"
-    ACTION: Change the title
+    WORKS
 
 SelfEditing
     SelfEditing/_add_self_editor_id.rb:24

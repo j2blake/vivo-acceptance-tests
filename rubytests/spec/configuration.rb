@@ -48,6 +48,11 @@ RSpec.configure do |config|
     options.add_argument('--window-size=1200x1200')
     $browser = Selenium::WebDriver.for :chrome, options: options
 
+#    options = Selenium::WebDriver::Firefox::Options.new(args: ['-headless'])
+#    $browser = Selenium::WebDriver.for(:firefox, options: options)
+#    target_size = Selenium::WebDriver::Dimension.new(1200, 1200)
+#    $browser.manage.window.size = target_size
+    
     if $webserver.running?
       puts
       puts "The webserver wasn't shut down."

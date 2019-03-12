@@ -53,7 +53,7 @@ module VivoHelpers
     Net::HTTP.get_response(URI(vivo_url("/admin/wait"))).value
 
     end_time = Time.new
-    puts "%.2f seconds" % [end_time.to_f - start_time.to_f]
+    puts "      wait %.2f seconds for indexing" % [end_time.to_f - start_time.to_f]
   end
 
   #
