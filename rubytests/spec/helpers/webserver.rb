@@ -6,7 +6,7 @@ class Webserver
   def run_setup_script
     stdout_file = File.expand_path("setup_stdout.txt", $settings.output_path)
     stderr_file = File.expand_path("setup_stderr.txt", $settings.output_path)
-    spawn("sh", $settings.webserver_setup_script, out: stdout_file, err: stderr_file)
+    system("sh", $settings.webserver_setup_script, out: stdout_file, err: stderr_file)
   end
   
   def run_start_script
@@ -41,7 +41,7 @@ class Webserver
   def run_stop_script
     stdout_file = File.expand_path("logs/stop_stdout.txt", $settings.output_path)
     stderr_file = File.expand_path("logs/stop_stderr.txt", $settings.output_path)
-    spawn("sh", $settings.webserver_stop_script, out: stdout_file, err: stderr_file)
+    system("sh", $settings.webserver_stop_script, out: stdout_file, err: stderr_file)
   end
 
   public # ---------------------------------------------------------------------
