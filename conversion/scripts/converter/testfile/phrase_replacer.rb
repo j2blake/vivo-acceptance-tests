@@ -340,7 +340,7 @@ module Converter
     # This should become:
     # 1) Send keys to the field
     # 2) Wait for jquery to complete
-    # 3) Send :down_arrow and :return to that field
+    # 3) Click on the suggested completion
     #
     class AutoCompleteReplacer < AbstractPhraseReplacer
       def find_replacements_for_range_based_at_current_index
@@ -393,7 +393,7 @@ module Converter
         @replacements = comments_from_range
         @replacements << Line.new("$browser.find_element(%s).send_keys(\"%s\")" % [ good_spec, good_text ])
         @replacements << Line.new("browser_wait_for_jQuery")
-        @replacements << Line.new("$browser.find_element(%s).send_keys(:arrow_down, :return)" % [ good_spec ])
+        @replacements << Line.new("$browser.find_element(:css, \".ui-menu-item-wrapper\").click")
       end
     end
 
