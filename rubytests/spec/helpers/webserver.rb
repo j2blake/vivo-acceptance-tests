@@ -4,12 +4,15 @@ class Webserver
   #
   
   def run_setup_script
-    system("sh", $settings.webserver_setup_script)
+    stdout_file = File.expand_path("setup_stdout.txt", $settings.output_path)
+    stderr_file = File.expand_path("setup_stderr.txt", $settings.output_path)
+    spawn("sh", $settings.webserver_setup_script, out: stdout_file, err: stderr_file)
   end
   
   def run_start_script
-    output_file = File.expand_path("logs/stdout.txt", $settings.output_path)
-    spawn("sh", $settings.webserver_start_script, out: output_file, err: output_file + "2")
+    stdout_file = File.expand_path("logs/start_stdout.txt", $settings.output_path)
+    stderr_file = File.expand_path("logs/start_stderr.txt", $settings.output_path)
+    spawn("sh", $settings.webserver_start_script, out: stdout_file, err: stderr_file)
   end
 
   def get_vivo_home_page
@@ -36,7 +39,9 @@ class Webserver
   end
 
   def run_stop_script
-    spawn("sh", $settings.webserver_stop_script)
+    stdout_file = File.expand_path("logs/stop_stdout.txt", $settings.output_path)
+    stderr_file = File.expand_path("logs/stop_stderr.txt", $settings.output_path)
+    spawn("sh", $settings.webserver_stop_script, out: stdout_file, err: stderr_file)
   end
 
   public # ---------------------------------------------------------------------
@@ -64,6 +69,7 @@ class Webserver
   end
   
   def setup
+    puts "BOGUS:: CHECK THAT THE OUTPUT DIRECTORY EXISTS."
     puts ""
     puts "       >>>>> SETTING UP THE ENVIRONMENT <<<<<<"
     puts ""

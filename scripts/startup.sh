@@ -4,6 +4,7 @@
 # We create the home directory on each startup, to insure that the TDBModels
 # the Solr index, and the file uploads are cleared.
 #
+# TODO -- Make it dependent on a VIVO version, taken from the command line.
 
 #
 # Figure out what directory the script is in (absolute path)
@@ -54,6 +55,7 @@ fi
 #
 # TODO
 #   Make this independent of VIVO version number.
+#   Complain if there is more than one home directory in vivo-installer-home
 #   If any of the required don't exist, exit.
 #
 if [ -d "$OUT_DIR/home" ]; then
