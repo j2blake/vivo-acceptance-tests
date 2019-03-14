@@ -69,7 +69,6 @@ class Webserver
   end
   
   def setup
-    puts "BOGUS:: CHECK THAT THE OUTPUT DIRECTORY EXISTS."
     puts ""
     puts "       >>>>> SETTING UP THE ENVIRONMENT <<<<<<"
     puts ""

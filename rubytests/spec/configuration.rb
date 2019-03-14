@@ -25,6 +25,11 @@ RSpec.configure do |config|
   # Always run the tests in the order they are given.
   #
   config.order = :defined
+  
+  #
+  # Print the name of each step as it executes.
+  #
+  config.formatter = :documentation
 
   #
   # Create a clean environment for the tests to run in.
@@ -78,8 +83,8 @@ RSpec.configure do |config|
   #
   config.after(:each) do |example|
     if example.exception
-      $browser.save_screenshot($settings.failure_path + example.full_description + ".png")
-      File.open($settings.failure_path + example.full_description + ".html", "w") do |f|
+      $browser.save_screenshot($settings.failure_path + "/" + example.full_description + ".png")
+      File.open($settings.failure_path + "/" + example.full_description + ".html", "w") do |f|
         f.puts $browser.page_source
       end
     end

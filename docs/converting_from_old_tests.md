@@ -29,3 +29,29 @@
 * The tests were recorded in the Selenium IDE and only minimally modified afterwards.
 * The Selenium IDE recorded an `expectTitle` assertion each time a page loaded.
 * Frequently, these assertions are repetitive, or irrelevant to the test.
+
+## Things that should be done to clean up the converted tests.
+
+### Improve element locators.
+
+* An element locator like this: 
+
+	```
+	:css, "li.nonSelectedGroupTab.clickable"
+	``` 
+
+  does not show the user's intent, and also relies on the order of the tabs on the page.
+  Change it to this: 
+  
+  ```
+  :xpath, ".//li[@groupname='publications']"
+  ```
+  
+  or even this: 
+  
+  ```
+  :xpath, ".//ul[@class='propertyTabsList']/li[@groupname='publications']"
+  ```
+  
+  to make it clearer and more reliable.
+  
