@@ -55,3 +55,15 @@
   
   to make it clearer and more reliable.
   
+* Here's another nice locator:
+
+	  ```
+     :xpath, ".//a[text()='Atlantis']/img"
+	  ```
+	  
+### Remove unnecessary calls to `vivo_wait_for_indexing`
+
+Many of these calls were added by the automated conversion process, and are not necessary.
+A call to `vivo_wait_for_indexing` is only required when the next operation relies on
+the contents of the search index.
+  

@@ -10,5 +10,4 @@
 #
 export VIVOTEST_SETTINGS=$1
 shift
-echo "TRY THIS" $@
 rspec $@

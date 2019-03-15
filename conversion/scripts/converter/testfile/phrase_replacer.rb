@@ -555,8 +555,20 @@ module Converter
         field_specs = {
           "//h3[@id='freetextKeyword']/a/img" => "literal",
           "//h3[@id='abbreviation']/a/img" => "literal",
+          "//h3[@id='researcherId']/a/img" => "literal",
+          "//h3[@id='scopusId']/a/img" => "literal",
           "css=a.add-researcherId &gt; img.add-individual" => "literal",
-          "css=a.add-ARG_2000028 &gt; img.add-individual" => "emailAddress"
+          "css=a.add-ARG_2000028 &gt; img.add-individual" => "emailAddress",
+          "css=a.add-ARG_0000197 &gt; img.add-individual" => "literal",
+          "css=a.add-eRACommonsId &gt; img.add-individual" => "literal",
+          "css=a.edit-freetextKeyword > img.edit-individual" => "literal",
+          "css=a.edit-abbreviation > img.edit-individual" => "literal",
+          "css=a.edit-researcherId > img.edit-individual" => "literal",
+          "css=a.edit-scopusId > img.edit-individual" => "literal",
+          "css=a.edit-researcherId &gt; img.edit-individual" => "literal",
+          "css=a.edit-ARG_2000028 &gt; img.edit-individual" => "emailAddress",
+          "css=a.edit-ARG_0000197 &gt; img.edit-individual" => "literal",
+          "css=a.edit-eRACommonsId &gt; img.edit-individual" => "literal"
         }
         if [ "click", "clickAndWait"].include?(@line.field1)
           @field_name = field_specs[@line.field2]

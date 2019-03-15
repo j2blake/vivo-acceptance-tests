@@ -1,24 +1,18 @@
 AddNonPersonThings
-    AddNonPersonThings/_create_organization.rb:372
-    $browser.find_element(:xpath, "(.//img[@alt='add'])[14]").click    
-       #<tr><td>clickAndWait</td><td>xpath=(//img[@alt='add'])[14]</td><td></td></tr>
-    May need to add browser_wait_for_jQuery every time we change tabs, but how to do that?
-    (AUTO-COMPLETE) 
-    ACTION: Find out what field is sought, and how to make it visible.
+    AddNonPersonThings/_create_organization.rb:304
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: ?
 
 AddPublications
-    AddPublications/_validate_fields.rb:256
-    $browser.find_element(:id, "returnLink").click
-     Selenium::WebDriver::Error::ElementNotVisibleError:
-       element not interactable
-    (AUTO-COMPLETE) 
+    AddPublications/_validate_fields.rb:265
+    Expected text not there
     ACTION: investigate
 
 AddRoles
-    AddRoles/_add_librarian_roles1.rb:137
-    expected: "Edit"
-            got: "VIVO"
-    ACTION: Figure out how the script works?
+    AddRoles/_add_librarian_roles1.rb:138
+    got Librarian, Lily : Add a new service provider role
+    ACTION: change the test
 
 AdminSecurity
     WORKS
@@ -30,12 +24,10 @@ CheckMapOfScience
     ACTION: Find out what field is sought, and how to make it visible.
 
 CheckVisualizations
-    CheckVisualizations/_add_publications.rb:56
-    $browser.find_element(:css, "a.add-placeOfPublication > img.add-individual").click    
-        #<tr><td>clickAndWait</td><td>css=a.add-placeOfPublication &gt; img.add-individual</td><td></td></tr>
+    CheckVisualizations/_add_publications.rb:47
     Selenium::WebDriver::Error::ElementNotVisibleError:
-    (AUTO-COMPLETE) 
-    ACTION: Find out what field is sought, and how to make it visible.
+       element not interactable
+    ACTION: ?
 
 CreateAccounts
     WORKS
@@ -44,10 +36,10 @@ CreateClasses
     WORKS
 
 CreatePeople
-    CreatePeople/_create_librarian.rb:66
-    $browser.find_element(:id, "querytext").clear
-    (AUTO-COMPLETE) 
-    ACTION: find queryText name= ?
+    CreatePeople/_delete_faculty_info.rb:105
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: ?
 
 CreateProperties
     CreateProperties/_add_property_group_place.rb:28
@@ -55,9 +47,10 @@ CreateProperties
     ACTION: Investigate. Maybe add delay
 
 CustomAdvisesForm
-    CustomAdvisesForm/_add_advises.rb:78
-    expect(browser_page_text).to include("undergraduate advising relationship")
-    ACTION: add delay?
+    CustomAdvisesForm/_delete_advises.rb:25
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: ?
 
 CustomAwardsForm
     CustomAwardsForm/_search_awards.rb:11
@@ -66,15 +59,14 @@ CustomAwardsForm
     ACTION: find queryText name= ?
 
 CustomEducationForm
-    CustomEducationForm/_search_education_background.rb:8
-    expect($browser.title).to eq("Search for 'carroll'")
-             got: "VIVO - Search results for 'carroll'"
-    ACTION: fix title
+    CustomEducationForm/_delete_educational_background.rb:32
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable    
+    ACTION: ?
 
 CustomPositionsForm
-    CustomPositionsForm/_search_positions.rb:11
-    expect($browser.title).to eq("Search for 'lecturer'")
-             got: "VIVO - Search results for 'lecturer'"
+    CustomPositionsForm/_search_positions.rb:67
+    no such element: Unable to locate element: {"method":"link text","selector":"people"}
     ACTION: fix title
 
 InitialSetup
@@ -90,10 +82,8 @@ LinkedOpenData
     NOT GOING TO HAPPEN -- based on the test webapp.
 
 MultiLabels
-    MultiLabels/_manage_labels.rb:14
-    $browser.find_element(:link_text, "Furter, Frank").click    
-        #<tr><td>clickAndWait</td><td>link=Furter, Frank</td><td></td></tr>
-        no such element:
+    MultiLabels/_manage_labels.rb:16
+    no such element: Unable to locate element: {"method":"css selector","selector":"a.add-label > img.add-individual"}
     ACTION: investigate. indexing?
 
 OntologyManagement
@@ -107,18 +97,15 @@ OpenSocialGadgets
     ACTION: verify that this will not work
 
 ProcessRDFData
-    ProcessRDFData/_export_r_d_f_file.rb:17
-    $browser.find_element(:id, "subgraph").click
-        NoSuchElementError:    No such element
-    ACTION: Change the HTML to include "name="
+    ProcessRDFData/_delete_r_d_f_internet_file.rb:24
+    expected: "Ingest RDF Data"
+             got: "Error 500 Server Error"
+    ACTION: Investigate
 
 ProxyEditing
-    ProxyEditing/_validate_admin_proxy.rb:28
-    Selenium::WebDriver::Wait.new.until {
-          $browser.execute_script("return ($.active == 0)")
-        }
-    Timed out
-    (AUTO-COMPLETE) 
+    ProxyEditing/_validate_admin_proxy.rb:32
+    Selenium::WebDriver::Error::TimeOutError:
+        timed out after 5 seconds
     ACTION: timed out after 5 seconds 
 
 SearchBoost
@@ -134,9 +121,8 @@ SearchTextDiscovery
     WORKS
 
 SelfEditing
-    SelfEditing/_add_self_editor_id.rb:24
+    SelfEditing/_add_self_editor_id2.rb:14
     No faculty members in the index, after a fresh login.
-    (AUTO-COMPLETE) 
     ACTION: Wait for indexing to complete before checking the index?
 
 ShortViews
