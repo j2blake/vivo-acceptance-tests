@@ -563,7 +563,9 @@ module Converter
           "css=a.edit-ARG_2000028 &gt; img.edit-individual" => "emailAddress",
           "css=a.edit-ARG_0000197 &gt; img.edit-individual" => "literal",
           "css=a.edit-eRACommonsId &gt; img.edit-individual" => "literal",
-          "xpath=//h3[@id='oclcnum']/a/img" => "literal"
+          "xpath=//h3[@id='oclcnum']/a/img" => "literal",
+          "//h3[@id='architecturalDetails']/a/img" => "literal"
+          
         }
         if [ "click", "clickAndWait"].include?(@line.field1)
           @field_name = field_specs[@line.field2]
