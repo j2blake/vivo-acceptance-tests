@@ -50,4 +50,19 @@ module SeleniumHelpers
     }
     sleep 0.5
   end
+  
+  #
+  # Check that the alert box exists, and has the expected text. Accept it.
+  #
+  # Clean the white space in both the expected text and the actual text.
+  # New-lines or multiple spaces are difficult to match.
+  #
+  def browser_accept_alert(expected_text)
+    expected_clean_text = expected_text.gsub(/\s+/, ' ')
+    actual_text = $browser.switch_to.alert.text
+    actual_clean_text = actual_text.gsub(/\s+/, ' ')
+    expect(actual_clean_text).to eq(expected_clean_text)
+    $browser.switch_to.alert.accept
+    browser_wait_for_jQuery
+  end
 end

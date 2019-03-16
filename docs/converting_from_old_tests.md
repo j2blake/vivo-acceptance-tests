@@ -67,3 +67,10 @@ Many of these calls were added by the automated conversion process, and are not 
 A call to `vivo_wait_for_indexing` is only required when the next operation relies on
 the contents of the search index.
   
+### Consider whether "tear-down" steps are useful
+
+The old tests were written to clean up after themselves. Each item that was added for a test was also removed during that test. This attempted to insure that each subsequent test worked against empty content.
+
+With the new test framework, this isn't necessary, since the triple-store is wiped after each test.
+
+So the question resolves to this: does the "tear-down" serve to test functionality? If so, then keep it in. But if not, skip it.

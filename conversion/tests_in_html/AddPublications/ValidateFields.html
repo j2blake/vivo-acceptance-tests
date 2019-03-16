@@ -1047,11 +1047,6 @@
 </tr>
 <tr>
 	<td>verifyTextPresent</td>
-	<td>If you don't find the appropriate entry on the selection list above:</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
 	<td>There are no entries in the system from which to select.</td>
 	<td></td>
 </tr>
@@ -1078,11 +1073,6 @@
 <tr>
 	<td>assertTitle</td>
 	<td>Edit</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyTextPresent</td>
-	<td>If you don't find the appropriate entry on the selection list above:</td>
 	<td></td>
 </tr>
 <tr>
@@ -1450,6 +1440,7 @@
 	<td></td>
 </tr>
 <!--Add OCLCNUM validating field first-->
+<!-- FORCE INSERT $browser.find_element(:xpath, ".//li[@groupname='identity']").click -->
 <tr>
 	<td>clickAndWait</td>
 	<td>//h3[@id='oclcnum']/a/img</td>
@@ -1500,16 +1491,8 @@
 	<td>An oclcnum is a sequential accession number assigned by OCLC as bibliographic records are entered into OCLC WorldCat (the OCLC Online Union Catalog).</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>tinymce</td>
-	<td></td>
-</tr>
-<tr>
-	<td>runScript</td>
-	<td>tinyMCE.activeEditor.setContent('1234-5678-90')</td>
-	<td></td>
-</tr>
+<!-- FORCE INSERT $browser.find_element(:id, "literal").clear -->
+<!-- FORCE INSERT $browser.find_element(:id, "literal").send_keys("1234-5678-90") -->
 <tr>
 	<td>clickAndWait</td>
 	<td>submit</td>
@@ -1571,16 +1554,8 @@
 	<td>A PMID (PubMed Identifier or PubMed Unique Identifier) is a unique number assigned to each PubMed citation of life sciences and biomedical scientific journal articles.</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>tinymce</td>
-	<td></td>
-</tr>
-<tr>
-	<td>runScript</td>
-	<td>tinyMCE.activeEditor.setContent('123456789')</td>
-	<td></td>
-</tr>
+<!-- FORCE INSERT $browser.find_element(:id, "literal").clear -->
+<!-- FORCE INSERT $browser.find_element(:id, "literal").send_keys("123456789") -->
 <tr>
 	<td>clickAndWait</td>
 	<td>submit</td>
@@ -1627,16 +1602,8 @@
 	<td>Edit</td>
 	<td></td>
 </tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>tinymce</td>
-	<td></td>
-</tr>
-<tr>
-	<td>runScript</td>
-	<td>tinyMCE.activeEditor.setContent('22')</td>
-	<td></td>
-</tr>
+<!-- FORCE INSERT $browser.find_element(:id, "literal").clear -->
+<!-- FORCE INSERT $browser.find_element(:id, "literal").send_keys("22") -->
 <tr>
 	<td>clickAndWait</td>
 	<td>submit</td>

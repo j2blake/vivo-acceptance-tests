@@ -478,9 +478,7 @@ module Converter
     #    <tr><td>assertConfirmation</td><td>Are you SURE? If in doubt, CANCEL.</td><td></td></tr>
     #    <tr><td>waitForPageToLoad</td><td>5000</td><td></td></tr>
     # Becomes
-    #    expect($browser.switch_to.alert.text).to eq("Are you SURE? If in doubt, CANCEL.")
-    #    $browser.switch_to.alert.accept
-    #    browser_wait_for_jQuery
+    #    browser_accept_alert("Are you SURE? If in doubt, CANCEL.")
     #
     class AssertConfirmation < AbstractPhraseReplacer
       def find_replacements_for_range_based_at_current_index
@@ -507,11 +505,7 @@ module Converter
       end
 
       def figure_replacements
-        @replacements = [
-          Line.new("expect($browser.switch_to.alert.text).to eq(\"%s\")" % value(@text)),
-          Line.new("$browser.switch_to.alert.accept"),
-          Line.new("browser_wait_for_jQuery")
-        ]
+        @replacements = [ Line.new("browser_accept_alert(\"%s\")" % value(@text)) ]
       end
     end
 
@@ -568,7 +562,8 @@ module Converter
           "css=a.edit-researcherId &gt; img.edit-individual" => "literal",
           "css=a.edit-ARG_2000028 &gt; img.edit-individual" => "emailAddress",
           "css=a.edit-ARG_0000197 &gt; img.edit-individual" => "literal",
-          "css=a.edit-eRACommonsId &gt; img.edit-individual" => "literal"
+          "css=a.edit-eRACommonsId &gt; img.edit-individual" => "literal",
+          "xpath=//h3[@id='oclcnum']/a/img" => "literal"
         }
         if [ "click", "clickAndWait"].include?(@line.field1)
           @field_name = field_specs[@line.field2]

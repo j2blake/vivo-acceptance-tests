@@ -5,14 +5,13 @@ AddNonPersonThings
     ACTION: ?
 
 AddPublications
-    AddPublications/_validate_fields.rb:265
-    Expected text not there
-    ACTION: investigate
+    AddPublications/_validate_fields.rb:394
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: ?
 
 AddRoles
-    AddRoles/_add_librarian_roles1.rb:138
-    got Librarian, Lily : Add a new service provider role
-    ACTION: change the test
+    WORKS
 
 AdminSecurity
     WORKS
@@ -53,10 +52,7 @@ CustomAdvisesForm
     ACTION: ?
 
 CustomAwardsForm
-    CustomAwardsForm/_search_awards.rb:11
-    $browser.find_element(:id, "querytext").clear
-    (AUTO-COMPLETE) 
-    ACTION: find queryText name= ?
+    WORKS
 
 CustomEducationForm
     CustomEducationForm/_delete_educational_background.rb:32
@@ -67,7 +63,9 @@ CustomEducationForm
 CustomPositionsForm
     CustomPositionsForm/_search_positions.rb:67
     no such element: Unable to locate element: {"method":"link text","selector":"people"}
-    ACTION: fix title
+    Search does not find faculty member based on institutions they worked at.
+    IS THIS BROKEN?
+    ACTION: ?
 
 InitialSetup
     WORKS
