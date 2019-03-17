@@ -41,9 +41,7 @@ CreatePeople
     ACTION: ?
 
 CreateProperties
-    CreateProperties/_add_property_group_place.rb:28
-    $browser.find_element(:id, "PublicDescription")
-    ACTION: Investigate. Maybe add delay
+    WORKS
 
 CustomAdvisesForm
     CustomAdvisesForm/_delete_advises.rb:25
@@ -83,6 +81,7 @@ MultiLabels
     MultiLabels/_manage_labels.rb:16
     no such element: Unable to locate element: {"method":"css selector","selector":"a.add-label > img.add-individual"}
     ACTION: investigate. indexing?
+>>>>>    NEXT NEXT NEXT NEXT NEXT
 
 OntologyManagement
     OntologyManagement/_delete_ontology.rb:28
@@ -105,6 +104,7 @@ ProxyEditing
     Selenium::WebDriver::Error::TimeOutError:
         timed out after 5 seconds
     ACTION: timed out after 5 seconds 
+>>>>>    NEXT NEXT NEXT NEXT NEXT
 
 SearchBoost
     SearchBoost/_test_individual_boost.rb:30
@@ -119,9 +119,10 @@ SearchTextDiscovery
     WORKS
 
 SelfEditing
-    SelfEditing/_add_self_editor_id2.rb:14
-    No faculty members in the index, after a fresh login.
-    ACTION: Wait for indexing to complete before checking the index?
+    SelfEditing/_add_self_editor_id2.rb:23
+    Selenium::WebDriver::Error::ElementNotVisibleError:
+       element not interactable
+    ACTION: ?
 
 ShortViews
     ShortViews/_create_test_departments.rb:61
