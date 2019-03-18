@@ -37,7 +37,6 @@ RSpec.configure do |config|
   config.before(:suite) do
     $settings = Settings.new
     $webserver = Webserver.new
-
     $webserver.setup
   end
 

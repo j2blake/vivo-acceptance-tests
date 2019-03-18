@@ -78,15 +78,10 @@ LinkedOpenData
     NOT GOING TO HAPPEN -- based on the test webapp.
 
 MultiLabels
-    MultiLabels/_manage_labels.rb:16
-    no such element: Unable to locate element: {"method":"css selector","selector":"a.add-label > img.add-individual"}
-    ACTION: investigate. indexing?
->>>>>    NEXT NEXT NEXT NEXT NEXT
+    WORKS
 
 OntologyManagement
-    OntologyManagement/_delete_ontology.rb:28
-    $browser.find_element(:id, "_delete").click
-    ACTION: add to name=
+    WORKS
 
 OpenSocialGadgets
     OpenSocialGadgets/_check_gadgets.rb:26
@@ -98,6 +93,7 @@ ProcessRDFData
     expected: "Ingest RDF Data"
              got: "Error 500 Server Error"
     ACTION: Investigate
+>>>>>    NEXT NEXT NEXT NEXT NEXT
 
 ProxyEditing
     ProxyEditing/_validate_admin_proxy.rb:32
@@ -113,7 +109,9 @@ SearchBoost
 
 SearchExclusion
     REQUIRES RDF FILE for part of test
-    BREAK into two tests, one with file and one without.
+    ACTION BREAK into two tests, one with file and one without.
+        Use shared_examples to create the faculty member?
+>>>>>     NEXT NEXT NEXT NEXT
 
 SearchTextDiscovery
     WORKS
@@ -127,16 +125,18 @@ SelfEditing
 ShortViews
     ShortViews/_create_test_departments.rb:61
     Index is showing the departments, but without location
-    (AUTO-COMPLETE) 
-    ACTION: ????
+    ACTION: BEFORE Running the test, copy the specified files to the specified locations.
+        For now, use output/context/... and output/home/...
+>>>>>     NEXT NEXT NEXT NEXT
 
 SparqlQueryApi
     NO SUITE FILE
 
 SparqlUpdateApi 
     SparqlUpdateApi/_test_api_disabled.rb:4
-    Won't run without the test app. What can we do instead?
-    NO TEST APP
+    ACTION: insert files before test
+>>>>>     NEXT NEXT NEXT NEXT
+
 
 ---------------------------------------------
 ACTIONS
