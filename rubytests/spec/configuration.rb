@@ -37,9 +37,19 @@ RSpec.configure do |config|
   config.before(:suite) do
     $settings = Settings.new
     $webserver = Webserver.new
-    $webserver.setup
+    $webserver.setup_session
   end
 
+#  config.before(:all) do |suite|
+#    puts "SUITE: #{suite.inspect}"
+#    puts "methods: #{suite.methods-Object.instance_methods}"
+#    puts "SUITE has helper_method? #{suite.respond_to?(:helper_method)}"
+#    puts "SUITE has helper_method? #{suite.respond_to?('helper_method')}"
+#    if suite.respond_to? :helper_method
+#      suite.helper_method
+#    end
+#  end
+  
   #
   # Start the webserver.
   #
@@ -63,6 +73,7 @@ RSpec.configure do |config|
       puts
       exit(false)
     end
+    $webserver.setup_test
     $webserver.start
   end
   

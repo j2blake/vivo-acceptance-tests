@@ -2,34 +2,51 @@ class Webserver
   #
   private # --------------------------------------------------------------------
   #
-  
-  def run_setup_script
-    stdout_file = File.expand_path("setup_stdout.txt", $settings.output_path)
-    stderr_file = File.expand_path("setup_stderr.txt", $settings.output_path)
-    system("sh", $settings.webserver_setup_script, out: stdout_file, err: stderr_file)
+  def script_options(stdout_path = nil, stderr_path = nil)
+    options = {}
+    options[:out] = File.expand_path(stdout_path, $settings.output_path) if stdout_path
+    options[:err] = File.expand_path(stderr_path, $settings.output_path) if stderr_path
+    options
   end
-  
+
+  def run_setup_session_script
+    unless system(@env, "sh", $settings.webserver_shell_scripts("setup_session.sh"), script_options)
+      raise "Session setup script failed: '#{script}'."
+    end
+  end
+
+  def run_setup_test_script
+    system(@env, "sh", $settings.webserver_shell_scripts("setup_test.sh"), script_options)
+  end
+
   def run_start_script
-    stdout_file = File.expand_path("logs/start_stdout.txt", $settings.output_path)
-    stderr_file = File.expand_path("logs/start_stderr.txt", $settings.output_path)
-    spawn("sh", $settings.webserver_start_script, out: stdout_file, err: stderr_file)
+    options = script_options("logs/start_stdout.txt", "logs/start_stderr.txt")
+    spawn(@env, "sh", $settings.webserver_shell_scripts("startup.sh"), options)
   end
 
   def get_vivo_home_page
+    begin
+      response = Net::HTTP.get_response(URI($settings.vivo_base_url))
+      response.value
+    rescue
+      return false
+    else
+      return true
+    end
+  end
+
+  def try_repeatedly_to_get_vivo_home_page
     message = ""
 
     (1..20).each do
-      begin
-        puts "     Trying..."
-        response = Net::HTTP.get_response(URI($settings.vivo_base_url))
-        response.value
-      rescue
-        message = $!.to_s
-        sleep(3)
-      else
+      puts "     Trying..."
+      if get_vivo_home_page
         puts "     Started."
         puts ""
         return true
+      else
+        message = $!.to_s
+        sleep(3)
       end
     end
 
@@ -39,39 +56,49 @@ class Webserver
   end
 
   def run_stop_script
-    stdout_file = File.expand_path("logs/stop_stdout.txt", $settings.output_path)
-    stderr_file = File.expand_path("logs/stop_stderr.txt", $settings.output_path)
-    system("sh", $settings.webserver_stop_script, out: stdout_file, err: stderr_file)
+    options = script_options("logs/stop_stdout.txt", "logs/stop_stderr.txt")
+    system(@env, "sh", $settings.webserver_shell_scripts("shutdown.sh"), options)
   end
 
   public # ---------------------------------------------------------------------
 
+  def initialize
+    @env = $settings.script_environment
+  end
+
   def running?
-    false
+    get_vivo_home_page
   end
 
   def start
     puts ""
-    puts "       >>>>> STARTING THE SERVER <<<<<<"
+    puts "     ----- Starting the server"
     puts ""
 
     run_start_script
     sleep(10)
-    exit 1 unless get_vivo_home_page
+    exit 1 unless try_repeatedly_to_get_vivo_home_page
   end
 
   def stop
     puts ""
-    puts "       >>>>> STOPPING THE SERVER <<<<<<"
+    puts "     ----- Stopping the server"
     puts ""
     run_stop_script
     sleep(5)
   end
-  
-  def setup
+
+  def setup_session
     puts ""
-    puts "       >>>>> SETTING UP THE ENVIRONMENT <<<<<<"
+    puts "     ----- Setting up the session"
     puts ""
-    run_setup_script
+    run_setup_session_script
+  end
+
+  def setup_test
+    puts ""
+    puts "     ----- Setting up the test"
+    puts ""
+    run_setup_test_script
   end
 end

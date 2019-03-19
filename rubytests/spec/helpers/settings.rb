@@ -7,36 +7,19 @@ class Settings
   attr_accessor :output_path
   attr_accessor :failure_path
   attr_accessor :vivo_base_url
-  attr_accessor :webserver_setup_script
-  attr_accessor :webserver_start_script
-  attr_accessor :webserver_stop_script
+  attr_accessor :script_environment
+
+  # ----------------------------------------------------------------------------
+  private
+  # ----------------------------------------------------------------------------
+
   #
   # These are the settings that should be treated as file paths, and resolved.
   #
-  PATH_SETTINGS = 
+  PATH_SETTINGS =
   %w{ VIVOTEST_SETTINGS VIVOTEST_OUTPUT_DIRECTORY VIVOTEST_VIVO_PROJECT } +
-  %w{ VIVOTEST_SETUP_SCRIPT VIVOTEST_START_SCRIPT VIVOTEST_STOP_SCRIPT }
-  %w{ VIVOTEST_VIVO_URL }
+  %w{ VIVOTEST_SHELL_SCRIPTS VIVOTEST_INJECTED_FILES }
   #
-  def initialize
-    begin
-      get_settings_from_environment
-      get_settings_from_file
-      combine_settings
-  
-      validate_output_path
-      validate_vivo_path
-      validate_setup_script
-      validate_start_script
-      validate_stop_script
-      validate_vivo_url
-    rescue
-      puts $!
-      recite_settings
-      raise $!
-    end
-  end
-
   def get_settings_from_environment
     raw_settings = ENV.select { |k| k.start_with?("VIVOTEST_") }
     @env_settings = resolve_paths_against_current_directory(raw_settings)
@@ -111,28 +94,29 @@ class Settings
     end
   end
 
-  def validate_setup_script
-    @webserver_setup_script = @settings["VIVOTEST_SETUP_SCRIPT"]
-    if @webserver_setup_script.nil?
-      @webserver_setup_script = File.expand_path("../../../scripts/setup.sh", File.dirname(__FILE__))
+  def validate_injected_files_path
+    @injected_files_path = @settings["VIVOTEST_INJECTED_FILES"]
+    if @injected_files_path.nil?
+      @injected_files_path = File.expand_path("../../../rubytests/injected_files", File.dirname(__FILE__))
     end
-    raise "Setup script does not exist: '#{@webserver_setup_script}'" unless File.exist?(@webserver_setup_script)
+    raise "The injected files directory at '#{@injected_files_path}' does not exist." unless Dir.exist?(@injected_files_path)
   end
 
-  def validate_start_script
-    @webserver_start_script = @settings["VIVOTEST_START_SCRIPT"]
-    if @webserver_start_script.nil?
-      @webserver_start_script = File.expand_path("../../../scripts/startup.sh", File.dirname(__FILE__))
+  def validate_shell_scripts_path
+    @webserver_shell_scripts = @settings["VIVOTEST_SHELL_SCRIPTS"]
+    if @webserver_shell_scripts.nil?
+      @webserver_shell_scripts = File.expand_path("../../../rubytests/shell_scripts", File.dirname(__FILE__))
     end
-    raise "Start script does not exist: '#{@webserver_start_script}'" unless File.exist?(@webserver_start_script)
+    raise "The injected files directory at '#{@injected_files_path}' does not exist." unless Dir.exist?(@injected_files_path)
+    validate_script("setup_session.sh", "Session setup script");
+    validate_script("setup_test.sh", "Test setup script");
+    validate_script("startup.sh", "Webserver start script");
+    validate_script("shutdown.sh", "Webserver stop script");
   end
 
-  def validate_stop_script
-    @webserver_stop_script = @settings["VIVOTEST_STOP_SCRIPT"]
-    if @webserver_stop_script.nil?
-      @webserver_stop_script = File.expand_path("../../../scripts/shutdown.sh", File.dirname(__FILE__))
-    end
-    raise "Stop script does not exist: '#{@webserver_stop_script}'" unless File.exist?(@webserver_stop_script)
+  def validate_script(filename, label)
+    path = webserver_shell_scripts(filename)
+    raise "#{label} does not exist: '#{path}'" unless File.exist?(path)
   end
 
   def validate_vivo_url
@@ -141,46 +125,87 @@ class Settings
       @vivo_base_url = "http://localhost:8080/vivo/"
     end
   end
+  
+  def validate_jetty_executables
+    # Seriously. Hard-code it, relative to here.
+    @jetty_executables = File.expand_path("../../../rubytests/jetty", File.dirname(__FILE__))
+  end
+
+  def create_script_environment
+    @script_environment = {
+      "VIVOTEST_OUTPUT_DIRECTORY" => @output_path,
+      "VIVOTEST_VIVO_PROJECT" => @vivo_project_path,
+      "VIVOTEST_INJECTED_FILES" => @injected_files_path,
+      "VIVOTEST_JETTY_EXECUTABLES" => @jetty_executables,
+    }
+  end
+
+  # ----------------------------------------------------------------------------
+  public
+  # ----------------------------------------------------------------------------
+
+  def initialize
+    begin
+      get_settings_from_environment
+      get_settings_from_file
+      combine_settings
+
+      validate_output_path
+      validate_vivo_path
+      validate_injected_files_path
+      validate_shell_scripts_path
+      validate_vivo_url
+      validate_jetty_executables
+
+      create_script_environment
+    rescue
+      puts $!
+      recite_settings
+      raise $!
+    end
+  end
+
+  def webserver_shell_scripts(filename)
+    File.expand_path(filename, @webserver_shell_scripts)
+  end
 
   def recite_settings
-    puts <<~HEREDOC
-
-    Required settings:
-      VIVOTEST_OUTPUT_DIRECTORY
-        The directory where the results will be written. Must already exist.
-      VIVOTEST_VIVO_PROJECT
-        The VIVO project directory for the VIVO under test. Must already
-        exist. Must contain 'target' directories from the Maven build process.
-  
-    Optional settings:
-      VIVOTEST_SETTINGS
-        A file containing other settings in a NAME=value format.
-      VIVOTEST_SETUP_SCRIPT
-       The script used to set up the vivo webapp directory (and vivosolr)
-       for the web server. Defaults to a "setup.sh" script in this workspace.
-      VIVOTEST_START_SCRIPT
-        The script used to start the web server for each test. Defaults to a
-        "start.sh" script in this workspace.
-      VIVOTEST_STOP_SCRIPT
-        The script used to stop the web server after each test. Defaults to a
-        "shutdown.sh" script in this workspace.
-      VIVOTEST_VIVO_URL
-        The base URL of the VIVO application in the web server. Defaults to
-        http://localhost:8080/vivo
-  
-     Values may be specified by environment variables. Any relative paths are
-     relative to the current working directory.
-        For example: VIVOTEST_OUTPUT_DIRECTORY=/usr/jeb228/vivotest/output rspec
-  
-     Values may be specified in a settings file, which is specified by an
-     environment variable.
-        For example: VIVOTEST_SETTINGS=/usr/jeb228/vivotest/settings rspec
-     Each line in the settings file is in the form [var-name]=[value]
-     Blank lines and comment lines (starting with '#') are also permitted.
-     Any relative paths are relative to the settings file itself.
-
-     Environment variables override values from the settings file.
-     
-     HEREDOC
-    end
+    #    puts <<~HEREDOC
+    #
+    #    Required settings:
+    #      VIVOTEST_OUTPUT_DIRECTORY
+    #        The directory where the results will be written. Must already exist.
+    #      VIVOTEST_VIVO_PROJECT
+    #        The VIVO project directory for the VIVO under test. Must already
+    #        exist. Must contain 'target' directories from the Maven build process.
+    #
+    #    Optional settings:
+    #      VIVOTEST_SETTINGS
+    #        A file containing other settings in a NAME=value format.
+    #      VIVOTEST_SHELL_SCRIPTS
+    #        The directory that contains setup_session.sh, setup_test.sh, startup.sh
+    #        and shutdown.sh. Defaults to a "shell_scripts" directory in this
+    #        workspace.
+    #      VIVOTEST_INJECTED_FILES
+    #        The directory that contains files to be injected into the VIVO home
+    #        directory (/home), and perhaps the VIVO context also (/context).
+    #      VIVOTEST_VIVO_URL
+    #        The base URL of the VIVO application in the web server. Defaults to
+    #        http://localhost:8080/vivo
+    #
+    #     Values may be specified by environment variables. Any relative paths are
+    #     relative to the current working directory.
+    #        For example: VIVOTEST_OUTPUT_DIRECTORY=/usr/jeb228/vivotest/output rspec
+    #
+    #     Values may be specified in a settings file, which is specified by an
+    #     environment variable.
+    #        For example: VIVOTEST_SETTINGS=/usr/jeb228/vivotest/settings rspec
+    #     Each line in the settings file is in the form [var-name]=[value]
+    #     Blank lines and comment lines (starting with '#') are also permitted.
+    #     Any relative paths are relative to the settings file itself.
+    #
+    #     Environment variables override values from the settings file.
+    #
+    #     HEREDOC
+  end
 end
