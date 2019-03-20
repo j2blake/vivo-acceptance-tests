@@ -71,34 +71,25 @@ class Webserver
   end
 
   def start
-    puts ""
     puts "     ----- Starting the server"
-    puts ""
-
     run_start_script
     sleep(10)
     exit 1 unless try_repeatedly_to_get_vivo_home_page
   end
 
   def stop
-    puts ""
     puts "     ----- Stopping the server"
-    puts ""
     run_stop_script
     sleep(5)
   end
 
   def setup_session
-    puts ""
     puts "     ----- Setting up the session"
-    puts ""
     run_setup_session_script
   end
 
   def setup_test
-    puts ""
     puts "     ----- Setting up the test"
-    puts ""
     run_setup_test_script
   end
 end

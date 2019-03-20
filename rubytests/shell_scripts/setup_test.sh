@@ -23,7 +23,7 @@ fi
 # settings.rb has already verified that:
 #   the VIVO project directory exists,
 #   it looks like a VIVO project directory,
-#   it looks like 'mvn install' has already been run.
+#   it looks like 'mvn package' has already been run.
 #
 if [ -z "$VIVOTEST_VIVO_PROJECT" ]; then
   echo "The environment variable 'VIVOTEST_VIVO_PROJECT' has not been set."

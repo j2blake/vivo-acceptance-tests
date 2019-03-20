@@ -90,7 +90,7 @@ class Settings
       raise "The directory at '#{@vivo_project_path}' does not look like a VIVO project (no 'installer' directory)."
     end
     unless Dir.exist?(File.expand_path('installer/webapp/target', @vivo_project_path))
-      raise "The VIVO project at '#{@vivo_project_path}' must be built with 'mvn install'."
+      raise "The VIVO project at '#{@vivo_project_path}' must be built with 'mvn package' (or 'mvn install')."
     end
   end
 

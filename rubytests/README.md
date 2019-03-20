@@ -12,7 +12,7 @@
 ### First steps
 * Keep it attainable.
 * Need to prepare by:
-	* Run mvn install
+	* Run mvn package
 	* Run scripts/run_tests.sh
 * Run it using Ruby
 	* First one will just bring up the home page and confirm that it is there.

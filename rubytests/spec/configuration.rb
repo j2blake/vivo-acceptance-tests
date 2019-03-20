@@ -40,16 +40,6 @@ RSpec.configure do |config|
     $webserver.setup_session
   end
 
-#  config.before(:all) do |suite|
-#    puts "SUITE: #{suite.inspect}"
-#    puts "methods: #{suite.methods-Object.instance_methods}"
-#    puts "SUITE has helper_method? #{suite.respond_to?(:helper_method)}"
-#    puts "SUITE has helper_method? #{suite.respond_to?('helper_method')}"
-#    if suite.respond_to? :helper_method
-#      suite.helper_method
-#    end
-#  end
-  
   #
   # Start the webserver.
   #
@@ -62,14 +52,9 @@ RSpec.configure do |config|
     options.add_argument('--window-size=1200x1200')
     $browser = Selenium::WebDriver.for :chrome, options: options
 
-#    options = Selenium::WebDriver::Firefox::Options.new(args: ['-headless'])
-#    $browser = Selenium::WebDriver.for(:firefox, options: options)
-#    target_size = Selenium::WebDriver::Dimension.new(1200, 1200)
-#    $browser.manage.window.size = target_size
-    
     if $webserver.running?
       puts
-      puts "The webserver wasn't shut down."
+      puts "The webserver wasn't shut down properly."
       puts
       exit(false)
     end
