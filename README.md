@@ -45,6 +45,13 @@ Your Ruby environment must include the RSpec gem. This project was developed usi
 
 You should be able to install RSpec by typing `gem install rspec`.
 
+### Selenium/WebDriver
+
+Your Ruby environment must include the Selenium/WebDriver gem. This project was developed using 
+Selenium/WebDriver 3.141.
+
+You should be able to install Selenium/WebDriver by typing `gem install selenium-webdriver`.
+
 ### Chrome
 
 Your system must include the Chrome browser. This project was developed using Google Chrome Version 72 (64-bit).
@@ -53,11 +60,15 @@ Your system must include the Chrome browser. This project was developed using Go
 
 ### ChromeDriver
 
-__*Andrew: I'm not sure what needs to happen here. If I recall correctly, if you try running the test
-framework without this, you will see a message telling you to install ChromeDriver, with a link to some 
-installation instructions. I won't know until I can test these instructions on a clean machine.*__
+Your system must include ChromeDriver, the interface between WebDriver and the Chrome browser.
+
+This project was developed using ChromeDriver 2.46.
+
+On an Ubuntu system, you can install ChromeDriver using this command: `sudo apt-get install chromium-chromedriver`
 
 [Documentation for ChromeDriver][chromedriver_docs].
+
+[Installing ChromeDriver on MacOS][chromedriver_macos]
 
 ### VIVO
 
@@ -118,7 +129,7 @@ mvn package -s ../install_settings.xml
 * Go to the `rubytests` folder of this project workspace.
 * Set environment variables that specify the location of the VIVO workspace (created by `git clone`),
   and the location of your output directory. 
-	* The output directory must already exist, and __it will be emptied at the beginning of each run__.
+	* You must create the output directory, and __it will be emptied at the beginning of each run__.
 	* Relative paths in the environment variables, if used, will be relative to your current working 
 	  directory when you run the tests.
 * Issue the `rspec` command. 
@@ -207,6 +218,14 @@ This project consists of these top-level folders:
 
 ## More information
 
+### Project docs
+
+* [How the test framework works](docs/how_the_framework_works.md)
+* [Creating the VIVO runtime environment](docs/creating_the_VIVO_runtime_environment.md)
+* [Helper methods provided to the tests](docs/helper_methods.md)
+
+### Still more information
+
 * The [`/docs`](./docs) directory of this project.
 * [RSpec: Behaviour Driven Development for Ruby.](http://rspec.info/)
 * [Selenium/WebDriver API for Ruby][selenium_api]
@@ -224,6 +243,7 @@ This project was initially developed by the staff of the Cornell University Libr
 [installing_ruby]: https://www.ruby-lang.org/en/documentation/installation/
 [installing_chrome]: https://support.google.com/chrome/answer/95346
 [chromedriver_docs]: https://sites.google.com/a/chromium.org/chromedriver/home
+[chromedriver_macos]: http://jonathansoma.com/lede/foundations-2017/classes/more-scraping/selenium/
 [vivo_installation]: https://wiki.duraspace.org/display/VIVODOC110x/Installing+VIVO
 [selenium_api]: https://seleniumhq.github.io/selenium/docs/api/rb/Selenium/WebDriver/Driver.html
 [selenium_tips]: http://elementalselenium.com/tips
