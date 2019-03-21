@@ -120,11 +120,7 @@ SelfEditing
     ACTION: ?
 
 ShortViews
-    ShortViews/_create_test_departments.rb:61
-    Index is showing the departments, but without location
-    ACTION: BEFORE Running the test, copy the specified files to the specified locations.
-        For now, use output/context/... and output/home/...
->>>>>     NEXT NEXT NEXT NEXT
+    WORKS
 
 SparqlQueryApi
     NO SUITE FILE

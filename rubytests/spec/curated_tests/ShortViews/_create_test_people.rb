@@ -40,7 +40,7 @@ shared_examples "Short Views: Create Test People" do
     $browser.find_element(:id, "lastName").send_keys("Dog")
     $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dog, Charlie")
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('affiliation')
     $browser.find_element(:css, "a.add-RO_0000053 > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Academic Department")
@@ -67,7 +67,7 @@ shared_examples "Short Views: Create Test People" do
     $browser.find_element(:id, "lastName").send_keys("Foxtrot")
     $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Foxtrot, Echo")
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('affiliation')
     $browser.find_element(:css, "a.add-RO_0000053 > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Department")

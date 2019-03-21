@@ -77,17 +77,8 @@ shared_examples "Short Views: Delete Test People" do
   end
 
   it "Verify everything is gone" do
+    vivo_wait_for_indexing
     $browser.find_element(:link_text, "Index").click
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
     expect(browser_page_text).not_to include("Faculty Member")
     expect(browser_page_text).not_to include("Person")
   end

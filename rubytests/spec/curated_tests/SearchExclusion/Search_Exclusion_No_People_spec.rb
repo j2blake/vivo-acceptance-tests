@@ -1,13 +1,19 @@
+require 'fileutils'
+
 require_relative '../../configuration'
 require_relative '_create_test_faculty_member.rb'
 require_relative '_search_not_found.rb'
 require_relative '_delete_unindexed_test_faculty_member.rb'
 
 describe 'Search Exclusion' do
+  #
+  # Modify the home directory to include thie RDF file that eliminates Person 
+  # individuals from the index.
+  #
   def before_starting_server
     source = File.expand_path("TestSearchExclusion.n3", File.dirname(__FILE__))
       dest = File.expand_path("home/rdf/display/everytime", $settings.output_path)
-      FileUtils.cp(source, dest)
+      FileUtils.copy(source, dest)
   end
   
   describe 'Create Test Faculty Member' do 

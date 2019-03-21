@@ -80,20 +80,44 @@ shared_examples "Short Views: Check Results" do
     expect(browser_page_text).to include("Jenkins, Iris")
   end
 
-  it "Search for Person" do
+  it "Search for the people" do
     $browser.find_element(:name, "querytext").clear
-    $browser.find_element(:name, "querytext").send_keys("person")
+    $browser.find_element(:name, "querytext").send_keys("Charlie")
     $browser.find_element(:css, "input.search").click
-    expect($browser.title).to eq("Search for 'person'")
-    expect(browser_page_text).to include("Search results for 'person'")
+    expect($browser.title).to eq("VIVO - Search results for 'Charlie'")
+    expect(browser_page_text).to include("Search results for 'Charlie'")
     expect(browser_page_text).to include("Dog, Charlie Faculty Member Member of Department A")
     $browser.find_element(:link_text, "Dog, Charlie")
+    
+    $browser.find_element(:name, "querytext").clear
+    $browser.find_element(:name, "querytext").send_keys("Baker")
+    $browser.find_element(:css, "input.search").click
+    expect($browser.title).to eq("VIVO - Search results for 'Baker'")
+    expect(browser_page_text).to include("Search results for 'Baker'")
     expect(browser_page_text).to include("Baker, Able Professor")
     $browser.find_element(:link_text, "Baker, Able")
+    
+    $browser.find_element(:name, "querytext").clear
+    $browser.find_element(:name, "querytext").send_keys("Foxtrot")
+    $browser.find_element(:css, "input.search").click
+    expect($browser.title).to eq("VIVO - Search results for 'Foxtrot'")
+    expect(browser_page_text).to include("Search results for 'Foxtrot'")
     expect(browser_page_text).to include("Foxtrot, Echo Faculty Member Member of Department B")
     $browser.find_element(:link_text, "Foxtrot, Echo")
+    
+    $browser.find_element(:name, "querytext").clear
+    $browser.find_element(:name, "querytext").send_keys("Jenkins")
+    $browser.find_element(:css, "input.search").click
+    expect($browser.title).to eq("VIVO - Search results for 'Jenkins'")
+    expect(browser_page_text).to include("Search results for 'Jenkins'")
     expect(browser_page_text).to include("Jenkins, Iris Person")
     $browser.find_element(:link_text, "Jenkins, Iris")
+    
+    $browser.find_element(:name, "querytext").clear
+    $browser.find_element(:name, "querytext").send_keys("Henry")
+    $browser.find_element(:css, "input.search").click
+    expect($browser.title).to eq("VIVO - Search results for 'Henry'")
+    expect(browser_page_text).to include("Search results for 'Henry'")
     expect(browser_page_text).to include("Henry, George Faculty Member")
     $browser.find_element(:link_text, "Henry, George")
   end

@@ -52,17 +52,8 @@ shared_examples "Short Views: Delete Test Departments" do
   end
 
   it "Verify everything is gone" do
+    vivo_wait_for_indexing
     $browser.find_element(:link_text, "Index").click
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
     expect(browser_page_text).not_to include("Academic Department")
     expect(browser_page_text).not_to include("Building")
   end
