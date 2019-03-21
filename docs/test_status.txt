@@ -108,10 +108,7 @@ SearchBoost
     ACTION: Wait for indexing to complete before checking the index?
 
 SearchExclusion
-    REQUIRES RDF FILE for part of test
-    ACTION BREAK into two tests, one with file and one without.
-        Use shared_examples to create the faculty member?
->>>>>     NEXT NEXT NEXT NEXT
+    WORKS
 
 SearchTextDiscovery
     WORKS

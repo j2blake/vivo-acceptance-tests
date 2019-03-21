@@ -126,6 +126,14 @@ mvn package -s ../install_settings.xml
 	* `rspec spec/curated_tests/` will run only the tests in that folder.
 	* `rspec spec/converted/CreatePeople/Create_People_spec.rb` will run only that test.
 
+In the `rubytests` directory, issue commands like this:
+
+```
+export VIVOTEST_OUTPUT_DIRECTORY=[your output directory]
+export VIVOTEST_VIVO_PROJECT=[your VIVO distribution workspace]
+rspec spec/curated_tests
+```
+
 For example:
 
 ```
@@ -142,13 +150,23 @@ rspec spec/curated_tests
 * Go to the `rubytests` folder of this project workspace.
 * Point to the settings file while issueing the `rspec` command
 
-For example, if the file `~/example_settings` is as follows:
+You could create a file `~/example_settings` something like this:
+
+```
+# Settings for a typical run
+VIVOTEST_OUTPUT_DIRECTORY=[your output directory]
+VIVOTEST_VIVO_PROJECT=[your VIVO distribution workspace]
+```
+
+For example:
 
 ```
 # Settings for a typical run
 VIVOTEST_OUTPUT_DIRECTORY=Development/VIVO/AcceptanceTests/output/
 VIVOTEST_VIVO_PROJECT=Development/VIVO/Projects/VIVO/
 ```
+Note again that the paths in the settings file can be relative paths,
+in which case they are relative to the settings file itself.
 
 Then you could use these commands:
 

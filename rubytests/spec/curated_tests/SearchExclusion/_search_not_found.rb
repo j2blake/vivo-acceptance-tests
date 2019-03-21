@@ -5,8 +5,8 @@ shared_examples "Search Exclusion: Search Not Found" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("faculty")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("VIVO - Search results for 'faculty'")
-    expect(browser_page_text).to include("Search results for 'faculty'")
+    expect($browser.title).to eq("Search for 'faculty'")
+    expect(browser_page_text).to include("Search for 'faculty'")
     expect(browser_page_text).to include("No matching results.")
     expect($browser.find_elements(:link_text, "people").size).to eq(0)
     expect(browser_page_text).not_to include("Faculty, Jane Assistant Professor")

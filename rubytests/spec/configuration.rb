@@ -15,24 +15,24 @@ require_relative "helpers/vivo_helpers"
 RSpec.configure do |config|
 
   #
-  # Make these helper methods available to the tests.
+  # Make these helper methods available to the examples.
   #
   config.include SeleniumHelpers
   config.include TesterHelpers
   config.include VivoHelpers
 
   #
-  # Always run the tests in the order they are given.
+  # Always run the tests and examples in the order they are given.
   #
   config.order = :defined
   
   #
-  # Print the name of each step as it executes.
+  # Print the name of each example as it executes.
   #
   config.formatter = :documentation
 
   #
-  # Create a clean environment for the tests to run in.
+  # Load the settings and create a clean environment for the tests to run in.
   #
   config.before(:suite) do
     $settings = Settings.new
@@ -41,12 +41,9 @@ RSpec.configure do |config|
   end
 
   #
-  # Start the webserver.
+  # For each test, Start the webserver and create the Chrome driver.
   #
-  # Create the Chrome driver as a global variable, and delete it when we are
-  # done.
-  #
-  config.before(:all) do
+  config.before(:all) do |context|
     options = Selenium::WebDriver::Chrome::Options.new
     options.add_argument('--headless')
     options.add_argument('--window-size=1200x1200')
@@ -58,23 +55,27 @@ RSpec.configure do |config|
       puts
       exit(false)
     end
+    
     $webserver.setup_test
+    
+    # Any last-minute instructions?
+    context.before_starting_server if context.respond_to?("before_starting_server")
+    
     $webserver.start
   end
   
-  config.after(:all) do
-    $browser.quit
-  end
-
   #
-  # Failure or not, stop the webserver at the end of each suite.
+  # Success or failure, close the browser and stop the webserver at the end of 
+  # each test.
   #
   config.after(:all) do
     $webserver.stop
+    $browser.quit
+    $browser = nil
   end
 
   #
-  # If a test fails, save a screen-shot and the HTML.
+  # If an example fails, save a screen-shot and the HTML.
   #
   config.after(:each) do |example|
     if example.exception
@@ -86,12 +87,13 @@ RSpec.configure do |config|
   end
 
   #
-  # If a test fails, don't try to run the remaining tests.
+  # If an example fails, don't try to run the remainder of the test.
   #
-  config.before :all do
+  config.before(:all) do
     $continue = true
   end
-  config.around :each do |example|
+  
+  config.around(:each) do |example|
     if $continue
       $continue = false
       example.run

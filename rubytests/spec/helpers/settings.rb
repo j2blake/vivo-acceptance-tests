@@ -170,42 +170,42 @@ class Settings
   end
 
   def recite_settings
-    #    puts <<~HEREDOC
-    #
-    #    Required settings:
-    #      VIVOTEST_OUTPUT_DIRECTORY
-    #        The directory where the results will be written. Must already exist.
-    #      VIVOTEST_VIVO_PROJECT
-    #        The VIVO project directory for the VIVO under test. Must already
-    #        exist. Must contain 'target' directories from the Maven build process.
-    #
-    #    Optional settings:
-    #      VIVOTEST_SETTINGS
-    #        A file containing other settings in a NAME=value format.
-    #      VIVOTEST_SHELL_SCRIPTS
-    #        The directory that contains setup_session.sh, setup_test.sh, startup.sh
-    #        and shutdown.sh. Defaults to a "shell_scripts" directory in this
-    #        workspace.
-    #      VIVOTEST_INJECTED_FILES
-    #        The directory that contains files to be injected into the VIVO home
-    #        directory (/home), and perhaps the VIVO context also (/context).
-    #      VIVOTEST_VIVO_URL
-    #        The base URL of the VIVO application in the web server. Defaults to
-    #        http://localhost:8080/vivo
-    #
-    #     Values may be specified by environment variables. Any relative paths are
-    #     relative to the current working directory.
-    #        For example: VIVOTEST_OUTPUT_DIRECTORY=/usr/jeb228/vivotest/output rspec
-    #
-    #     Values may be specified in a settings file, which is specified by an
-    #     environment variable.
-    #        For example: VIVOTEST_SETTINGS=/usr/jeb228/vivotest/settings rspec
-    #     Each line in the settings file is in the form [var-name]=[value]
-    #     Blank lines and comment lines (starting with '#') are also permitted.
-    #     Any relative paths are relative to the settings file itself.
-    #
-    #     Environment variables override values from the settings file.
-    #
-    #     HEREDOC
+    puts <<~HEREDOC
+
+    Required settings:
+      VIVOTEST_OUTPUT_DIRECTORY
+        The directory where the results will be written. Must already exist.
+      VIVOTEST_VIVO_PROJECT
+        The VIVO project directory for the VIVO under test. Must already
+        exist. Must contain 'target' directories from the Maven build process.
+
+    Optional settings:
+      VIVOTEST_SETTINGS
+        A file containing other settings in a NAME=value format.
+      VIVOTEST_SHELL_SCRIPTS
+        The directory that contains setup_session.sh, setup_test.sh, startup.sh
+        and shutdown.sh. Defaults to a "shell_scripts" directory in this
+        workspace.
+      VIVOTEST_INJECTED_FILES
+        The directory that contains files to be injected into the VIVO home
+        directory (/home), and perhaps the VIVO context also (/context).
+      VIVOTEST_VIVO_URL
+        The base URL of the VIVO application in the web server. Defaults to
+        http://localhost:8080/vivo
+
+     Values may be specified by environment variables. Any relative paths are
+     relative to the current working directory.
+        For example: VIVOTEST_OUTPUT_DIRECTORY=/usr/jeb228/vivotest/output rspec
+
+     Values may be specified in a settings file, which is specified by an
+     environment variable.
+        For example: VIVOTEST_SETTINGS=/usr/jeb228/vivotest/settings rspec
+     Each line in the settings file is in the form [var-name]=[value]
+     Blank lines and comment lines (starting with '#') are also permitted.
+     Any relative paths are relative to the settings file itself.
+
+     Environment variables override values from the settings file.
+
+     HEREDOC
   end
 end

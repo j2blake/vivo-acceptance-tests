@@ -25,6 +25,6 @@ fi
 if [ -d "$VIVOTEST_OUTPUT_DIRECTORY/failures" ]; then
   rm -r $VIVOTEST_OUTPUT_DIRECTORY/failures
 fi
-
 mkdir $VIVOTEST_OUTPUT_DIRECTORY/failures
+
 exit 0
