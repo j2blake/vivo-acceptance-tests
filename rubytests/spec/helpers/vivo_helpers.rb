@@ -74,5 +74,21 @@ module VivoHelpers
     between = page.start_with?('/') ? '' : '/'
     first_part + between + page
   end
-
+  
+  #
+  # When viewing an individual profile page, of a Person or a Department, for
+  # example, select a tab by its grouopname.
+  #
+  # This is good because otherwise, you would be using some obscure CSS
+  # selector, or complicated XPath selector.
+  #
+  # This is bad because we shouldn't need to descend to JavaScript to make
+  # this work. However, if we don't then it works sometimes but not others,
+  # regardless of how we select the tab element.
+  #
+  def vivo_select_tab_on_profile(groupname)
+    locator = ".//li[@groupname='%s']" % groupname
+    element = $browser.find_element(:xpath, locator)
+    $browser.execute_script("arguments[0].click()" , element)
+  end
 end

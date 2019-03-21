@@ -43,3 +43,9 @@
 * `vivo_url(page)`
 	* Convert the page path to a full URL in the VIVO application.
 	* Example: `browser.navigate.to vivo_url("/people")`
+* `vivo_select_tab_on_profile(groupname)`
+	* Select a tab on an individual profile page, by groupname
+	* This is handy because it is clearer than the alternatives.
+	* This is annoying because I don't know why the alternatives would
+	  not work in all situations,
+	* Example: `vivo_select_tab_on_profile('affiliation')`
