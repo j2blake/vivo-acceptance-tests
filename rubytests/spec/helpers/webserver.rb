@@ -38,7 +38,7 @@ class Webserver
   def try_repeatedly_to_get_vivo_home_page
     message = ""
 
-    (1..20).each do
+    (1..30).each do
       puts "     Trying..."
       if get_vivo_home_page
         puts "     Started."
@@ -46,7 +46,7 @@ class Webserver
         return true
       else
         message = $!.to_s
-        sleep(3)
+        sleep(5)
       end
     end
 
