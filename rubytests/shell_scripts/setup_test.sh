@@ -59,7 +59,7 @@ if [ -d "$VIVOTEST_OUTPUT_DIRECTORY/home" ]; then
 fi
 
 cp -R $VIVOTEST_VIVO_PROJECT/installer/home/target/vivo-installer-home-* $VIVOTEST_OUTPUT_DIRECTORY/home
-cp -R $VIVOTEST_INJECTED_FILES/home/ $VIVOTEST_OUTPUT_DIRECTORY/home
+cp -R $VIVOTEST_INJECTED_FILES/home/* $VIVOTEST_OUTPUT_DIRECTORY/home
 
 #
 # Create the VIVO context directory.
@@ -69,8 +69,8 @@ if [ -d "$VIVOTEST_OUTPUT_DIRECTORY/vivo_context" ]; then
 fi
 mkdir $VIVOTEST_OUTPUT_DIRECTORY/vivo_context
 
-cp -R $VIVOTEST_VIVO_PROJECT/installer/webapp/target/vivo/ $VIVOTEST_OUTPUT_DIRECTORY/vivo_context
-cp -R $VIVOTEST_INJECTED_FILES/context/ $VIVOTEST_OUTPUT_DIRECTORY/vivo_context
+cp -R $VIVOTEST_VIVO_PROJECT/installer/webapp/target/vivo/* $VIVOTEST_OUTPUT_DIRECTORY/vivo_context
+cp -R $VIVOTEST_INJECTED_FILES/context/* $VIVOTEST_OUTPUT_DIRECTORY/vivo_context
 
 #
 # Make the VIVOSOLR WAR file available.
