@@ -59,7 +59,7 @@ shared_examples "Add Publications: Add Book" do
     $browser.find_element(:xpath, ".//h3[@id='status']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "objectVar").select_by(:text, "in press")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
     $browser.find_element(:xpath, ".//h3[@id='hasSubjectArea']/a/img").click
     expect($browser.title).to eq("Edit")
@@ -68,54 +68,53 @@ shared_examples "Add Publications: Add Book" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "relatedIndLabel").clear
     $browser.find_element(:id, "relatedIndLabel").send_keys("Child Development")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:link_text, "Return to Profile Page").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Children")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Games")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
+    
+    vivo_select_tab_on_profile('identity')
     $browser.find_element(:xpath, ".//h3[@id='isbn10']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("5555555555")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("5555555555")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
     $browser.find_element(:xpath, ".//h3[@id='isbn13']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("7777777777777")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("7777777777777")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='numPages']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("258")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("258")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
   end
 
-  it "Naviage back to Index" do
+  it "Navigate back to Index" do
+    vivo_wait_for_indexing
     $browser.find_element(:link_text, "Index").click
   end
 
   it "Verify Book link now appears" do
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
     expect(browser_page_text).to include("Faculty Member (1)")
     $browser.find_element(:link_text, "Faculty Member")
     expect(browser_page_text).to include("Person (1)")

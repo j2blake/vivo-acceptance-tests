@@ -84,8 +84,8 @@ shared_examples "Add Publications: Delete Validation Stuff" do
     $browser.find_element(:link_text, "Index").click
     $browser.find_element(:link_text, "Book").click
     expect($browser.title).to eq("Book")
-    $browser.find_element(:link_text, "exact:Nintendo: Good or Bad for Kids?").click
-    expect($browser.title).to eq("exact:Nintendo: Good or Bad for Kids?")
+    $browser.find_element(:link_text, "Nintendo: Good or Bad for Kids?").click
+    expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
     $browser.find_element(:link_text, "Edit this individual").click
     expect($browser.title).to eq("Individual Control Panel")
     $browser.find_element(:xpath, ".//input[@value=\"Edit This Individual\"]").click
@@ -215,18 +215,12 @@ shared_examples "Add Publications: Delete Validation Stuff" do
     $browser.find_element(:name, "_delete").click
     browser_accept_alert("Are you SURE you want to delete this individual? If in doubt, CANCEL.")
     expect($browser.title).to eq("VIVO Site Administration")
-    $browser.find_element(:link_text, "Index").click
-    expect($browser.title).to eq("Index of Contents")
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
-    # #<tr><td>refreshAndWait</td><td>10000</td><td></td></tr>
   end
 
   it "Verify everything is gone" do
+    vivo_wait_for_indexing
+    $browser.find_element(:link_text, "Index").click
+    expect($browser.title).to eq("Index of Contents")
     expect(browser_page_text).not_to include("people")
     expect(browser_page_text).not_to include("research")
     expect(browser_page_text).not_to include("activities")

@@ -50,9 +50,8 @@ mkdir $VIVOTEST_OUTPUT_DIRECTORY/logs
 # Create the home directory (in the output directory).
 #
 # TODO
-#   Make this independent of VIVO version number.
 #   Complain if there is more than one home directory in vivo-installer-home
-#   If any of the required pieces don't exist, exit.
+#   If any of the required pieces doesn't exist, exit.
 #
 if [ -d "$VIVOTEST_OUTPUT_DIRECTORY/home" ]; then
   rm -r $VIVOTEST_OUTPUT_DIRECTORY/home

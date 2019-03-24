@@ -73,7 +73,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("Start Page")
     expect(browser_page_text).to include("End Page")
     expect(browser_page_text).to include("Publication Date")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Please select an existing publication in the Title field or enter a new one.")
   end
@@ -166,16 +166,16 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "showAddFormButton").click
     expect($browser.title).to eq("Edit")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("url: This field must not be empty.")
     browser_find_select_list(:name, "urlType").select_by(:text, "Standard Web Link")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("url: This field must not be empty.")
     $browser.find_element(:id, "url").clear
     $browser.find_element(:id, "url").send_keys("http://www.nintendo.com/")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Manage Web Pages")
     $browser.find_element(:link_text, "Edit").click
@@ -238,7 +238,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("If you don't find the appropriate entry on the selection list above:")
     expect(browser_page_text).to include("This relates an information resource to a person it features.")
     browser_find_select_list(:id, "objectVar").select_by(:text, "Mouse, Minnie (Person)")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
     expect(browser_page_text).to include("Mouse, Minnie  Person")
     $browser.find_element(:css, "a[title=\"name\"]")
@@ -255,7 +255,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:xpath, ".//h3[@id='abstract']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_fill_tinyMCE("This is a chapter in a book that provides various professional viewpoints as to the impact of Nintendo usage on kids.")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -276,7 +276,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("Create \"presented at event\" entry for Nintendo O.K. for Kids")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Focus on Kids!")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -295,7 +295,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:css, "a.add-status > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "objectVar").select_by(:text, "published")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -314,7 +314,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Kids Now Conference Proceedings")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -331,7 +331,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Nintendo: Good or Bad for Kids?")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -351,7 +351,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:id, "object").send_keys("United States of Am")
     browser_wait_for_jQuery
     $browser.find_element(:css, ".ui-menu-item-wrapper").click
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -369,7 +369,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("An oclcnum is a sequential accession number assigned by OCLC as bibliographic records are entered into OCLC WorldCat (the OCLC Online Union Catalog).")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("1234-5678-90")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -386,11 +386,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("A PMID (PubMed Identifier or PubMed Unique Identifier) is a unique number assigned to each PubMed citation of life sciences and biomedical scientific journal articles.")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("123456789")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add Number of Pages, validating field first" do
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='numPages']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Add new entry for: number of pages")
@@ -400,11 +401,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("22")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add Subject Area, validating field first" do
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='hasSubjectArea']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Manage Concepts")
@@ -425,7 +427,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:link_text, "Return to Manage Concepts")
     $browser.find_element(:id, "relatedIndLabel").clear
     $browser.find_element(:id, "relatedIndLabel").send_keys("Child Development")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Manage Concepts")
     expect(browser_page_text).to include("Concept (Type)")
@@ -438,6 +440,7 @@ shared_examples "Add Publications: Validate Fields" do
   end
 
   it "Add Keywords, validating field first" do
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Add new entry for: keywords")
@@ -450,11 +453,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("Intended for a word or short phrase only where no instance of a controlled vocabulary can be identified. Can also be used to help in highlighting subtle difference in work.")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Children")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add Reproduced In, validating field first" do
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='reproducedIn']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("If you don't find the appropriate entry on the selection list above:")
@@ -463,7 +467,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:xpath, ".//h3[@id='reproducedIn']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "objectVar").select_by(:text, "Nintendo: Good or Bad for Kids? (Book)")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -477,11 +481,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("If you don't find the appropriate entry on the selection list above:")
     browser_find_select_list(:id, "objectVar").select_by(:text, "Kids Now Conference Proceedings (Chapter)")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add documentation for" do
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-documentationFor > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).not_to include("Select an existing (Instrument or Service or Reagent or Research Project or Biological Specimen or Software or Database) for Nintendo O.K. for Kids")
@@ -500,11 +505,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Focus on Kids Project")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add has global citation frequency" do
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-hasGlobalCitationFrequency > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).not_to include("Select an existing Global Citation Count for Nintendo O.K. for Kids")
@@ -522,11 +528,12 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("99")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add presented at" do
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-presentedAt > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).not_to include("Select an existing Event for Nintendo O.K. for Kids")
@@ -551,7 +558,7 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:link_text, "Cancel")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Focus on Kids Too!")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -566,11 +573,12 @@ shared_examples "Add Publications: Validate Fields" do
     $browser.find_element(:css, "a.add-RO_0002353 > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "objectVar").select_by(:text, "Focus on Kids! (Conference)")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
   it "Add cited by" do
+    vivo_select_tab_on_profile('related_documents')
     $browser.find_element(:css, "a.add-citedBy > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Select an existing document for Nintendo O.K. for Kids")
@@ -591,7 +599,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect(browser_page_text).to include("Create \"cited by\" entry for Nintendo O.K. for Kids")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Kids Today")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -606,7 +614,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Kids of the 21st Century")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
     $browser.find_element(:css, "a.add-cites > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -615,7 +623,7 @@ shared_examples "Add Publications: Validate Fields" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Children Today")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Nintendo O.K. for Kids")
   end
 
@@ -659,6 +667,7 @@ shared_examples "Add Publications: Validate Fields" do
   end
 
   it "Verify Index is correct" do
+    vivo_wait_for_indexing
     $browser.find_element(:link_text, "Index").click
     expect(browser_page_text).to include("people")
     expect(browser_page_text).to include("Faculty Member (1)")

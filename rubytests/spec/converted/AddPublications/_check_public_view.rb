@@ -116,29 +116,29 @@ shared_examples "Add Publications: Check Public View" do
     $browser.find_element(:link_text, "View all ...").click
     expect($browser.title).to eq("Research")
     $browser.find_element(:link_text, "Academic Article (1)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Too Much Nintendo")
     $browser.find_element(:link_text, "Article (2)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Nintendo Case Studies")
     expect(browser_page_text).to include("Conference Paper")
     $browser.find_element(:link_text, "Too Much Nintendo")
     expect(browser_page_text).to include("Academic Article")
     $browser.find_element(:link_text, "Book (2)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Kids in the 21st Century")
     $browser.find_element(:link_text, "Nintendo: Good or Bad for Kids?")
     $browser.find_element(:link_text, "Chapter (1)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Nintendo O.K. for Kids")
     $browser.find_element(:link_text, "Concept (1)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Child Development")
     $browser.find_element(:link_text, "Conference Paper (1)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Nintendo Case Studies")
     $browser.find_element(:link_text, "Journal (1)").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:link_text, "Child Development")
   end
 

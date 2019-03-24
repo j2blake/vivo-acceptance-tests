@@ -90,5 +90,6 @@ module VivoHelpers
     locator = ".//li[@groupname='%s']" % groupname
     element = $browser.find_element(:xpath, locator)
     $browser.execute_script("arguments[0].click()" , element)
+    browser_wait_for_jQuery
   end
 end

@@ -66,6 +66,8 @@ shared_examples "Add Publications: Add Conference" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:link_text, "Return to Profile Page").click
     expect($browser.title).to eq("Nintendo Case Studies")
+    
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear

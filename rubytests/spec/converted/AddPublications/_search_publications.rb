@@ -8,10 +8,11 @@ shared_examples "Add Publications: Search Publications" do
   end
 
   it "Search for NINTENDO" do
+    vivo_wait_for_indexing
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("nintendo")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("Search for 'nintendo'")
+    expect($browser.title).to eq("VIVO - Search results for 'nintendo'")
     $browser.find_element(:link_text, "people")
     $browser.find_element(:link_text, "events")
     $browser.find_element(:link_text, "organizations")
@@ -44,7 +45,7 @@ shared_examples "Add Publications: Search Publications" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("child development")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("Search for 'child development'")
+    expect($browser.title).to eq("VIVO - Search results for 'child development'")
     $browser.find_element(:link_text, "events")
     $browser.find_element(:link_text, "research")
     expect(browser_page_text).to include("Child Development Journal")
@@ -67,7 +68,7 @@ shared_examples "Add Publications: Search Publications" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("children")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("Search for 'children'")
+    expect($browser.title).to eq("VIVO - Search results for 'children'")
     $browser.find_element(:link_text, "research")
     expect(browser_page_text).to include("Nintendo: Good or Bad for Kids? Book")
     $browser.find_element(:link_text, "Nintendo: Good or Bad for Kids?")
@@ -83,7 +84,7 @@ shared_examples "Add Publications: Search Publications" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("games")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("Search for 'games'")
+    expect($browser.title).to eq("VIVO - Search results for 'games'")
     $browser.find_element(:link_text, "events")
     $browser.find_element(:link_text, "research")
     expect(browser_page_text).to include("Games and Child Development Conference")
@@ -102,7 +103,7 @@ shared_examples "Add Publications: Search Publications" do
     $browser.find_element(:name, "querytext").clear
     $browser.find_element(:name, "querytext").send_keys("conference")
     $browser.find_element(:xpath, ".//input[@value='Search']").click
-    expect($browser.title).to eq("Search for 'conference'")
+    expect($browser.title).to eq("VIVO - Search results for 'conference'")
     $browser.find_element(:link_text, "events")
     $browser.find_element(:link_text, "research")
     expect(browser_page_text).to include("Games and Child Development Conference")

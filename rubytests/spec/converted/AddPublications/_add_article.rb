@@ -26,7 +26,7 @@ shared_examples "Add Publications: Add Article" do
   end
 
   it "Select to add a Publication" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:css, "#relatedBy-Authorship > a.add-relatedBy > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Create publication entry for Furter, Frank")
@@ -50,7 +50,7 @@ shared_examples "Add Publications: Add Article" do
     $browser.find_element(:id, "endPage").send_keys("344")
     $browser.find_element(:id, "dateTime-year").clear
     $browser.find_element(:id, "dateTime-year").send_keys("2010")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[4]").click
     expect(browser_page_text).to include("academic article")
@@ -65,26 +65,33 @@ shared_examples "Add Publications: Add Article" do
 
   it "Add details for Article" do
     expect($browser.title).to eq("Too Much Nintendo")
+    vivo_select_tab_on_profile('identity')
     $browser.find_element(:xpath, ".//h3[@id='pmid']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("ABC111222333")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("ABC111222333")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
     $browser.find_element(:xpath, ".//h3[@id='eanucc13']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("DEF12121212")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("DEF12121212")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
     $browser.find_element(:xpath, ".//h3[@id='nihmsid']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("NIH9898989898")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("NIH9898989898")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
     $browser.find_element(:xpath, ".//h3[@id='pmcid']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("PMID767676")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("PMID767676")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='hasSubjectArea']/a/img").click
     $browser.find_element(:id, "showAddFormButton").click
     $browser.find_element(:link_text, "Select or create a VIVO-defined concept.").click
@@ -92,30 +99,36 @@ shared_examples "Add Publications: Add Article" do
     $browser.find_element(:id, "relatedIndLabel").send_keys("Child")
     browser_wait_for_jQuery
     $browser.find_element(:css, ".ui-menu-item-wrapper").click
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:link_text, "Return to Profile Page").click
     expect($browser.title).to eq("Too Much Nintendo")
+    
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Children")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Games")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
+    
+    vivo_select_tab_on_profile('identity')
     $browser.find_element(:xpath, ".//h3[@id='doi']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("987654321.1234567890")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("987654321.1234567890")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Too Much Nintendo")
   end
 
   it "Naviage back to Index" do
+    vivo_wait_for_indexing
     $browser.find_element(:link_text, "Index").click
   end
 
