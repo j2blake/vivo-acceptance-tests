@@ -151,7 +151,7 @@ shared_examples "Check Visualizations: Check Grant Dates" do
     $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[6]").click
     expect(browser_page_text).to include("Games and Kids: The Impact 2011 -")
     $browser.find_element(:link_text, "Games and Kids: The Impact")
-    expect($browser.find_element(:css, "#RO_0000053-InvestigatorRole-List > li").text).to eq("exact:Nix Nintendo? 2010 -")
+    expect($browser.find_element(:css, "#RO_0000053-InvestigatorRole-List > li").text).to eq("Nix Nintendo? 2010 -")
     $browser.find_element(:link_text, "Nix Nintendo?")
     expect(browser_page_text).to include("Future of Children 2005 -")
     $browser.find_element(:link_text, "Future of Children")

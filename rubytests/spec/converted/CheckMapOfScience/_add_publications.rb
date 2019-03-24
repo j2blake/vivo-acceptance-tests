@@ -28,36 +28,47 @@ shared_examples "Check Map Of Science: Add Publications" do
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Academic Article")
     $browser.find_element(:id, "title").clear
     $browser.find_element(:id, "title").send_keys("Dying for a Drink")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "Dying for a Drink").click
     expect($browser.title).to eq("Dying for a Drink")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("111")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("111")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dying for a Drink")
     $browser.find_element(:css, "a.add-pageEnd > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("119")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("119")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dying for a Drink")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2005")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dying for a Drink")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-volume > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("9")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("9")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dying for a Drink")
     $browser.find_element(:css, "a.add-issue > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("2")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("2")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Dying for a Drink")
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-hasPublicationVenue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Journal (bibo)")
@@ -85,36 +96,48 @@ shared_examples "Check Map Of Science: Add Publications" do
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Academic Article")
     $browser.find_element(:id, "title").clear
     $browser.find_element(:id, "title").send_keys("Alcohol Poisoning Treatment")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "Alcohol Poisoning Treatment").click
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("222")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("222")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
     $browser.find_element(:css, "a.add-pageEnd > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("229")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("229")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2005")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
+
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-volume > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("12")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("12")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
     $browser.find_element(:css, "a.add-issue > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("4")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("4")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Alcohol Poisoning Treatment")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-hasPublicationVenue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -137,36 +160,47 @@ shared_examples "Check Map Of Science: Add Publications" do
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Academic Article")
     $browser.find_element(:id, "title").clear
     $browser.find_element(:id, "title").send_keys("What should I drink?")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "What should I drink?").click
     expect($browser.title).to eq("What should I drink?")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("345")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("345")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("What should I drink?")
     $browser.find_element(:css, "a.add-pageEnd > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("367")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("367")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("What should I drink?")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2007")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("What should I drink?")
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-volume > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("55")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("55")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("What should I drink?")
     $browser.find_element(:css, "a.add-issue > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("1")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("1")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("What should I drink?")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-hasPublicationVenue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Journal (bibo)")
@@ -187,6 +221,7 @@ shared_examples "Check Map Of Science: Add Publications" do
   end
 
   it "Add fourth journal article" do
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:css, "#relatedBy-Authorship > a.add-relatedBy > img.add-individual").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Create publication entry for Furter, Frank")
@@ -194,36 +229,48 @@ shared_examples "Check Map Of Science: Add Publications" do
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Academic Article")
     $browser.find_element(:id, "title").clear
     $browser.find_element(:id, "title").send_keys("Latest Alcohol Research")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "Latest Alcohol Research").click
     expect($browser.title).to eq("Latest Alcohol Research")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("990")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("990")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Latest Alcohol Research")
     $browser.find_element(:css, "a.add-pageEnd > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("994")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("994")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Latest Alcohol Research")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2009")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Latest Alcohol Research")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-volume > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("23")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("23")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Latest Alcohol Research")
     $browser.find_element(:css, "a.add-issue > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("4")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("4")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Latest Alcohol Research")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-hasPublicationVenue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Journal (bibo)")
@@ -247,7 +294,7 @@ shared_examples "Check Map Of Science: Add Publications" do
     expect(browser_page_text).to include("Latest Alcohol Research.  ALCOHOL RESEARCH & HEALTH.  23:990-994. 2009")
     $browser.find_element(:link_text, "Latest Alcohol Research")
     expect(browser_page_text).to include("What should I drink?.  Alcohol And Alcoholism.  55:345-367. 2007")
-    $browser.find_element(:link_text, "exact:What should I drink?")
+    $browser.find_element(:link_text, "What should I drink?")
     expect(browser_page_text).to include("Alcohol Poisoning Treatment.  Alcohol.  12:222-229. 2005")
     $browser.find_element(:link_text, "Alcohol Poisoning Treatment")
     expect(browser_page_text).to include("Dying for a Drink.  Alcohol.  9:111-119. 2005")
@@ -273,7 +320,7 @@ shared_examples "Check Map Of Science: Add Publications" do
     $browser.find_element(:link_text, "Map of Science").click
     expect($browser.title).to eq("Furter, Frank - Map of Science Visualization")
     expect(browser_page_text).to include("Furter, Frank")
-    # #<tr><td>pause</td><td>10000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:id, "entityMoniker")
     expect(browser_page_text).to include("Explore activity (4 publications) across 554 scientific subdisciplines")
     expect(browser_page_text).to include("554 Subdisciplines")
@@ -296,7 +343,8 @@ shared_examples "Check Map Of Science: Add Publications" do
 
   it "Back to 554 Subdisciplines" do
     $browser.find_element(:id, "first-filter").click
-    $browser.find_element(:css, "td..sorting_2").click
+    browser_wait_for_jQuery
+    $browser.find_element(:css, "td.sorting_2").click
     expect(browser_page_text).to include("Neurotoxicology")
     expect(browser_page_text).to include("4.0")
     expect(browser_page_text).to include("100.0")
@@ -306,5 +354,5 @@ shared_examples "Check Map Of Science: Add Publications" do
     $browser.find_element(:link_text, "Home").click
     vivo_logout
     expect($browser.title).to eq("VIVO")
-    end
   end
+end

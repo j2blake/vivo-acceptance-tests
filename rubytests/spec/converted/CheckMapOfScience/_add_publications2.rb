@@ -37,32 +37,44 @@ shared_examples "Check Map Of Science: Add Publications2" do
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "One For the Road").click
     expect($browser.title).to eq("One For the Road")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-pageStart > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("456")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("456")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("One For the Road")
     $browser.find_element(:css, "a.add-pageEnd > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("468")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("468")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("One For the Road")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2008")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("One For the Road")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-volume > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("15")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("15")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("One For the Road")
     $browser.find_element(:css, "a.add-issue > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("8")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("8")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("One For the Road")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-hasPublicationVenue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Journal (bibo)")
@@ -88,7 +100,7 @@ shared_examples "Check Map Of Science: Add Publications2" do
     expect(browser_page_text).to include("One For the Road.  DRINKY POOS.  15:456-468. 2008")
     $browser.find_element(:link_text, "One For the Road")
     expect(browser_page_text).to include("What should I drink?.  Alcohol And Alcoholism.  55:345-367. 2007")
-    $browser.find_element(:link_text, "exact:What should I drink?")
+    $browser.find_element(:link_text, "What should I drink?")
     expect(browser_page_text).to include("Alcohol Poisoning Treatment.  Alcohol.  12:222-229. 2005")
     $browser.find_element(:link_text, "Alcohol Poisoning Treatment")
     expect(browser_page_text).to include("Dying for a Drink.  Alcohol.  9:111-119. 2005")
@@ -97,14 +109,23 @@ shared_examples "Check Map Of Science: Add Publications2" do
 
   it "Check Map of Science" do
     $browser.find_element(:link_text, "Map of Science").click
+    browser_wait_for_jQuery
     expect($browser.title).to eq("Furter, Frank - Map of Science Visualization")
+    
+    #
+    # This is hidden, and I don't see a way to display it.
+    #
+    # It would allow the user to choose whether to "explore" the faculty member or
+    # to compare organizations. Perhaps it is not displayed because there are
+    # no organizations to compare?
+    #
     $browser.find_element(:name, "view-type").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    
+    browser_wait_for_jQuery
     $browser.find_element(:id, "first-filter").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
-    #<tr><td>waitForTextPresent</td><td>Explore activity</td><td></td></tr>
+    browser_wait_for_jQuery
     expect($browser.title).to eq("Furter, Frank - Map of Science Visualization")
-    # #<tr><td>pause</td><td>10000</td><td></td></tr>
+    browser_wait_for_jQuery
     expect(browser_page_text).to include("Furter, Frank")
     expect(browser_page_text).to include("Explore activity (4 publications) across 554 scientific subdisciplines")
     expect(browser_page_text).to include("554 Subdisciplines")
@@ -117,19 +138,19 @@ shared_examples "Check Map Of Science: Add Publications2" do
 
   it "Check 13 Disciplines" do
     $browser.find_element(:id, "second-filter").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     expect(browser_page_text).to include("Brain Research")
     expect(browser_page_text).to include("4.0")
     $browser.find_element(:xpath, ".//tr[@id='DISCIPLINE-5']/td[3]").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     expect(browser_page_text).to include("100.0")
   end
 
   it "Back to 554 Subdisciplines" do
     $browser.find_element(:id, "first-filter").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     $browser.find_element(:css, "td..sorting_2").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     expect(browser_page_text).to include("Neurotoxicology")
     expect(browser_page_text).to include("4.0")
     expect(browser_page_text).to include("100.0")

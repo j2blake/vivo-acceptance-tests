@@ -17,7 +17,7 @@ shared_examples "Create Classes: Add Sub Class Minutes" do
   end
 
   it "Verify sub-class Minutes does not already exist" do
-    expect($browser.find_elements(:link_text, "exact:core:Minutes").size).to eq(0)
+    expect($browser.find_elements(:link_text, "core:Minutes").size).to eq(0)
     $browser.find_element(:id, "addClass").click
     expect($browser.title).to eq("Class Editing Form")
   end

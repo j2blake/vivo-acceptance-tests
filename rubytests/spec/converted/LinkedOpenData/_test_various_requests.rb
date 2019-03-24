@@ -373,7 +373,7 @@ shared_examples "Linked Open Data: Test Various Requests" do
   it "---" do
     $browser.find_element(:id, "BOGUS_FORMAT_button").click
     # #<tr><td>pause</td><td>5000</td><td></td></tr>
-    expect($browser.find_element(:css, "div").text).to eq("exact:Request URL is /vivo/individual/lodFacultyMember?format=bogus")
+    expect($browser.find_element(:css, "div").text).to eq("Request URL is /vivo/individual/lodFacultyMember?format=bogus")
     expect($browser.find_element(:xpath, ".//div[2]").text).to eq("Accept header is No header")
     expect($browser.find_element(:xpath, ".//div[3]").text).to eq("Response code is 200")
     expect($browser.find_element(:xpath, ".//div[4]").text).to eq("MIME type is text/html")
@@ -385,7 +385,7 @@ shared_examples "Linked Open Data: Test Various Requests" do
   it "---" do
     $browser.find_element(:id, "CLEAR_RESPONSE_button").click
     # #<tr><td>pause</td><td>5000</td><td></td></tr>
-    expect($browser.find_element(:id, "requestUrl").text).to eq("exact:/vivo/individual/lodFacultyMember?format=bogus")
+    expect($browser.find_element(:id, "requestUrl").text).to eq("/vivo/individual/lodFacultyMember?format=bogus")
     expect($browser.find_element(:xpath, ".//div[2]").text).to eq("Accept header is No header")
     expect($browser.find_element(:xpath, ".//div[3]").text).to eq("Response code is 000")
     expect($browser.find_element(:xpath, ".//div[4]").text).to eq("MIME type is No type")

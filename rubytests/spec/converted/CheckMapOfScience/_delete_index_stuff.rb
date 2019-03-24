@@ -42,8 +42,8 @@ shared_examples "Check Map Of Science: Delete Index Stuff" do
     expect($browser.title).to eq("Index of Contents")
     $browser.find_element(:link_text, "Academic Article").click
     expect($browser.title).to eq("Academic Article")
-    $browser.find_element(:link_text, "exact:What should I drink?").click
-    expect($browser.title).to eq("exact:What should I drink?")
+    $browser.find_element(:link_text, "What should I drink?").click
+    expect($browser.title).to eq("What should I drink?")
     $browser.find_element(:link_text, "Edit this individual").click
     expect($browser.title).to eq("Individual Control Panel")
     $browser.find_element(:xpath, ".//input[@value='Edit This Individual']").click
