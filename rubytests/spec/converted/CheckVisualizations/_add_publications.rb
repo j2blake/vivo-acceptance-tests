@@ -44,15 +44,20 @@ shared_examples "Check Visualizations: Add Publications" do
     $browser.find_element(:id, "label").send_keys("Putnam")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:css, "a.add-placeOfPublication > img.add-individual").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("New York")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("New York")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:css, "a.add-dateTimeValue > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "dateTimeField-year").clear
-    $browser.find_element(:id, "dateTimeField-year").send_keys("2009")
+    $browser.find_element(:id, "dateTimeField-year").send_keys("2011")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Nintendo: Good or Bad for Kids?")
     # #<tr><td>pause</td><td>3000</td><td></td></tr>
@@ -76,16 +81,22 @@ shared_examples "Check Visualizations: Add Publications" do
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "Why Games Are Important to Child Growth").click
     expect($browser.title).to eq("Why Games Are Important to Child Growth")
+    
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='pageStart']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("111")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("111")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Why Games Are Important to Child Growth")
     $browser.find_element(:xpath, ".//h3[@id='pageEnd']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("222")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("222")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Why Games Are Important to Child Growth")
+    
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='hasPublicationVenue']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Journal (bibo)")
@@ -120,24 +131,35 @@ shared_examples "Check Visualizations: Add Publications" do
     expect($browser.title).to eq("Furter, Frank")
     $browser.find_element(:link_text, "Game Wars").click
     expect($browser.title).to eq("Game Wars")
+
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='pageStart']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("333")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("333")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Game Wars")
+
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='chapter']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("9")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("9")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Game Wars")
+    
+    vivo_select_tab_on_profile('additional_document_info')
     $browser.find_element(:xpath, ".//h3[@id='pageEnd']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("444")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("444")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Game Wars")
+    
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='dateTimeValue']/a/img").click
     $browser.find_element(:id, "dateTimeField-year").clear
-    $browser.find_element(:id, "dateTimeField-year").send_keys("2003")
+    $browser.find_element(:id, "dateTimeField-year").send_keys("2013")
     $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Game Wars")
   end
@@ -151,6 +173,7 @@ shared_examples "Check Visualizations: Add Publications" do
   end
 
   it "Add a Conference" do
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:css, "#relatedBy-Authorship > a.add-relatedBy > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Conference Paper")
@@ -168,6 +191,8 @@ shared_examples "Check Visualizations: Add Publications" do
     $browser.find_element(:id, "label").send_keys("Game World 2005")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Games to Promote Growth")
+    
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='dateTimeValue']/a/img").click
     $browser.find_element(:id, "dateTimeField-year").clear
     $browser.find_element(:id, "dateTimeField-year").send_keys("2005")
@@ -181,7 +206,7 @@ shared_examples "Check Visualizations: Add Publications" do
     expect($browser.title).to eq("Faculty Member")
     $browser.find_element(:link_text, "Furter, Frank").click
     expect($browser.title).to eq("Furter, Frank")
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
   end
 
   it "Verify there are no co-investigators" do
@@ -194,30 +219,26 @@ shared_examples "Check Visualizations: Add Publications" do
     $browser.find_element(:link_text, "Co-author Network")
     $browser.find_element(:link_text, "Map of Science")
     $browser.find_element(:link_text, "Co-author Network").click
-    # #<tr><td>pause</td><td>5000</td><td></td></tr>
+    browser_wait_for_jQuery
     expect($browser.title).to eq("Furter, Frank - Person Level Visualization")
     expect(browser_page_text).to include("Furter, Frank")
     expect(browser_page_text).to include("Co-author Network")
     $browser.find_element(:link_text, "GraphML file")
-    expect(browser_page_text).to include("4   Publications through today's date")
-    expect(browser_page_text).to include("0   Co-author(s)")
-    expect(browser_page_text).to include("2001  First publication")
-    expect(browser_page_text).to include("2009   Last publication")
     expect(browser_page_text).to include("4 publications")
-    expect(browser_page_text).to include("from 2001 - 2014")
+    expect(browser_page_text).to include("from 2001 - 2018")
     $browser.find_element(:link_text, "(.CSV File)")
     expect(browser_page_text).to include("0 co-authors")
-    expect(browser_page_text).to include("from 2005 - 2014")
+    expect(browser_page_text).to include("from 2009 - 2018")
     expect(browser_page_text).to include("Tables")
     expect(browser_page_text).to include("Publications per year")
     $browser.find_element(:css, "caption > a")
     expect(browser_page_text).to include("2001")
     expect(browser_page_text).to include("1")
-    expect(browser_page_text).to include("2003")
+    expect(browser_page_text).to include("2013")
     expect(browser_page_text).to include("1")
     expect(browser_page_text).to include("2005")
     expect(browser_page_text).to include("1")
-    expect(browser_page_text).to include("2009")
+    expect(browser_page_text).to include("2011")
     expect(browser_page_text).to include("1")
   end
 

@@ -75,16 +75,11 @@ shared_examples "Check Visualizations: Add Grants" do
     $browser.find_element(:link_text, "Co-author Network")
     expect(browser_page_text).to include("Co-investigator Network")
     $browser.find_element(:link_text, "(GraphML File)")
-    $browser.find_element(:id, "profileUrl")
-    expect(browser_page_text).to include("4   Grant(s)")
-    expect(browser_page_text).to include("0   Co-investigator(s)")
-    expect(browser_page_text).to include("2002  First Grant")
-    expect(browser_page_text).to include("2010   Last Grant")
     expect(browser_page_text).to include("4 grants")
-    expect(browser_page_text).to include("from 2002 through 2014")
+    expect(browser_page_text).to include("from 2002 through 2018")
     $browser.find_element(:link_text, "(.CSV File)")
     expect(browser_page_text).to include("0 co-investigators")
-    expect(browser_page_text).to include("from 2005 through 2014")
+    expect(browser_page_text).to include("from 2009 through 2018")
     expect(browser_page_text).to include("Tables")
     expect(browser_page_text).to include("The information in the following tables is for all years.")
     expect(browser_page_text).to include("Grants per year")
@@ -96,6 +91,7 @@ shared_examples "Check Visualizations: Add Grants" do
     expect(browser_page_text).to include("2007")
     expect(browser_page_text).to include("1")
     expect(browser_page_text).to include("2010")
+    expect(browser_page_text).to include("1")
   end
 
   it "Log out" do

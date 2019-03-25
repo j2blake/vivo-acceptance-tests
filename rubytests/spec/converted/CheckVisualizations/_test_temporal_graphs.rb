@@ -46,7 +46,7 @@ shared_examples "Check Visualizations: Test Temporal Graphs" do
     browser_wait_for_jQuery
     $browser.find_element(:css, ".ui-menu-item-wrapper").click
     $browser.find_element(:id, "startField-year").clear
-    $browser.find_element(:id, "startField-year").send_keys("2009")
+    $browser.find_element(:id, "startField-year").send_keys("2011")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Child Development")
     $browser.find_element(:css, "#relatedBy-Position > a.add-relatedBy > img.add-individual").click
@@ -79,7 +79,7 @@ shared_examples "Check Visualizations: Test Temporal Graphs" do
 
   it "Verify all people are correct" do
     expect(browser_page_text).to include("Furter, Frank , Dr. 2010 -")
-    expect(browser_page_text).to include("Johnson, Jane, Ms. 2009 -")
+    expect(browser_page_text).to include("Johnson, Jane, Ms. 2011 -")
     expect(browser_page_text).to include("Smith, Sally, Dr. 2008 -")
     expect(browser_page_text).to include("Zink, Zoe, Mrs. 2007 -")
   end

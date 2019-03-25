@@ -220,6 +220,7 @@ This project consists of these top-level folders:
 
 ### Project docs
 
+* [How to write a test](docs/writing_tests.md)
 * [How the test framework works](docs/how_the_framework_works.md)
 * [Creating and controlling the VIVO runtime environment](docs/creating_the_VIVO_runtime_environment.md)
 * [Helper methods provided to the tests](docs/helper_methods.md)
