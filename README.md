@@ -224,6 +224,18 @@ This project consists of these top-level folders:
 * [How the test framework works](docs/how_the_framework_works.md)
 * [Creating and controlling the VIVO runtime environment](docs/creating_the_VIVO_runtime_environment.md)
 * [Helper methods provided to the tests](docs/helper_methods.md)
+* [A checklist that Cornell used, to run the old tests](docs/CornellSeleniumTestChecklist_1.8_ReleaseCandidate4.pdf)
+
+#### Unfinished project docs
+
+* [Converting from old tests](docs/_converting_from_old_tests.md) -- some good tips here, 
+  but not really finished, and a fair amount of overlap with [How to write a test](docs/writing_tests.md)
+* [Things that would be nice](docs/_things_that_would_be_nice.md) -- we all have a list like this, right?
+* [Test Status list](docs/test_status.txt) -- a running tally of how the conversions are progressing, with 
+  some guesses as to what should be done next.
+* [Improving the Old Tests](docs/improving_the_old_tests.md) -- barely started. This would be populated
+  with all sorts of suggestions on how to make the converted tests more readable, more concise, and
+  hence more maintainable. Maybe even faster.
 
 ### Still more information
 

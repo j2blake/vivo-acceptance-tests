@@ -1,3 +1,6 @@
+LAST MINUTE NOTE: Most of the tests marked with "element not interactable" can be
+fixed with a call to vivo_select_tab_on_profile() 
+
 AddNonPersonThings
     AddNonPersonThings/_create_organization.rb:304
     Selenium::WebDriver::Error::ElementNotVisibleError:
