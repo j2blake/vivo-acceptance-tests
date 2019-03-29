@@ -38,7 +38,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "relatedIndLabel").clear
     $browser.find_element(:id, "relatedIndLabel").send_keys("Primatia")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:link_text, "Return to Profile Page").click
     expect($browser.title).to eq("Faculty, Jane")
@@ -58,7 +58,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "url").send_keys("http://mannlib.cornell.edu")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Mann Library Homepage")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Faculty, Jane")
     expect(browser_page_text).to include("Manage Web Pages")
@@ -72,20 +72,20 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:xpath, ".//h2[@id='overview']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_fill_tinyMCE("I am named after Jane in the Tarzan stories.")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-geographicFocus > img.add-individual").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "object").send_keys("Afri")
     browser_wait_for_jQuery
     $browser.find_element(:css, ".ui-menu-item-wrapper").click
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, "(.//img[@alt='add'])[4]").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "telephoneNumber").clear
     $browser.find_element(:id, "telephoneNumber").send_keys("607-255-5555")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-ARG_2000028 > img.add-individual").click
     $browser.find_element(:id, "emailAddress").clear
@@ -96,7 +96,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "emailAddress").clear
     $browser.find_element(:id, "emailAddress").send_keys("jfac@gmail.com")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -115,7 +115,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "activity").send_keys("Apes on Parade")
     $browser.find_element(:id, "startField-year").clear
     $browser.find_element(:id, "startField-year").send_keys("1991")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -129,7 +129,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("USABC123456789")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "#publicationsGroup > article.property > #RO_0000053 > a.add-RO_0000053 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -140,7 +140,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "startField-year").send_keys("1988")
     $browser.find_element(:id, "endField-year").clear
     $browser.find_element(:id, "endField-year").send_keys("1990")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-featuredIn > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -149,12 +149,12 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Primate Reactions")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-translatorOf > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "objectVar").select_by(:text, "Primate Reactions (Case Study)")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -164,13 +164,13 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:xpath, ".//h3[@id='researchOverview']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_fill_tinyMCE("I study monkeys, of course.")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, ".//h3[@id='freetextKeyword']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("Apes")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -185,12 +185,12 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "firstName").send_keys("Joe")
     $browser.find_element(:id, "SubjectArea").clear
     $browser.find_element(:id, "SubjectArea").send_keys("Primates-R-Us Fellowship")
-    vivo_click_and_wait_for_indexing(:css, "input.submit")
+    $browser.find_element(:css, "input.submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, ".//h3[@id='teachingOverview']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_fill_tinyMCE("I teach monkeys to communicate.")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -199,7 +199,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:xpath, ".//h3[@id='outreachOverview']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_fill_tinyMCE("I travel the country teaching monkeys in zoos how to communicate.")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-ERO_0000037 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -208,7 +208,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Primate Feeding")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "#serviceGroup > article.property > #RO_0000053 > a.add-RO_0000053 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -219,7 +219,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "startField-year").send_keys("1983")
     $browser.find_element(:id, "endField-year").clear
     $browser.find_element(:id, "endField-year").send_keys("1983")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, "(.//img[@alt='add'])[29]").click
     expect($browser.title).to eq("Edit")
@@ -228,7 +228,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "activity").send_keys("Primates of East Africa")
     $browser.find_element(:id, "startField-year").clear
     $browser.find_element(:id, "startField-year").send_keys("1984")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-ERO_0000397 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -237,7 +237,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("JF Feeding")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-ERO_0000033 > img.add-individual").click
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Technique (obo)")
@@ -245,7 +245,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("JF Feeding Revised")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -256,7 +256,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "award").clear
     $browser.find_element(:id, "award").send_keys("Monkey Trainer of the Year")
-    vivo_click_and_wait_for_indexing(:css, "input.submit")
+    $browser.find_element(:css, "input.submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-eligibleFor > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -274,14 +274,14 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "label").clear
     $browser.find_element(:id, "label").send_keys("Primate Expert Association")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "#backgroundGroup > article.property > #relatedBy > a.add-relatedBy > img.add-individual").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeSelector").select_by(:text, "License")
     $browser.find_element(:id, "credential").clear
     $browser.find_element(:id, "credential").send_keys("Licensed Primate Expert")
-    vivo_click_and_wait_for_indexing(:css, "input.submit")
+    $browser.find_element(:css, "input.submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "#backgroundGroup > article.property > #RO_0000053 > a.add-RO_0000053 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -294,7 +294,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "SubjectArea").send_keys("Primate Feeding")
     $browser.find_element(:id, "startField-year").clear
     $browser.find_element(:id, "startField-year").send_keys("2013")
-    vivo_click_and_wait_for_indexing(:css, "input.submit")
+    $browser.find_element(:css, "input.submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -308,13 +308,13 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "middleName").send_keys("Elizabeth")
     $browser.find_element(:id, "lastName").clear
     $browser.find_element(:id, "lastName").send_keys("Faculty")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, "(.//img[@alt='add'])[41]").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "telephoneNumber").clear
     $browser.find_element(:id, "telephoneNumber").send_keys("607-244-4444")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "article.property > #ARG_2000028 > a.add-ARG_2000028 > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -328,7 +328,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "postalCode").send_keys("1234567890")
     $browser.find_element(:id, "countryEditMode").clear
     $browser.find_element(:id, "countryEditMode").send_keys("Democratic Republic of Congo")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "#ARG_2000028-Name-List > li > a.edit-ARG_2000028 > img.edit-individual").click
     expect($browser.title).to eq("Edit")
@@ -336,7 +336,7 @@ shared_examples "Create People: Add Faculty Info" do
     $browser.find_element(:id, "prefix").send_keys("Ms.")
     $browser.find_element(:id, "suffix").clear
     $browser.find_element(:id, "suffix").send_keys("III")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 
@@ -351,13 +351,13 @@ shared_examples "Create People: Add Faculty Info" do
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("123456789")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:xpath, ".//h3[@id='scopusId']/a/img").click
     expect($browser.title).to eq("Edit")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("5678")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-eRACommonsId > img.add-individual").click
     expect($browser.title).to eq("Edit")
@@ -369,7 +369,7 @@ shared_examples "Create People: Add Faculty Info" do
     expect(browser_page_text).to include("Add new entry for: eRA Commons ID")
     $browser.find_element(:id, "literal").clear
     $browser.find_element(:id, "literal").send_keys("ABC123987")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
     $browser.find_element(:css, "a.add-ARG_0000197 > img.add-individual").click
     expect($browser.title).to eq("Edit")

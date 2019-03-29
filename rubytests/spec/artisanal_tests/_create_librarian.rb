@@ -23,7 +23,7 @@ shared_examples "Create a Librarian" do
   end
 
   it "adds a preferred title" do
-    $browser.find_element(:css, "section#preferredTitle a.add-ARG_2000028").click
+    $browser.find_element(:css, "#preferredTitle a").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("preferred title for")
 

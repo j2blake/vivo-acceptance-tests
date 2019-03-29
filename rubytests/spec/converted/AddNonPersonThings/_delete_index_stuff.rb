@@ -500,8 +500,8 @@ shared_examples "Add Non Person Things: Delete Index Stuff" do
     expect($browser.title).to eq("Index of Contents")
     $browser.find_element(:link_text, "Webpage").click
     expect($browser.title).to eq("Webpage")
-    $browser.find_element(:link_text, "exact:http://primatehealthintro.cornell.edu").click
-    expect($browser.title).to eq("exact:http://primatehealthintro.cornell.edu")
+    $browser.find_element(:link_text, "http://primatehealthintro.cornell.edu").click
+    expect($browser.title).to eq("http://primatehealthintro.cornell.edu")
     $browser.find_element(:link_text, "Edit this individual").click
     expect($browser.title).to eq("Individual Control Panel")
     $browser.find_element(:xpath, ".//input[@value='Edit This Individual']").click

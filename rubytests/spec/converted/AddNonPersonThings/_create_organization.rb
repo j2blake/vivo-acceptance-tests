@@ -300,7 +300,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Add additional 1.6 fields" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('affiliation')
     $browser.find_element(:xpath, "(.//img[@alt='add'])[14]").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeSelector").select_by(:text, "Workshop")
@@ -401,7 +401,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check OVERVIEW tab" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('overview')
     expect(browser_page_text).to include("PCoA")
     expect(browser_page_text).to include("1959 -")
     $browser.find_element(:link_text, "B.S. Bachelor of Science")
@@ -410,7 +410,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check AFFILIATION tab" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('affiliation')
     expect(browser_page_text).to include("faculty administrative position")
     $browser.find_element(:link_text, "Person, Polly")
     expect(browser_page_text).to include("Person, Polly, Dr. 1999 -")
@@ -431,7 +431,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check PUBLICATIONS tab" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[6]").click
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:link_text, "Primate Info")
     expect(browser_page_text).to include("invited talk")
     $browser.find_element(:link_text, "Primate Health and Fitness")
@@ -441,7 +441,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check RESEARCH tab" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[8]").click
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:link_text, "Primate Habitat Research Grant")
     $browser.find_element(:link_text, "Primate Habitat Research Grant")
     $browser.find_element(:link_text, "Primate Survival Planning Grant")
@@ -450,7 +450,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check SERVICE tab" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[10]").click
+    vivo_select_tab_on_profile('service')
     $browser.find_element(:link_text, "Gorilla Moving Company")
     $browser.find_element(:link_text, "Primate Health Check")
     expect(browser_page_text).to include("Primate Health Check Sponsor 2008 - 2010")
@@ -459,7 +459,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check CONTACT tab" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[12]").click
+    vivo_select_tab_on_profile('contact')
     expect(browser_page_text).to include("555-555-5555")
     expect(browser_page_text).to include("555-555-5554")
     expect(browser_page_text).to include("info@primates.edu")
@@ -474,7 +474,7 @@ shared_examples "Add Non Person Things: Create Organization" do
   end
 
   it "Check VIEW ALL tab" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[14]").click
+    vivo_select_tab_on_profile('viewAll')
     expect(browser_page_text).to include("PCoA")
     expect(browser_page_text).to include("1959 -")
     $browser.find_element(:link_text, "B.S. Bachelor of Science")

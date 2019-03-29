@@ -156,7 +156,7 @@ shared_examples "Add Non Person Things: Check Browse Options" do
     $browser.find_element(:link_text, "PHC Proceedings")
     $browser.find_element(:xpath, ".//li[@id='webpage']/a").click
     # #<tr><td>pause</td><td>5000</td><td></td></tr>
-    $browser.find_element(:link_text, "exact:http://primatehealthintro.cornell.edu")
+    $browser.find_element(:link_text, "http://primatehealthintro.cornell.edu")
   end
 
   it "Verify Events menu option " do

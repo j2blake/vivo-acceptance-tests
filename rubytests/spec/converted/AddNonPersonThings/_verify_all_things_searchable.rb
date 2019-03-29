@@ -90,7 +90,7 @@ shared_examples "Add Non Person Things: Verify All Things Searchable" do
     expect(browser_page_text).to include("Elderly Care Concept")
     $browser.find_element(:link_text, "Jane Memorial Building")
     expect($browser.find_element(:xpath, ".//div[@id='wrapper-content']/div/ul/li[9]/span").text).to eq("Building")
-    $browser.find_element(:link_text, "exact:http://primatehealthintro.cornell.edu")
+    $browser.find_element(:link_text, "http://primatehealthintro.cornell.edu")
     expect(browser_page_text).to include("http://primatehealthintro.cornell.edu Webpage")
     $browser.find_element(:link_text, "Human and Ape Brain Comparison")
     expect(browser_page_text).to include("Human and Ape Brain Comparison Human Study")

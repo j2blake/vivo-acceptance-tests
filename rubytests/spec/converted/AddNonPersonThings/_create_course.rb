@@ -39,10 +39,12 @@ shared_examples "Add Non Person Things: Create Course" do
   end
 
   it "Test overview tab entry (image and webpage have been tested)" do
+    vivo_select_tab_on_profile('overview')
     $browser.find_element(:xpath, ".//h3[@id='description']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Add new entry for: description")
-    browser_fill_tinyMCE("Learn the basics about the general health of primates.")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("Learn the basics about the general health of primates.")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Introduction to Primate Health")
     $browser.find_element(:css, "a.add-offeredBy > img.add-individual").click
@@ -109,7 +111,7 @@ shared_examples "Add Non Person Things: Create Course" do
   end
 
   it "Test publication tab entry" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:xpath, ".//h3[@id='presents']/a/img").click
     expect($browser.title).to eq("Edit")
     browser_find_select_list(:id, "typeOfNew").select_by(:text, "Webpage (bibo)")
@@ -129,11 +131,12 @@ shared_examples "Add Non Person Things: Create Course" do
   end
 
   it "Test contact tab entry" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[6]").click
+    vivo_select_tab_on_profile('contact')
     $browser.find_element(:xpath, ".//h3[@id='contactInformation']/a/img").click
     expect($browser.title).to eq("Edit")
     expect(browser_page_text).to include("Add new entry for: contact information")
-    browser_fill_tinyMCE("ME Tarzan at metarzan@primates.edu or 555-555-5553")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("ME Tarzan at metarzan@primates.edu or 555-555-5553")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Introduction to Primate Health")
     $browser.find_element(:xpath, "(.//h3[@id='RO_0001025']/a)[2]").click
@@ -157,7 +160,8 @@ shared_examples "Add Non Person Things: Create Course" do
     $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[8]").click
     $browser.find_element(:xpath, ".//h3[@id='courseCredits']/a/img").click
     expect($browser.title).to eq("Edit")
-    browser_fill_tinyMCE("9")
+    $browser.find_element(:id, "literal").clear
+    $browser.find_element(:id, "literal").send_keys("9")
     vivo_click_and_wait_for_indexing(:id, "submit")
     expect($browser.title).to eq("Introduction to Primate Health")
     $browser.find_element(:css, "a.add-hasPrerequisite > img.add-individual").click

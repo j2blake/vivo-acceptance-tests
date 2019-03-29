@@ -14,10 +14,10 @@ shared_examples "Process R D F Data: Export R D F File" do
   it "Go to RDF export option on Site Admin page" do
     $browser.find_element(:link_text, "RDF export").click
     expect($browser.title).to eq("VIVO")
-    $browser.find_element(:id, "subgraph").click
+    $browser.find_element(:name, "subgraph").click
     $browser.find_element(:xpath, ".//input[@name='assertedOrInferred' and @value='full']").click
-    browser_find_select_list(:id, "format").select_by(:text, "RDF/XML")
-    $browser.find_element(:id, "submit").click
+    browser_find_select_list(:name, "format").select_by(:text, "RDF/XML")
+    $browser.find_element(:name, "submit").click
   end
 
   it "Go back to VIVO" do

@@ -93,7 +93,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Publications info" do
-    $browser.find_element(:css, "li.nonSelectedGroupTab.clickable").click
+    vivo_select_tab_on_profile('publications')
     $browser.find_element(:css, "a.delete-RO_0000053 > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -109,7 +109,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Research info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[6]").click
+    vivo_select_tab_on_profile('research')
     $browser.find_element(:css, "a.delete-researchOverview > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -125,7 +125,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Teaching info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[8]").click
+    vivo_select_tab_on_profile('teaching')
     $browser.find_element(:css, "a.delete-teachingOverview > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -137,7 +137,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Service info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[10]").click
+    vivo_select_tab_on_profile('service')
     $browser.find_element(:css, "a.delete-outreachOverview > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -165,7 +165,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Background info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[12]").click
+    vivo_select_tab_on_profile('background')
     $browser.find_element(:css, "a.delete-relatedBy > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -189,7 +189,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Contact info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[14]").click
+    vivo_select_tab_on_profile('contact')
     $browser.find_element(:css, "li > a.delete-ARG_2000028 > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")
@@ -213,7 +213,7 @@ shared_examples "Create People: Delete Faculty Info" do
   end
 
   it "Delete Identity info" do
-    $browser.find_element(:xpath, ".//div[@id='wrapper-content']/ul/li[16]").click
+    vivo_select_tab_on_profile('identity')
     $browser.find_element(:css, "a.delete-orcidId > img.delete-individual").click
     expect($browser.title).to eq("Edit")
     vivo_click_and_wait_for_indexing(:id, "submit")

@@ -21,7 +21,7 @@ shared_examples "Create People: Create Faculty Member" do
     $browser.find_element(:id, "firstName").send_keys("Jane")
     $browser.find_element(:id, "lastName").clear
     $browser.find_element(:id, "lastName").send_keys("Faculty")
-    vivo_click_and_wait_for_indexing(:id, "submit")
+    $browser.find_element(:id, "submit").click
     expect($browser.title).to eq("Faculty, Jane")
   end
 

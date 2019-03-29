@@ -287,8 +287,8 @@ shared_examples "Add Non Person Things: Check Public View" do
     expect($browser.title).to eq("Index of Contents")
     $browser.find_element(:link_text, "Webpage").click
     expect($browser.title).to eq("Webpage")
-    $browser.find_element(:link_text, "exact:http://primatehealthintro.cornell.edu").click
-    expect($browser.title).to eq("exact:http://primatehealthintro.cornell.edu")
+    $browser.find_element(:link_text, "http://primatehealthintro.cornell.edu").click
+    expect($browser.title).to eq("http://primatehealthintro.cornell.edu")
     $browser.find_element(:link_text, "Introduction to Primate Health")
     $browser.find_element(:link_text, "Index").click
     expect($browser.title).to eq("Index of Contents")
