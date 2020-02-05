@@ -79,7 +79,7 @@ They are simpler, because the test harness makes many of the steps unnecessary.
 
 * Create an empty directory to use for the installation.
 
-* In that directory, download the VIVO and Vitro repositories. To test the develop branch, 
+* In that directory, download the VIVO and Vitro repositories. To test the `master` branch, 
   use these commands:
 
 	```
